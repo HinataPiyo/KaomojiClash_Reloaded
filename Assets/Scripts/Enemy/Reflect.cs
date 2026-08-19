@@ -1,4 +1,4 @@
-namespace Player
+namespace Enemy
 {
     using Base;
     using UnityEngine;
@@ -7,8 +7,8 @@ namespace Player
     {
         protected override void OnCollisionEnter2D(Collision2D col)
         {
-            // 敵と衝突した
-            if (col.collider.CompareTag("Enemy"))
+            // プレイヤーと衝突した
+            if (col.collider.CompareTag("Player"))
             {
                 if (!CanReflection())       // 反射できない状態なら何もしない
                 {
@@ -25,13 +25,9 @@ namespace Player
                 {
                     IAttackable attackable = col.collider.GetComponent<IAttackable>();
                     attackable?.TakeDamage(1f);
-                    Debug.Log($"<color=blue>Player</color>が<color=red>Enemy</color>にダメージを与えました");
+                    Debug.Log($"<color=red>Enemy</color>が<color=blue>Player</color>にダメージを与えました");
                 }
             }
-            // else if (col.collider.CompareTag("Wall"))
-            // {
-            //     ApplaySkillTagEffects();     // 反射に関連するスキルタグの効果を適用
-            // }
         }
 
         protected override bool CanApplyDamage(Rigidbody2D otherRb)
@@ -39,5 +35,6 @@ namespace Player
             // 相手より自分のほうが速い場合のみダメージを与える
             return otherRb != null && rb.linearVelocity.sqrMagnitude > otherRb.linearVelocity.sqrMagnitude * speedThreshold;
         }
+        
     }
 }

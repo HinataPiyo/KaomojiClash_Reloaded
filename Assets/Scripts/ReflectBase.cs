@@ -3,7 +3,8 @@ using UnityEngine;
 public abstract class ReflectBase : MonoBehaviour
 {
     protected Rigidbody2D rb;
-    const float REFRECT_SPEED_BORDER = 1.5f;
+    const float REFRECT_SPEED_BORDER = 1.5f;        // 反射可能な速度の閾値
+    [SerializeField] protected float speedThreshold = 0.92f;        // ダメージを与えるための速度の閾値（相手より自分のほうが速い場合のみダメージを与える）
 
     void Awake()
     {
