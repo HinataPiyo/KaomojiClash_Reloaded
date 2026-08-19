@@ -481,6 +481,7 @@ GameObject:
   - component: {fileID: 513315751}
   - component: {fileID: 513315752}
   - component: {fileID: 513315753}
+  - component: {fileID: 513315754}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -593,6 +594,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy.Reflect
   speedThreshold: 1
+--- !u!114 &513315754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513315748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32898ddcd74c767439d79329c50caa49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy.Movement
+  default_Speed: 5
+  idleTime: 1
+  max_DraggingDistance: 3
+  draggingIdleTime: 1
+  beforeLaunchIdleDuration: 0.1
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

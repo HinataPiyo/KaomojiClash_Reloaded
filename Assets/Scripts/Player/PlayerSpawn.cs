@@ -1,46 +1,51 @@
-using UnityEngine;
-
-public interface IPlayerSpawn
+namespace Player
 {
-    void SpawnPlayer();
-    GameObject PlayerInstance { get; }
-    bool IsPlayerAlive { get; }
-}
 
-public class PlayerSpawn : MonoBehaviour, IPlayerSpawn
-{
-    [SerializeField] GameObject playerPrefab;
 
-    GameObject playerInstance;
+    using UnityEngine;
 
-    // PlayerObject自体を返す
-    public GameObject PlayerInstance => playerInstance;
-
-    // PlayerObjectが存在するかどうかを返す
-    public bool IsPlayerAlive => playerInstance != null;
-
-    // PlayerObjectを生成する
-    public void SpawnPlayer()
+    public interface IPlayerSpawn
     {
-        if (playerInstance == null)
-        {
-            playerInstance = Instantiate(playerPrefab, transform.position, Quaternion.identity);
-        }
-        else
-        {
-            Debug.Log("既にプレイヤーが存在します。");
-        }
+        void SpawnPlayer();
+        GameObject PlayerInstance { get; }
+        bool IsPlayerAlive { get; }
     }
 
-    void Awake()
+    public class PlayerSpawn : MonoBehaviour, IPlayerSpawn
     {
-        // IPlayerSpawnをApiProviderに登録
-        ApiProvider.Register<IPlayerSpawn>(this);
-    }
+        [SerializeField] GameObject playerPrefab;
 
-    void Start()
-    {
-        // ゲーム開始時にプレイヤーを生成
-        SpawnPlayer();
+        GameObject playerInstance;
+
+        // PlayerObject自体を返す
+        public GameObject PlayerInstance => playerInstance;
+
+        // PlayerObjectが存在するかどうかを返す
+        public bool IsPlayerAlive => playerInstance != null;
+
+        // PlayerObjectを生成する
+        public void SpawnPlayer()
+        {
+            if (playerInstance == null)
+            {
+                playerInstance = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+            }
+            else
+            {
+                Debug.Log("既にプレイヤーが存在します。");
+            }
+        }
+
+        void Awake()
+        {
+            // IPlayerSpawnをApiProviderに登録
+            ApiProvider.Register<IPlayerSpawn>(this);
+        }
+
+        void Start()
+        {
+            // ゲーム開始時にプレイヤーを生成
+            SpawnPlayer();
+        }
     }
 }
