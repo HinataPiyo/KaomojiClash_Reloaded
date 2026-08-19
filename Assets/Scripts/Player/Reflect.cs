@@ -5,6 +5,23 @@ namespace Player
 
     public class Reflect : ReflectBase
     {
+        float reflectionPower;
+
+        protected override void Start()
+        {
+            base.Start();
+            SkillSetUp();
+        }
+
+        void SkillSetUp()
+        {
+            IKaomojiSetUp kaomojiSetUp = GetComponentInChildren<IKaomojiSetUp>();
+            if (kaomojiSetUp.TryGetSkill(out IWallReflection wallReflection, out int level))
+            {
+                reflectionPower = wallReflection.GetReflectionPower(level);
+            }
+        }
+        
         protected override void OnCollisionEnter2D(Collision2D col)
         {
             // 敵と衝突した
@@ -28,10 +45,10 @@ namespace Player
                     Debug.Log($"<color=blue>Player</color>が<color=red>Enemy</color>にダメージを与えました");
                 }
             }
-            // else if (col.collider.CompareTag("Wall"))
-            // {
-            //     ApplaySkillTagEffects();     // 反射に関連するスキルタグの効果を適用
-            // }
+            else if (col.collider.CompareTag("Wall"))
+            {
+                WallReflection(5, reflectionPower);        // 壁に衝突した場合の反射処理
+            }
         }
 
         protected override bool CanApplyDamage(Rigidbody2D otherRb)

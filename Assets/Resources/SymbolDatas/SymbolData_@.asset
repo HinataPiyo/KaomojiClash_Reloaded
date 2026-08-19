@@ -15,3 +15,5 @@ MonoBehaviour:
   symbolType: 0
   symbolName: "\u30A2\u30C3\u30C8\u30DE\u30FC\u30AF"
   symbol: 64
+  skillData:
+  - {fileID: 11400000, guid: 7c38b2708aaabc544b1aa29f114ac221, type: 2}

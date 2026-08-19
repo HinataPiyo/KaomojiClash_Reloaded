@@ -30,7 +30,7 @@ namespace Player
             if (playerInstance == null)
             {
                 playerInstance = Instantiate(playerPrefab, transform.position, Quaternion.identity);
-                playerInstance.GetComponentInChildren<KaomojiSetUp>().SetUp(playerKaomojiData);
+                playerInstance.GetComponentInChildren<IKaomojiSetUp>().SetUp(playerKaomojiData);
             }
             else
             {

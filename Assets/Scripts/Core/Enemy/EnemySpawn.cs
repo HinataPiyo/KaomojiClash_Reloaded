@@ -41,7 +41,7 @@ namespace Enemy
             Vector2 spawnPosition = wall.GetRandomPositionWithinWall();
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
             KaomojiData kaomojiData = CreateEnemyKaomojiData();
-            enemy.GetComponentInChildren<KaomojiSetUp>().SetUp(kaomojiData);
+            enemy.GetComponentInChildren<IKaomojiSetUp>().SetUp(kaomojiData);
             spawnedEnemies.Add(enemy);
         }
 

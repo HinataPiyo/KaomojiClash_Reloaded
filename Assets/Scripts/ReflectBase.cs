@@ -1,14 +1,22 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using Wall;
 
 public abstract class ReflectBase : MonoBehaviour
 {
     protected Rigidbody2D rb;
+    protected IWall wall;
     const float REFRECT_SPEED_BORDER = 1.5f;        // 反射可能な速度の閾値
     [SerializeField] protected float speedThreshold = 0.92f;        // ダメージを与えるための速度の閾値（相手より自分のほうが速い場合のみダメージを与える）
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    protected virtual void Start()
+    {
+        wall = ApiProvider.Get<IWall>();
     }
 
     protected abstract void OnCollisionEnter2D(Collision2D col);
@@ -38,4 +46,14 @@ public abstract class ReflectBase : MonoBehaviour
     }
 
     protected abstract bool CanApplyDamage(Rigidbody2D otherRb);
+
+    /// <summary>
+    /// 壁に衝突した場合の反射処理
+    /// 速度に関係なく壁の中心に向かって反射する
+    /// </summary>
+    protected void WallReflection(float userSpeed, float reflectionPower)
+    {
+        // 壁の中心に向かって反射する
+        rb.AddForce((wall.GetWallCenter() - (Vector2)transform.position).normalized * userSpeed * reflectionPower, ForceMode2D.Impulse);
+    }
 }
