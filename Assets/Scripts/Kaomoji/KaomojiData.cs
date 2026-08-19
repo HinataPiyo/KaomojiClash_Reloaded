@@ -27,4 +27,28 @@ public class KaomojiData : ScriptableObject
             _ => throw new System.ArgumentException($"Invalid SymbolType: {type}"),
         };
     }
+
+    public void SetSymbolDataByType(SymbolType type, SymbolData data)
+    {
+        switch (type)
+        {
+            case SymbolType.Mouth:
+                symbol_Mouth = data;
+                break;
+            case SymbolType.LeftEye:
+                symbol_LeftEye = data;
+                break;
+            case SymbolType.RightEye:
+                symbol_RightEye = data;
+                break;
+            case SymbolType.LeftHand:
+                symbol_LeftHand = data;
+                break;
+            case SymbolType.RightHand:
+                symbol_RightHand = data;
+                break;
+            default:
+                throw new System.ArgumentException($"Invalid SymbolType: {type}");
+        }
+    }
 }

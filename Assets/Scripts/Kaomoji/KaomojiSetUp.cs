@@ -3,21 +3,14 @@ using UnityEngine;
 
 public class KaomojiSetUp : MonoBehaviour
 {
-    KaomojiData kaomojiData;
     [SerializeField] TextMeshPro kaomojiBody;
-    [SerializeField] KaomojiData test_data;
     static readonly char default_FaceLineLeft = '(';
     static readonly char default_FaceLineRight = ')';
-
-    void Start()
-    {
-        kaomojiData = test_data;
-        SetUp(kaomojiData);
-    }
 
     public void SetUp(KaomojiData data)
     {
         string kaomoji = GetKaomojiCoupling(data);
+        Debug.Log($"Setting up Kaomoji: {kaomoji}");
         kaomojiBody.text = kaomoji;
     }
 

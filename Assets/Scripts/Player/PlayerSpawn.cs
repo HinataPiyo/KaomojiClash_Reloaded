@@ -14,6 +14,7 @@ namespace Player
     public class PlayerSpawn : MonoBehaviour, IPlayerSpawn
     {
         [SerializeField] GameObject playerPrefab;
+        [SerializeField] KaomojiData playerKaomojiData;
 
         GameObject playerInstance;
 
@@ -29,6 +30,7 @@ namespace Player
             if (playerInstance == null)
             {
                 playerInstance = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+                playerInstance.GetComponentInChildren<KaomojiSetUp>().SetUp(playerKaomojiData);
             }
             else
             {

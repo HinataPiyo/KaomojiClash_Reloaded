@@ -34,4 +34,16 @@ public static class SymbolDataCollection
         }
         await Task.Yield();
     }
+
+    public static SymbolData GetRandomSymbolData(SymbolType type)
+    {
+        if (!collections.ContainsKey(type) || collections[type].Count == 0)
+        {
+            Debug.LogWarning($"No SymbolData found for SymbolType: {type}");
+            return null;
+        }
+        var list = collections[type];
+        int randomIndex = Random.Range(0, list.Count);
+        return list[randomIndex];
+    }
 }
