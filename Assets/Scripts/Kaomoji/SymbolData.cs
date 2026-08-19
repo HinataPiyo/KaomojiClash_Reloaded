@@ -1,15 +1,37 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
-public enum SymbolTyp { Mouth, LeftEye, RightEye, LeftHand, RightHand, MAX }
+public enum SymbolType { Mouth, LeftEye, RightEye, LeftHand, RightHand, MAX }
 
 [CreateAssetMenu(fileName = "SymbolData", menuName = "KaomojiClash_Reloaded/SymbolData")]
 public class SymbolData : ScriptableObject
 {
-    [SerializeField] SymbolTyp symbolType;
+    [SerializeField] SymbolType symbolType;
     [SerializeField] string symbolName;
     [SerializeField] char symbol;
 
-    public SymbolTyp SymbolType => symbolType;
+    public SymbolType SymbolType => symbolType;
     public string SymbolName => symbolName;
     public char Symbol => symbol;
+}
+
+public static class SymbolDataCollection
+{
+    public static Dictionary<SymbolType, List<SymbolData>> collections = new Dictionary<SymbolType, List<SymbolData>>();
+    public static readonly string path = "Assets/Resources/SymbolDatas";
+    public async static Task SymbolDataLoadAsync()
+    {
+        collections.Clear();
+        SymbolData[] symbolDatas = Resources.LoadAll<SymbolData>("SymbolDatas");
+        foreach (var data in symbolDatas)
+        {
+            if (!collections.ContainsKey(data.SymbolType))
+            {
+                collections[data.SymbolType] = new List<SymbolData>();
+            }
+            collections[data.SymbolType].Add(data);
+        }
+        await Task.Yield();
+    }
 }

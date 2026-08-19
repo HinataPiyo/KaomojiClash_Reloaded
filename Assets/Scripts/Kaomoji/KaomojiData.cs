@@ -12,19 +12,19 @@ public class KaomojiData : ScriptableObject
     /// <summary>
     /// 指定されたSymbolTypに対応するSymbolDataを返す
     /// </summary>
-    /// <param name="type">SymbolTyp</param>
+    /// <param name="type">SymbolType</param>
     /// <returns>対応するSymbolData</returns>
-    /// <exception cref="System.ArgumentException">無効なSymbolTypが指定された場合にスローされる</exception>
-    public SymbolData GetSymbolDataByType(SymbolTyp type)
+    /// <exception cref="System.ArgumentException">無効なSymbolTypeが指定された場合にスローされる</exception>
+    public SymbolData GetSymbolDataByType(SymbolType type)
     {
         return type switch
         {
-            SymbolTyp.Mouth => symbol_Mouth,
-            SymbolTyp.LeftEye => symbol_LeftEye,
-            SymbolTyp.RightEye => symbol_RightEye,
-            SymbolTyp.LeftHand => symbol_LeftHand,
-            SymbolTyp.RightHand => symbol_RightHand,
-            _ => throw new System.ArgumentException($"Invalid SymbolTyp: {type}"),
+            SymbolType.Mouth => symbol_Mouth,
+            SymbolType.LeftEye => symbol_LeftEye,
+            SymbolType.RightEye => symbol_RightEye,
+            SymbolType.LeftHand => symbol_LeftHand,
+            SymbolType.RightHand => symbol_RightHand,
+            _ => throw new System.ArgumentException($"Invalid SymbolType: {type}"),
         };
     }
 }

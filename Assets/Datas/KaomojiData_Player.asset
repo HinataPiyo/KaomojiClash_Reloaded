@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3f01f722ab9d17418cae841cc160d3f, type: 3}
   m_Name: KaomojiData_Player
   m_EditorClassIdentifier: Assembly-CSharp::KaomojiData
-  symbol_Mouth: {fileID: 11400000, guid: 19f63e08bbed7954da372fa2b96c09ef, type: 2}
+  symbol_Mouth: {fileID: 11400000, guid: 13b9a29cd5ca149428fcc0a204dac858, type: 2}
   symbol_LeftEye: {fileID: 0}
   symbol_RightEye: {fileID: 0}
   symbol_LeftHand: {fileID: 0}

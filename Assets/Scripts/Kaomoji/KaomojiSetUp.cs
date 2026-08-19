@@ -28,11 +28,11 @@ public class KaomojiSetUp : MonoBehaviour
     {
         if (data == null) return string.Empty;
 
-        SymbolData leftHand = data.GetSymbolDataByType(SymbolTyp.LeftHand);
-        SymbolData leftEye = data.GetSymbolDataByType(SymbolTyp.LeftEye);
-        SymbolData mouth = data.GetSymbolDataByType(SymbolTyp.Mouth);
-        SymbolData rightEye = data.GetSymbolDataByType(SymbolTyp.RightEye);
-        SymbolData rightHand = data.GetSymbolDataByType(SymbolTyp.RightHand);
+        SymbolData leftHand = data.GetSymbolDataByType(SymbolType.LeftHand);
+        SymbolData leftEye = data.GetSymbolDataByType(SymbolType.LeftEye);
+        SymbolData mouth = data.GetSymbolDataByType(SymbolType.Mouth);
+        SymbolData rightEye = data.GetSymbolDataByType(SymbolType.RightEye);
+        SymbolData rightHand = data.GetSymbolDataByType(SymbolType.RightHand);
 
         int length = 0;
         if (leftHand != null) length++;
