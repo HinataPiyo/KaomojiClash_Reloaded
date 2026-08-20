@@ -2,6 +2,7 @@ namespace Wave
 {
     using System.Collections;
     using Enemy;
+    using Player;
     using UnityEngine;
 
     public interface IWave
@@ -25,6 +26,8 @@ namespace Wave
         [SerializeField] WaveConfig waveConfig;
 
         IEnemySpawn enemySpawn;
+        IPlayerSpawn playerSpawn;
+        IStage stage;
 
         BattleState battleState = BattleState.WaitingForNextWave;
 
@@ -34,6 +37,7 @@ namespace Wave
         WaitForSeconds wait_TimeAfterWaveCompleted;
         WaitForSeconds wait_TimeAfterWaveFailed;
         WaitUntil wait_UntilAllEnemiesDestructed;
+        WaitUntil wait_MovePlayerToEnemy;
 
         public int ReleaseStep => releaseStep;
         public void ChangeBattleState(BattleState newState) => battleState = newState;
@@ -66,7 +70,11 @@ namespace Wave
         void Start()
         {
             enemySpawn = ApiProvider.Get<IEnemySpawn>();
+            playerSpawn = ApiProvider.Get<IPlayerSpawn>();
+            stage = ApiProvider.Get<IStage>();
+
             wait_UntilAllEnemiesDestructed = new WaitUntil(() => enemySpawn.IsTotalDestructed());
+            wait_MovePlayerToEnemy = new WaitUntil(() => !playerSpawn.IsMoveToEnemy);
             StartCoroutine(WaveLooping());
         }
 
@@ -75,24 +83,36 @@ namespace Wave
         /// </summary>
         IEnumerator WaveLooping()
         {
+            yield return null;
+
             while (true)
             {
                 switch (battleState)
                 {
                     case BattleState.WaitingForNextWave:
-                        // 次のWaveを待機
-                        yield return wait_TimeBetweenWaves;
+                        // yield return wait_TimeBetweenWaves;     // 次のWaveを待機
                         waveCount++;
+
+                        Vector2 spawnPosition = stage.EncountPosition(waveCount);
+                        enemySpawn.OnlySpawnEnemy(spawnPosition);       // 最初は一体生成する
+
+                        // プレイヤーが移動し敵とエンカウントしたらその敵を中心にWallを生成する
+                        playerSpawn.MovementPlayerToEnemy(spawnPosition);
+                        
+                        yield return wait_MovePlayerToEnemy;        // プレイヤーが敵の位置に移動するのを待つ
+
+                        // Wallを生成
+                        stage.CreateWall(spawnPosition);
+
+                        // プレイヤーが敵にエンカウントしたらStateを変える
                         ChangeBattleState(BattleState.WaveInProgress);
                         break;
                     case BattleState.WaveInProgress:
-                        // 敵を生成
+                        // 敵をランダムな位置に複数体生成する
                         int spawnCount = EnemySpawnCount();
-                        for (int i = 0; i < spawnCount; i++)
-                        {
-                            enemySpawn.SpawnEnemy();
-                        }
+                        enemySpawn.OtherSpawnEnemy(spawnCount);
 
+                        // ↓全ての敵を倒したら次のwaveへ移行する
                         yield return wait_UntilAllEnemiesDestructed;
                         break;
                     case BattleState.WaveCompleted:

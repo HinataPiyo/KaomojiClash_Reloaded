@@ -22,11 +22,6 @@ namespace Wall
             return (Vector2)transform.position + new Vector2(randomX, randomY);
         }
 
-        void Awake()
-        {
-            ApiProvider.Register<IWall>(this);
-        }
-
         void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

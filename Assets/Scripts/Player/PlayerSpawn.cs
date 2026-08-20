@@ -7,8 +7,10 @@ namespace Player
     public interface IPlayerSpawn
     {
         void SpawnPlayer();
+        void MovementPlayerToEnemy(Vector2 enemyPosition);
         GameObject PlayerInstance { get; }
         bool IsPlayerAlive { get; }
+        bool IsMoveToEnemy { get; }
     }
 
     public class PlayerSpawn : MonoBehaviour, IPlayerSpawn
@@ -17,6 +19,11 @@ namespace Player
         [SerializeField] KaomojiData playerKaomojiData;
 
         GameObject playerInstance;
+        ICamera cam;
+
+        static readonly float encountDistance = 2f; // プレイヤーと敵のエンカウント距離
+        Vector2 nextWaveEnemyPosition;
+        public bool IsMoveToEnemy { get; private set; } = false;
 
         // PlayerObject自体を返す
         public GameObject PlayerInstance => playerInstance;
@@ -24,19 +31,6 @@ namespace Player
         // PlayerObjectが存在するかどうかを返す
         public bool IsPlayerAlive => playerInstance != null;
 
-        // PlayerObjectを生成する
-        public void SpawnPlayer()
-        {
-            if (playerInstance == null)
-            {
-                playerInstance = Instantiate(playerPrefab, transform.position, Quaternion.identity);
-                playerInstance.GetComponentInChildren<IKaomojiSetUp>().SetUp(playerKaomojiData);
-            }
-            else
-            {
-                Debug.Log("既にプレイヤーが存在します。");
-            }
-        }
 
         void Awake()
         {
@@ -46,8 +40,47 @@ namespace Player
 
         void Start()
         {
+            cam = ApiProvider.Get<ICamera>();
             // ゲーム開始時にプレイヤーを生成
             SpawnPlayer();
+        }
+
+        void Update()
+        {
+            // プレイヤーが敵の位置に移動する処理
+            if(IsMoveToEnemy)
+            {
+                playerInstance.transform.position = Vector2.MoveTowards(playerInstance.transform.position, nextWaveEnemyPosition, Time.deltaTime * 5f);
+                if (Vector2.Distance(playerInstance.transform.position, nextWaveEnemyPosition) <= encountDistance)
+                {
+                    IsMoveToEnemy = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// プレイヤーを敵の位置まで移動させる
+        /// </summary>
+        /// <param name="enemyPosition">敵の位置</param>
+        public void MovementPlayerToEnemy(Vector2 enemyPosition)
+        {
+            nextWaveEnemyPosition = enemyPosition;
+            IsMoveToEnemy = true;
+        }
+
+        // PlayerObjectを生成する
+        public void SpawnPlayer()
+        {
+            if (playerInstance == null)
+            {
+                playerInstance = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+                playerInstance.GetComponentInChildren<IKaomojiSetUp>().SetUp(playerKaomojiData);
+                cam.SetCameraTarget(playerInstance.transform);
+            }
+            else
+            {
+                Debug.Log("既にプレイヤーが存在します。");
+            }
         }
     }
 }

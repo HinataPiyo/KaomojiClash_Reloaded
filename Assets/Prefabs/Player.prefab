@@ -129,8 +129,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.7, y: 0.35}
+  m_Offset: {x: 0, y: -0.02}
+  m_Size: {x: 0.70000005, y: 0.3}
   m_Direction: 1
 --- !u!114 &6833340970675205331
 MonoBehaviour:
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd9460c3335090488bc1741810268fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.Reflect
-  speedThreshold: 0.92
+  speedThreshold: 1
 --- !u!1001 &1734654213857815156
 PrefabInstance:
   m_ObjectHideFlags: 0
