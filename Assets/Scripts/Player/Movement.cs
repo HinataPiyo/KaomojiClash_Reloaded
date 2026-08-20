@@ -2,11 +2,14 @@ namespace Player
 {
     using UnityEngine;
     using UnityEngine.InputSystem;
+    using Wave;
 
     public class Movement : MonoBehaviour
     {
         [SerializeField] float default_Speed = 5f;
         [SerializeField] float max_DraggingDistance = 3f;
+
+        IWave wave;
 
         Rigidbody2D rb;
         InputAction press;
@@ -22,10 +25,18 @@ namespace Player
             rb = GetComponent<Rigidbody2D>();
             press = InputSystem.actions["Press"];
             point = InputSystem.actions["Point"];
+            wave = ApiProvider.Get<IWave>();
+        }
+
+        void Start()
+        {
+            wave = ApiProvider.Get<IWave>();
         }
 
         void Update()
         {
+            if(wave.IsStopCharacter) return;
+
             // press.IsInProgress() はボタンが押されている間 true になる
             bool isPressedNow = press.IsInProgress();
 

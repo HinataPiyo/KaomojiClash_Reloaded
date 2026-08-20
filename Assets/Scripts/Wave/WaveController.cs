@@ -11,6 +11,7 @@ namespace Wave
         int ReleaseStep { get; }
 
         void ChangeBattleState(BattleState newState);
+        public bool IsStopCharacter { get; }
     }
 
     public enum BattleState
@@ -33,12 +34,13 @@ namespace Wave
 
         int waveCount = 0;
         int releaseStep = 1;
-        WaitForSeconds wait_TimeBetweenWaves;
+        WaitForSeconds wait_EncountToStartBattle;
         WaitForSeconds wait_TimeAfterWaveCompleted;
         WaitForSeconds wait_TimeAfterWaveFailed;
         WaitUntil wait_UntilAllEnemiesDestructed;
         WaitUntil wait_MovePlayerToEnemy;
 
+        public bool IsStopCharacter { get; private set; } = true;
         public int ReleaseStep => releaseStep;
         public void ChangeBattleState(BattleState newState) => battleState = newState;
 
@@ -62,7 +64,7 @@ namespace Wave
         void Awake()
         {
             ApiProvider.Register<IWave>(this);
-            wait_TimeBetweenWaves = new WaitForSeconds(waveConfig.TimeBetweenWaves);
+            wait_EncountToStartBattle = new WaitForSeconds(waveConfig.EncountToStartBattle);
             wait_TimeAfterWaveCompleted = new WaitForSeconds(waveConfig.TimeAfterWaveCompleted);
             wait_TimeAfterWaveFailed = new WaitForSeconds(waveConfig.TimeAfterWaveFailed);
         }
@@ -90,7 +92,7 @@ namespace Wave
                 switch (battleState)
                 {
                     case BattleState.WaitingForNextWave:
-                        // yield return wait_TimeBetweenWaves;     // 次のWaveを待機
+                        IsStopCharacter = true;      // プレイヤーの入力を禁止
                         waveCount++;
 
                         Vector2 spawnPosition = stage.EncountPosition(waveCount);
@@ -112,8 +114,14 @@ namespace Wave
                         int spawnCount = EnemySpawnCount();
                         enemySpawn.OtherSpawnEnemy(spawnCount);
 
+                        yield return wait_EncountToStartBattle;     // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
+
+                        IsStopCharacter = false;     // プレイヤーの入力を許可
+
                         // ↓全ての敵を倒したら次のwaveへ移行する
                         yield return wait_UntilAllEnemiesDestructed;
+
+                        IsStopCharacter = true;     // プレイヤーの入力を禁止
                         break;
                     case BattleState.WaveCompleted:
                         // Wave完了後の処理

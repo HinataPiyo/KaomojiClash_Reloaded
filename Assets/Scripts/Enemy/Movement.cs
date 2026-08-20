@@ -1,7 +1,8 @@
 namespace Enemy
 {
     using UnityEngine;
-    
+    using Wave;
+
     public class Movement : MonoBehaviour
     {
         enum MovementState
@@ -25,6 +26,7 @@ namespace Enemy
         float elapsedTime;
         MovementState currentState = MovementState.Idle;
         Player.IPlayerSpawn playerSpawn;
+        IWave wave;
 
         void Awake()
         {
@@ -34,11 +36,12 @@ namespace Enemy
         void Start()
         {
             playerSpawn = ApiProvider.Get<Player.IPlayerSpawn>();
+            wave = ApiProvider.Get<IWave>();
         }
 
         void Update()
         {
-            if(!playerSpawn.IsPlayerAlive) return;
+            if(!playerSpawn.IsPlayerAlive || wave.IsStopCharacter) return;
 
             elapsedTime += Time.deltaTime;
 
