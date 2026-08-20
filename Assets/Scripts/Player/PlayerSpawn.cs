@@ -53,6 +53,7 @@ namespace Player
                 playerInstance.transform.position = Vector2.MoveTowards(playerInstance.transform.position, nextWaveEnemyPosition, Time.deltaTime * 5f);
                 if (Vector2.Distance(playerInstance.transform.position, nextWaveEnemyPosition) <= encountDistance)
                 {
+                    cam.SetCameraState(CameraState.Encount);
                     IsMoveToEnemy = false;
                 }
             }

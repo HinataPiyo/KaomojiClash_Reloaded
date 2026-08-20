@@ -1,21 +1,21 @@
-namespace Enemy
+namespace Player
 {
-    using Base;
     using UnityEngine;
-    
-    public class Sutamina : SutaminaBase
+    using Base;
+
+    public class Stamina : StaminaBase
     {
-        void Awake()
+        void Start()
         {
-            currentSutamina = 10;
+            currentStamina = 1000;
         }
 
         public override void TakeDamage(float amount)
         {
-            currentSutamina -= amount;
-            if (currentSutamina < 0)
+            currentStamina -= amount;
+            if (currentStamina < 0)
             {
-                currentSutamina = 0;
+                currentStamina = 0;
                 Die();
             }
         }

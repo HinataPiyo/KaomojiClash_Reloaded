@@ -2,6 +2,7 @@ namespace Enemy
 {
     using System.Collections.Generic;
     using UnityEngine;
+    using UnityEngine.Rendering;
     using Wave;
 
     public interface IEnemySpawn
@@ -19,6 +20,7 @@ namespace Enemy
 
         IWave wave;
         IStage stage;
+        ICamera cam;
 
         /// <summary>
         /// 敵が全滅しているかどうかを判定する
@@ -34,6 +36,13 @@ namespace Enemy
         {
             wave = ApiProvider.Get<IWave>();
             stage = ApiProvider.Get<IStage>();
+            cam = ApiProvider.Get<ICamera>();
+        }
+
+        void OnEnemyDeath(GameObject enemy)
+        {
+            spawnedEnemies.Remove(enemy);
+            cam.RemoveTargetFromGroup(enemy.transform);
         }
 
         /// <summary>
@@ -43,9 +52,12 @@ namespace Enemy
         public void OnlySpawnEnemy(Vector2 position)
         {
             GameObject enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
+            IEnemyStamina stamina = enemy.GetComponent<IEnemyStamina>();
             KaomojiData kaomojiData = CreateEnemyKaomojiData();
+            stamina.OnEnemyDeathEvent += () => OnEnemyDeath(enemy);
             enemy.GetComponentInChildren<IKaomojiSetUp>().SetUp(kaomojiData);
             spawnedEnemies.Add(enemy);
+            cam.AddTargetToGroup(enemy.transform);
         }
 
         /// <summary>

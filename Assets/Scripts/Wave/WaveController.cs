@@ -29,6 +29,7 @@ namespace Wave
         IEnemySpawn enemySpawn;
         IPlayerSpawn playerSpawn;
         IStage stage;
+        ICamera cam;
 
         BattleState battleState = BattleState.WaitingForNextWave;
 
@@ -74,6 +75,7 @@ namespace Wave
             enemySpawn = ApiProvider.Get<IEnemySpawn>();
             playerSpawn = ApiProvider.Get<IPlayerSpawn>();
             stage = ApiProvider.Get<IStage>();
+            cam = ApiProvider.Get<ICamera>();
 
             wait_UntilAllEnemiesDestructed = new WaitUntil(() => enemySpawn.IsTotalDestructed());
             wait_MovePlayerToEnemy = new WaitUntil(() => !playerSpawn.IsMoveToEnemy);
@@ -95,6 +97,7 @@ namespace Wave
                         IsStopCharacter = true;      // プレイヤーの入力を禁止
                         waveCount++;
 
+                        cam.SetCameraState(CameraState.PlayerMoving);
                         Vector2 spawnPosition = stage.EncountPosition(waveCount);
                         enemySpawn.OnlySpawnEnemy(spawnPosition);       // 最初は一体生成する
 
@@ -116,6 +119,7 @@ namespace Wave
 
                         yield return wait_EncountToStartBattle;     // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
 
+                        cam.SetCameraState(CameraState.Battle);
                         IsStopCharacter = false;     // プレイヤーの入力を許可
 
                         // ↓全ての敵を倒したら次のwaveへ移行する

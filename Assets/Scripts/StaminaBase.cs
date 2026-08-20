@@ -7,9 +7,9 @@ namespace Base
         void TakeDamage(float amount);
     }
 
-    public abstract class SutaminaBase : MonoBehaviour, IAttackable
+    public abstract class StaminaBase : MonoBehaviour, IAttackable
     {
-        protected float currentSutamina;
+        protected float currentStamina;
 
         /// <summary>
         /// スタミナを減らす
