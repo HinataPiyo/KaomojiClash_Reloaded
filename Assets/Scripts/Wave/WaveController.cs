@@ -12,6 +12,7 @@ namespace Wave
 
         void ChangeBattleState(BattleState newState);
         public bool IsStopCharacter { get; }
+        public int GetWaveCount();
     }
 
     public enum BattleState
@@ -27,7 +28,9 @@ namespace Wave
         [SerializeField] WaveConfig waveConfig;
 
         IEnemySpawn enemySpawn;
+        IEnemyExpFactory enemyExpFactory;
         IPlayerSpawn playerSpawn;
+        IExpHandler playerExpHandler;
         IStage stage;
         ICamera cam;
 
@@ -43,6 +46,7 @@ namespace Wave
 
         public bool IsStopCharacter { get; private set; } = true;
         public int ReleaseStep => releaseStep;
+        public int GetWaveCount() => waveCount;
         public void ChangeBattleState(BattleState newState) => battleState = newState;
 
         public int EnemySpawnCount()
@@ -74,8 +78,10 @@ namespace Wave
         {
             enemySpawn = ApiProvider.Get<IEnemySpawn>();
             playerSpawn = ApiProvider.Get<IPlayerSpawn>();
+            playerExpHandler = ApiProvider.Get<IExpHandler>();
             stage = ApiProvider.Get<IStage>();
             cam = ApiProvider.Get<ICamera>();
+            enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
 
             wait_UntilAllEnemiesDestructed = new WaitUntil(() => enemySpawn.IsTotalDestructed());
             wait_MovePlayerToEnemy = new WaitUntil(() => !playerSpawn.IsMoveToEnemy);
@@ -130,8 +136,10 @@ namespace Wave
                         ChangeBattleState(BattleState.WaveCompleted);                       
                         break;
                     case BattleState.WaveCompleted:
+                        playerExpHandler.AddPlayerEXP(enemyExpFactory.WaveEXPPool);    // Wave完了後に獲得したEXPをプレイヤーに加算
                         // Wave完了後の処理
                         yield return wait_TimeAfterWaveCompleted;
+                        enemyExpFactory.ResetWaveEXPPool();      // Wave完了後にEXPプールをリセット
                         ChangeBattleState(BattleState.WaitingForNextWave);
                         break;
                     case BattleState.WaveFailed:

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IKaomojiSetUp
 {
-    void SetUp(KaomojiData data);
+    void SetUp(KaomojiData data, int exp = 0);
     List<SkillWithLevel> SkillsWithLevels { get; }
     public bool TryGetSkill<T>(out T skill, out int level) where T : class;
 }
@@ -15,13 +15,16 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp
     static readonly char default_FaceLineLeft = '(';
     static readonly char default_FaceLineRight = ')';
 
+    int hasExp = 0;
+
     public List<SkillWithLevel> SkillsWithLevels { get; private set; } = new List<SkillWithLevel>();
 
-    public void SetUp(KaomojiData data)
+    public void SetUp(KaomojiData data, int exp = 0)
     {
         string kaomoji = GetKaomojiCoupling(data);
         SkillsWithLevels = SkillData.GetAllSkillsWithLevelsFromKaomojiData(data);
         kaomojiBody.text = kaomoji;
+        hasExp = exp;
     }
 
     /// <summary>
