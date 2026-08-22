@@ -56,4 +56,6 @@ public abstract class ReflectBase : MonoBehaviour
         IWall wall = stage.GetCurrentWall();
         rb.AddForce((wall.GetWallCenter() - (Vector2)transform.position).normalized * userSpeed * reflectionPower, ForceMode2D.Impulse);
     }
+
+    protected abstract float ApplyDamageCalculation();
 }

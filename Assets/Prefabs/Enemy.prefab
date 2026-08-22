@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32898ddcd74c767439d79329c50caa49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy.Movement
-  default_Speed: 5
+  default_Speed: 3
   idleTime: 1
   max_DraggingDistance: 3
   draggingIdleTime: 1
