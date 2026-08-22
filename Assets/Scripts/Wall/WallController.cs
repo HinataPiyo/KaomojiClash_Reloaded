@@ -8,6 +8,7 @@ namespace Wall
         Vector2 GetWallCenter();
         Vector2 GetWallRange();
         Vector2 GetRandomPositionWithinWall();
+        void DestroyWall();
     }
 
     public class WallController : MonoBehaviour, IWall
@@ -21,6 +22,8 @@ namespace Wall
             float randomY = Random.Range(-wallRange.y / 2, wallRange.y / 2);
             return (Vector2)transform.position + new Vector2(randomX, randomY);
         }
+
+        public void DestroyWall() => Destroy(gameObject);
 
         void OnDrawGizmos()
         {

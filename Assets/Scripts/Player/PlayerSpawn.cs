@@ -50,7 +50,7 @@ namespace Player
             // プレイヤーが敵の位置に移動する処理
             if(IsMoveToEnemy)
             {
-                playerInstance.transform.position = Vector2.MoveTowards(playerInstance.transform.position, nextWaveEnemyPosition, Time.deltaTime * 5f);
+                playerInstance.transform.position = Vector2.MoveTowards(playerInstance.transform.position, nextWaveEnemyPosition, Time.deltaTime * 15f);
                 if (Vector2.Distance(playerInstance.transform.position, nextWaveEnemyPosition) <= encountDistance)
                 {
                     cam.SetCameraState(CameraState.Encount);

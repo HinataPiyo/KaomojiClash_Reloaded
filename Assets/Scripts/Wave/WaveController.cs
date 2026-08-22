@@ -120,12 +120,14 @@ namespace Wave
                         yield return wait_EncountToStartBattle;     // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
 
                         cam.SetCameraState(CameraState.Battle);
-                        IsStopCharacter = false;     // プレイヤーの入力を許可
+                        IsStopCharacter = false;                    // プレイヤーの入力を許可
 
                         // ↓全ての敵を倒したら次のwaveへ移行する
                         yield return wait_UntilAllEnemiesDestructed;
-
                         IsStopCharacter = true;     // プレイヤーの入力を禁止
+
+                        stage.GetCurrentWall().DestroyWall();      // Wallを破壊する
+                        ChangeBattleState(BattleState.WaveCompleted);                       
                         break;
                     case BattleState.WaveCompleted:
                         // Wave完了後の処理

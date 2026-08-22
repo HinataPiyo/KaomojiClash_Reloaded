@@ -10,6 +10,7 @@ namespace Player
         [SerializeField] float max_DraggingDistance = 3f;
 
         IWave wave;
+        IMoveDirectionArrow moveDirectionArrow;
 
         Rigidbody2D rb;
         InputAction press;
@@ -23,14 +24,15 @@ namespace Player
         void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            moveDirectionArrow = GetComponentInChildren<IMoveDirectionArrow>();
             press = InputSystem.actions["Press"];
             point = InputSystem.actions["Point"];
-            wave = ApiProvider.Get<IWave>();
         }
 
         void Start()
         {
             wave = ApiProvider.Get<IWave>();
+            moveDirectionArrow.SetVisible(false);
         }
 
         void Update()
@@ -46,11 +48,13 @@ namespace Player
                 isPressed = true;
                 startPosition = point.ReadValue<Vector2>();
                 isDragging = true;
+                moveDirectionArrow.SetVisible(true);
             }
             else if (!isPressedNow && isPressed)        // 離した瞬間
             {
                 isPressed = false;
                 isDragging = false;
+                moveDirectionArrow.SetVisible(false);
                 Impact();
             }
 
@@ -58,6 +62,17 @@ namespace Player
             if(isDragging)
             {
                 currentPosition = point.ReadValue<Vector2>();
+
+                // スクリーン（ピクセル）座標からワールド座標に変換して計算
+                Vector2 startWorldPos = Camera.main.ScreenToWorldPoint(startPosition);
+                Vector2 currentWorldPos = Camera.main.ScreenToWorldPoint(currentPosition);
+
+                // 引っ張った方向と逆（飛んでいく方向）を矢印の向きとする
+                Vector2 dragDirection = startWorldPos - currentWorldPos;
+                float distance = dragDirection.magnitude;
+
+                moveDirectionArrow.SetArrowDirection(dragDirection);
+                moveDirectionArrow.UpdateScale(distance);
             }
         }
 

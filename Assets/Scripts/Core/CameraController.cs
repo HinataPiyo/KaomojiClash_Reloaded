@@ -1,11 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 
 public interface ICamera
 {
-    void AddTargetToGroup(Transform target, float weight = 0.95f, float radius = 0f);
+    void AddTargetToGroup(Transform target, float weight = 0.25f, float radius = 0.5f);
     void RemoveTargetFromGroup(Transform target);
     void SetCameraTarget(Transform target);
     void SetCameraState(CameraState state);
@@ -16,28 +15,36 @@ public enum CameraState
 
 public class CameraController : MonoBehaviour, ICamera
 {
-    CinemachineCamera cam;
+    [SerializeField] CinemachineCamera cam_TargetGroup;
+    [SerializeField] CinemachineCamera cam_PlayerMoving;
     [SerializeField] CinemachineTargetGroup targetGroup;
     static readonly float PlayerMovingOrthoSize = 7f;
     static readonly float EncountOrthoSize = 4f;
     static readonly float BattleOrthoSize = 5f;
 
+    const int ActivePriority = 10;
+    const int InactivePriority = 0;
+
+    Coroutine smoothCoroutine;
+
+    enum CameraType
+    { TargetGroup, PlayerMoving }
+
     void Awake()
     {
-        cam = GetComponent<CinemachineCamera>();
         ApiProvider.Register<ICamera>(this);
     }
 
     public void SetCameraTarget(Transform target)
     {
-        cam.Target.TrackingTarget = target;
+        cam_PlayerMoving.Target.TrackingTarget = target;
         AddTargetToGroup(target, 1f, 1f);
     }
 
     /// <summary>
     /// カメラのTargetGroupにターゲットを追加する
     /// </summary>
-    public void AddTargetToGroup(Transform target, float weight = 0.95f, float radius = 0.5f)
+    public void AddTargetToGroup(Transform target, float weight = 0.25f, float radius = 0.5f)
     {
         targetGroup.AddMember(target, weight, radius);
     }
@@ -49,18 +56,29 @@ public class CameraController : MonoBehaviour, ICamera
 
     public void SetCameraState(CameraState state)
     {
+        ResetSmoothCoroutine();
+
         switch (state)
         {
             case CameraState.PlayerMoving:
-                StartCoroutine(SmoothOrthographicSize(PlayerMovingOrthoSize, 0.2f));
+                smoothCoroutine = StartCoroutine(SmoothOrthographicSize(PlayerMovingOrthoSize, 0.2f, CameraType.PlayerMoving));
                 break;
             case CameraState.Encount:
-                StartCoroutine(SmoothOrthographicSize(EncountOrthoSize, 0.2f));
+                smoothCoroutine = StartCoroutine(SmoothOrthographicSize(EncountOrthoSize, 0.2f, CameraType.PlayerMoving));
                 break;
             case CameraState.Battle:
-                cam.Target.TrackingTarget = targetGroup.transform;
-                StartCoroutine(SmoothOrthographicSize(BattleOrthoSize, 0.2f));
+                cam_TargetGroup.Target.TrackingTarget = targetGroup.transform;
+                smoothCoroutine = StartCoroutine(SmoothOrthographicSize(BattleOrthoSize, 0.2f, CameraType.TargetGroup));
                 break;
+        }
+    }
+
+    private void ResetSmoothCoroutine()
+    {
+        if (smoothCoroutine != null)
+        {
+            StopCoroutine(smoothCoroutine);
+            smoothCoroutine = null;
         }
     }
 
@@ -69,8 +87,13 @@ public class CameraController : MonoBehaviour, ICamera
     /// </summary>
     /// <param name="targetSize">目標のOrthographicSize</param>
     /// <param name="duration">変更にかける時間</param>
-    IEnumerator SmoothOrthographicSize(float targetSize, float duration)
+    IEnumerator SmoothOrthographicSize(float targetSize, float duration, CameraType cameraType)
     {
+        CinemachineCamera cam = (cameraType == CameraType.TargetGroup) ? cam_TargetGroup : cam_PlayerMoving;
+
+        cam_TargetGroup.Priority = (cameraType == CameraType.TargetGroup) ? ActivePriority : InactivePriority;
+        cam_PlayerMoving.Priority = (cameraType == CameraType.PlayerMoving) ? ActivePriority : InactivePriority;
+
         float startSize = cam.Lens.OrthographicSize;
         float elapsedTime = 0f;
 
