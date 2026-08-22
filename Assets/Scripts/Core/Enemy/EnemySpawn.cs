@@ -42,6 +42,7 @@ namespace Enemy
         {
             spawnedEnemies.Remove(enemy);
             cam.RemoveTargetFromGroup(enemy.transform);
+            cam.SetCameraState(CameraState.EnemyDeath);
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ public interface ICamera
 }
 
 public enum CameraState
-{ PlayerMoving, Encount, Battle }
+{ PlayerMoving, Encount, Battle, Reflect, PlayerDeath, EnemyDeath }
 
 public partial class CameraController : MonoBehaviour, ICamera
 {
@@ -23,11 +23,17 @@ public partial class CameraController : MonoBehaviour, ICamera
     static readonly float PlayerMovingOrthoSize = 7f;
     static readonly float EncountOrthoSize = 4f;
     static readonly float BattleOrthoSize = 5f;
+    static readonly float ReflectOrthoSize = 4.5f;
+    static readonly float EnemyDeathOrthoSize = 3f;
+    static readonly float PlayerDeathOrthoSize = 2f;
 
     const int ActivePriority = 10;
     const int InactivePriority = 0;
 
     Coroutine smoothCoroutine;
+    CameraState currentState = CameraState.PlayerMoving;
+
+    bool isCameraSwitching = true;
 
     enum CameraType
     { TargetGroup, PlayerMoving }
@@ -62,8 +68,13 @@ public partial class CameraController : MonoBehaviour, ICamera
         targetGroup.RemoveMember(target);
     }
 
+
     public void SetCameraState(CameraState state)
     {
+        if (!isCameraSwitching) return;
+
+        currentState = state;
+
         ResetSmoothCoroutine();
 
         switch (state)
@@ -77,6 +88,16 @@ public partial class CameraController : MonoBehaviour, ICamera
             case CameraState.Battle:
                 cam_TargetGroup.Target.TrackingTarget = targetGroup.transform;
                 smoothCoroutine = StartCoroutine(SmoothOrthographicSize(BattleOrthoSize, 0.2f, CameraType.TargetGroup));
+                break;
+            case CameraState.Reflect:
+                smoothCoroutine = StartCoroutine(SmoothOrthographicSize(ReflectOrthoSize, 0.2f, CameraType.TargetGroup, CameraState.Battle));
+                break;
+            case CameraState.PlayerDeath:
+                smoothCoroutine = StartCoroutine(SmoothOrthographicSize(PlayerDeathOrthoSize, 3f, CameraType.TargetGroup, CameraState.Battle));
+                isCameraSwitching = false;
+                break;
+            case CameraState.EnemyDeath:
+                smoothCoroutine = StartCoroutine(SmoothOrthographicSize(EnemyDeathOrthoSize, 0.5f, CameraType.TargetGroup, CameraState.Battle));
                 break;
         }
     }
@@ -95,7 +116,7 @@ public partial class CameraController : MonoBehaviour, ICamera
     /// </summary>
     /// <param name="targetSize">目標のOrthographicSize</param>
     /// <param name="duration">変更にかける時間</param>
-    IEnumerator SmoothOrthographicSize(float targetSize, float duration, CameraType cameraType)
+    IEnumerator SmoothOrthographicSize(float targetSize, float duration, CameraType cameraType, CameraState? nextState = null)
     {
         CinemachineCamera cam = (cameraType == CameraType.TargetGroup) ? cam_TargetGroup : cam_PlayerMoving;
 
@@ -115,5 +136,10 @@ public partial class CameraController : MonoBehaviour, ICamera
         }
 
         cam.Lens.OrthographicSize = targetSize;
+
+        if (nextState.HasValue)
+        {
+            SetCameraState(nextState.Value);
+        }
     }
 }

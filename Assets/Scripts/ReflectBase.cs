@@ -43,6 +43,7 @@ public abstract class ReflectBase : MonoBehaviour
         Quaternion rot = Quaternion.Euler(0f, 0f, angle);
 
         hitStop.HitStopEffect();
+        cam.SetCameraState(CameraState.Reflect);
         cam.ShakeCamera(1f, 0.2f, 0.1f);
     }
 

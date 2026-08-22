@@ -4,10 +4,15 @@ namespace Player
 
     public class Stamina : StaminaBase
     {
+        ICamera cam;
+        IHitStop hitStop;
+
         protected override void Start()
         {
             base.Start();
-            currentStamina = 1000;
+            cam = ApiProvider.Get<ICamera>();
+            hitStop = ApiProvider.Get<IHitStop>();
+            currentStamina = 5;
         }
 
         public override void TakeDamage(float amount)
@@ -24,6 +29,8 @@ namespace Player
         public override void Die()
         {
             Destroy(gameObject);
+            cam.SetCameraState(CameraState.PlayerDeath);
+            hitStop.PlayerDeathHitStopEffect();
         }
     }
 }
