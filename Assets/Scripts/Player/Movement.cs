@@ -11,6 +11,7 @@ namespace Player
 
         IWave wave;
         IMoveDirectionArrow moveDirectionArrow;
+        UI.IPlayerHereArrow playerHereArrow;
 
         Rigidbody2D rb;
         InputAction press;
@@ -33,10 +34,12 @@ namespace Player
         {
             wave = ApiProvider.Get<IWave>();
             moveDirectionArrow.SetVisible(false);
+            playerHereArrow = ApiProvider.Get<UI.IPlayerHereArrow>();
         }
 
         void Update()
         {
+            playerHereArrow.UpdatePlayerHereArrowPosition(transform.position);
             if(wave.IsStopCharacter) return;
 
             // press.IsInProgress() はボタンが押されている間 true になる
