@@ -1,5 +1,6 @@
 namespace Player
 {
+    using UI;
     using UnityEngine;
 
     public interface ICombo
@@ -16,11 +17,13 @@ namespace Player
         static readonly float ComboDuration = 3f;           // コンボが途切れるまでの時間
         static readonly float ComboMaxDamageRate = 1.5f;    // コンボ中の最大攻撃力倍率
         static readonly float ComboMaxSpeedRate = 1.2f;     // コンボ中の最大速度倍率
-        static readonly int ComboMaxCount = 15;             // コンボの最大数
+        public static readonly int ComboMaxCount = 15;             // コンボの最大数
 
         float comboTimer = 0f;                              // コンボタイマー
         int comboCount = 0;                                 // コンボ数
         int beforeComboCount = 0;                           // 前回のコンボ数
+
+        IComboUI comboUI;
 
         public float ComboDamageRate => Mathf.Lerp(0.8f, ComboMaxDamageRate, (float)comboCount / ComboMaxCount);
         public float ComboSpeedRate => Mathf.Lerp(0.8f, ComboMaxSpeedRate, (float)comboCount / ComboMaxCount);
@@ -29,11 +32,17 @@ namespace Player
         {
             comboCount++;
             comboTimer = ComboDuration;
+            comboUI.SetCombo(comboCount, ComboSpeedRate, ComboDamageRate);
         }
 
         void Awake()
         {
             ApiProvider.Register<ICombo>(this);
+        }
+
+        void Start()
+        {
+            comboUI = ApiProvider.Get<IComboUI>();
         }
 
         void Update()
@@ -46,6 +55,7 @@ namespace Player
                 {
                     beforeComboCount = comboCount;
                     comboCount = 0;
+                    comboUI.SetCombo(comboCount, ComboSpeedRate, ComboDamageRate);
                 }
             }
 
