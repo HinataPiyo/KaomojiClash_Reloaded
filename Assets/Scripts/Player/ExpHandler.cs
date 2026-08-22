@@ -15,7 +15,7 @@ namespace Player
     {
         static readonly int DefaultLevelUpBorder = 100;
         public int HasPlayerEXP { get; private set; } = 0;
-        public int Level { get; private set; } = 1;
+        public int Level { get; private set; } = 1;     // プレイヤーのレベルは例外で1スタートとする
         public int GetLevelUpBorder() => DefaultLevelUpBorder * Level;
 
         IPlayerEXPUI playerEXPUI;
