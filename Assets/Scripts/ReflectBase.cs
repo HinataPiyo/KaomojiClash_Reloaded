@@ -6,6 +6,7 @@ public abstract class ReflectBase : MonoBehaviour
     protected Rigidbody2D rb;
     protected IStage stage;
     IHitStop hitStop;
+    ICamera cam;
     const float REFRECT_SPEED_BORDER = 1.5f;        // 反射可能な速度の閾値
     [SerializeField] protected float speedThreshold = 0.92f;        // ダメージを与えるための速度の閾値（相手より自分のほうが速い場合のみダメージを与える）
 
@@ -18,6 +19,7 @@ public abstract class ReflectBase : MonoBehaviour
     {
         stage = ApiProvider.Get<IStage>();
         hitStop = ApiProvider.Get<IHitStop>();
+        cam = ApiProvider.Get<ICamera>();
     }
 
     protected abstract void OnCollisionEnter2D(Collision2D col);
@@ -41,6 +43,7 @@ public abstract class ReflectBase : MonoBehaviour
         Quaternion rot = Quaternion.Euler(0f, 0f, angle);
 
         hitStop.HitStopEffect();
+        cam.ShakeCamera(1f, 0.2f, 0.1f);
     }
 
     protected bool CanReflection()

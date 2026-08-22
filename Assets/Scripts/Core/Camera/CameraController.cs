@@ -8,12 +8,14 @@ public interface ICamera
     void RemoveTargetFromGroup(Transform target);
     void SetCameraTarget(Transform target);
     void SetCameraState(CameraState state);
+
+    void ShakeCamera(float amplitude, float frequency, float duration);
 }
 
 public enum CameraState
 { PlayerMoving, Encount, Battle }
 
-public class CameraController : MonoBehaviour, ICamera
+public partial class CameraController : MonoBehaviour, ICamera
 {
     [SerializeField] CinemachineCamera cam_TargetGroup;
     [SerializeField] CinemachineCamera cam_PlayerMoving;
@@ -31,6 +33,12 @@ public class CameraController : MonoBehaviour, ICamera
     { TargetGroup, PlayerMoving }
 
     void Awake()
+    {
+        InitializeCamera();
+        InitializeShake();
+    }
+
+    void InitializeCamera()
     {
         ApiProvider.Register<ICamera>(this);
     }
