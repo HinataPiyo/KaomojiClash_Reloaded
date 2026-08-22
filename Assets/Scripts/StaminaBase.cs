@@ -1,6 +1,7 @@
 namespace Base
 {
     using UnityEngine;
+    using UI;
 
     public interface IAttackable
     {
@@ -10,6 +11,12 @@ namespace Base
     public abstract class StaminaBase : MonoBehaviour, IAttackable
     {
         protected float currentStamina;
+        protected IWorldUI worldUI;
+
+        protected virtual void Start()
+        {
+            worldUI = ApiProvider.Get<IWorldUI>();
+        }
 
         /// <summary>
         /// スタミナを減らす

@@ -1,18 +1,19 @@
 namespace Player
 {
-    using UnityEngine;
     using Base;
 
     public class Stamina : StaminaBase
     {
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             currentStamina = 1000;
         }
 
         public override void TakeDamage(float amount)
         {
             currentStamina -= amount;
+            worldUI.SetEnemyToPlayerDamageText(transform.position, amount);
             if (currentStamina < 0)
             {
                 currentStamina = 0;
