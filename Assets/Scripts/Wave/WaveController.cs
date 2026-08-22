@@ -2,6 +2,7 @@ namespace Wave
 {
     using System.Collections;
     using Enemy;
+    using Player;
     using UnityEngine;
 
     public interface IWave
@@ -10,6 +11,7 @@ namespace Wave
         int ReleaseStep { get; }
 
         void ChangeBattleState(BattleState newState);
+        public bool IsStopCharacter { get; }
     }
 
     public enum BattleState
@@ -25,16 +27,21 @@ namespace Wave
         [SerializeField] WaveConfig waveConfig;
 
         IEnemySpawn enemySpawn;
+        IPlayerSpawn playerSpawn;
+        IStage stage;
+        ICamera cam;
 
         BattleState battleState = BattleState.WaitingForNextWave;
 
         int waveCount = 0;
         int releaseStep = 1;
-        WaitForSeconds wait_TimeBetweenWaves;
+        WaitForSeconds wait_EncountToStartBattle;
         WaitForSeconds wait_TimeAfterWaveCompleted;
         WaitForSeconds wait_TimeAfterWaveFailed;
         WaitUntil wait_UntilAllEnemiesDestructed;
+        WaitUntil wait_MovePlayerToEnemy;
 
+        public bool IsStopCharacter { get; private set; } = true;
         public int ReleaseStep => releaseStep;
         public void ChangeBattleState(BattleState newState) => battleState = newState;
 
@@ -58,7 +65,7 @@ namespace Wave
         void Awake()
         {
             ApiProvider.Register<IWave>(this);
-            wait_TimeBetweenWaves = new WaitForSeconds(waveConfig.TimeBetweenWaves);
+            wait_EncountToStartBattle = new WaitForSeconds(waveConfig.EncountToStartBattle);
             wait_TimeAfterWaveCompleted = new WaitForSeconds(waveConfig.TimeAfterWaveCompleted);
             wait_TimeAfterWaveFailed = new WaitForSeconds(waveConfig.TimeAfterWaveFailed);
         }
@@ -66,7 +73,12 @@ namespace Wave
         void Start()
         {
             enemySpawn = ApiProvider.Get<IEnemySpawn>();
+            playerSpawn = ApiProvider.Get<IPlayerSpawn>();
+            stage = ApiProvider.Get<IStage>();
+            cam = ApiProvider.Get<ICamera>();
+
             wait_UntilAllEnemiesDestructed = new WaitUntil(() => enemySpawn.IsTotalDestructed());
+            wait_MovePlayerToEnemy = new WaitUntil(() => !playerSpawn.IsMoveToEnemy);
             StartCoroutine(WaveLooping());
         }
 
@@ -75,25 +87,47 @@ namespace Wave
         /// </summary>
         IEnumerator WaveLooping()
         {
+            yield return null;
+
             while (true)
             {
                 switch (battleState)
                 {
                     case BattleState.WaitingForNextWave:
-                        // 次のWaveを待機
-                        yield return wait_TimeBetweenWaves;
+                        IsStopCharacter = true;      // プレイヤーの入力を禁止
                         waveCount++;
+
+                        cam.SetCameraState(CameraState.PlayerMoving);
+                        Vector2 spawnPosition = stage.EncountPosition(waveCount);
+                        enemySpawn.OnlySpawnEnemy(spawnPosition);       // 最初は一体生成する
+
+                        // プレイヤーが移動し敵とエンカウントしたらその敵を中心にWallを生成する
+                        playerSpawn.MovementPlayerToEnemy(spawnPosition);
+                        
+                        yield return wait_MovePlayerToEnemy;        // プレイヤーが敵の位置に移動するのを待つ
+
+                        // Wallを生成
+                        stage.CreateWall(spawnPosition);
+
+                        // プレイヤーが敵にエンカウントしたらStateを変える
                         ChangeBattleState(BattleState.WaveInProgress);
                         break;
                     case BattleState.WaveInProgress:
-                        // 敵を生成
+                        // 敵をランダムな位置に複数体生成する
                         int spawnCount = EnemySpawnCount();
-                        for (int i = 0; i < spawnCount; i++)
-                        {
-                            enemySpawn.SpawnEnemy();
-                        }
+                        enemySpawn.OtherSpawnEnemy(spawnCount);
 
+                        yield return wait_EncountToStartBattle;     // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
+
+                        cam.SetCameraState(CameraState.Battle);
+                        IsStopCharacter = false;                    // プレイヤーの入力を許可
+
+                        // ↓全ての敵を倒したら次のwaveへ移行する
                         yield return wait_UntilAllEnemiesDestructed;
+                        IsStopCharacter = true;     // プレイヤーの入力を禁止
+
+                        stage.GetCurrentWall().DestroyWall();      // Wallを破壊する
+                        ChangeBattleState(BattleState.WaveCompleted);                       
                         break;
                     case BattleState.WaveCompleted:
                         // Wave完了後の処理

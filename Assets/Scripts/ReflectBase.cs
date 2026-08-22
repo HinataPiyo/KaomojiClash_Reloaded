@@ -1,14 +1,25 @@
 using UnityEngine;
+using Wall;
 
 public abstract class ReflectBase : MonoBehaviour
 {
     protected Rigidbody2D rb;
+    protected IStage stage;
+    IHitStop hitStop;
+    ICamera cam;
     const float REFRECT_SPEED_BORDER = 1.5f;        // 反射可能な速度の閾値
     [SerializeField] protected float speedThreshold = 0.92f;        // ダメージを与えるための速度の閾値（相手より自分のほうが速い場合のみダメージを与える）
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    protected virtual void Start()
+    {
+        stage = ApiProvider.Get<IStage>();
+        hitStop = ApiProvider.Get<IHitStop>();
+        cam = ApiProvider.Get<ICamera>();
     }
 
     protected abstract void OnCollisionEnter2D(Collision2D col);
@@ -30,6 +41,10 @@ public abstract class ReflectBase : MonoBehaviour
         Vector2 dir = reflected.normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         Quaternion rot = Quaternion.Euler(0f, 0f, angle);
+
+        hitStop.HitStopEffect();
+        cam.SetCameraState(CameraState.Reflect);
+        cam.ShakeCamera(1f, 0.2f, 0.1f);
     }
 
     protected bool CanReflection()
@@ -38,4 +53,17 @@ public abstract class ReflectBase : MonoBehaviour
     }
 
     protected abstract bool CanApplyDamage(Rigidbody2D otherRb);
+
+    /// <summary>
+    /// 壁に衝突した場合の反射処理
+    /// 速度に関係なく壁の中心に向かって反射する
+    /// </summary>
+    protected void WallReflection(float userSpeed, float reflectionPower)
+    {
+        // 壁の中心に向かって反射する
+        IWall wall = stage.GetCurrentWall();
+        rb.AddForce((wall.GetWallCenter() - (Vector2)transform.position).normalized * userSpeed * reflectionPower, ForceMode2D.Impulse);
+    }
+
+    protected abstract float ApplyDamageCalculation();
 }

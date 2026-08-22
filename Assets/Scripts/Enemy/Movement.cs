@@ -1,7 +1,8 @@
 namespace Enemy
 {
     using UnityEngine;
-    
+    using Wave;
+
     public class Movement : MonoBehaviour
     {
         enum MovementState
@@ -24,21 +25,26 @@ namespace Enemy
 
         float elapsedTime;
         MovementState currentState = MovementState.Idle;
+        IMoveDirectionArrow moveDirectionArrow;
         Player.IPlayerSpawn playerSpawn;
+        IWave wave;
 
         void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            moveDirectionArrow = GetComponentInChildren<IMoveDirectionArrow>();
         }
 
         void Start()
         {
             playerSpawn = ApiProvider.Get<Player.IPlayerSpawn>();
+            wave = ApiProvider.Get<IWave>();
+            moveDirectionArrow.SetVisible(false);
         }
 
         void Update()
         {
-            if(!playerSpawn.IsPlayerAlive) return;
+            if(!playerSpawn.IsPlayerAlive || wave.IsStopCharacter) return;
 
             elapsedTime += Time.deltaTime;
 
@@ -49,6 +55,7 @@ namespace Enemy
                     {
                         currentState = MovementState.Dragging;
                         elapsedTime = 0f;
+                        moveDirectionArrow.SetVisible(true);
                     }
                     break;
 
@@ -57,6 +64,8 @@ namespace Enemy
                     currentTargetPosition = playerSpawn.PlayerInstance.transform.position;      // プレイヤーの位置を取得
                     startPosition = transform.position;      // 敵の位置を取得
                     launchDirection = (currentTargetPosition - startPosition).normalized;       // 発射方向を計算
+                    moveDirectionArrow.SetArrowDirection(launchDirection);
+                    moveDirectionArrow.UpdateScale(Vector2.Distance(startPosition, currentTargetPosition));    // 矢印の長さを更新s
                     if (elapsedTime >= draggingIdleTime)
                     {
                         currentState = MovementState.BeforeLaunchIdle;
@@ -70,10 +79,12 @@ namespace Enemy
                     {
                         currentState = MovementState.Idle;
                         elapsedTime = 0f;
+                        moveDirectionArrow.SetVisible(false);
                         Launch();
                     }
                     break;
             }
+            
         }
 
         void Launch()

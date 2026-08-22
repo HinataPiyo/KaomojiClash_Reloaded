@@ -1,15 +1,22 @@
 namespace Base
 {
     using UnityEngine;
+    using UI;
 
     public interface IAttackable
     {
         void TakeDamage(float amount);
     }
 
-    public abstract class SutaminaBase : MonoBehaviour, IAttackable
+    public abstract class StaminaBase : MonoBehaviour, IAttackable
     {
-        protected float currentSutamina;
+        protected float currentStamina;
+        protected IWorldUI worldUI;
+
+        protected virtual void Start()
+        {
+            worldUI = ApiProvider.Get<IWorldUI>();
+        }
 
         /// <summary>
         /// スタミナを減らす

@@ -24,8 +24,7 @@ namespace Enemy
                 if (CanApplyDamage(otherRb))
                 {
                     IAttackable attackable = col.collider.GetComponent<IAttackable>();
-                    attackable?.TakeDamage(1f);
-                    Debug.Log($"<color=red>Enemy</color>が<color=blue>Player</color>にダメージを与えました");
+                    attackable?.TakeDamage(ApplyDamageCalculation());
                 }
             }
         }
@@ -36,5 +35,9 @@ namespace Enemy
             return otherRb != null && rb.linearVelocity.sqrMagnitude > otherRb.linearVelocity.sqrMagnitude * speedThreshold;
         }
         
+        protected override float ApplyDamageCalculation()
+        {
+            return 1f;
+        }
     }
 }

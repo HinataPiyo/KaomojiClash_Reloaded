@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Wave.WaveConfig
   minEnemySpawnCount: 2
   increaseSpawnCountPerWave: 1.5
-  timeBetweenWaves: 3
+  encountToStartBattle: 2
   timeAfterWaveCompleted: 2
   timeAfterWaveFailed: 2

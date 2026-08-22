@@ -5,6 +5,27 @@ namespace Player
 
     public class Reflect : ReflectBase
     {
+        float reflectionPower;
+        [SerializeField] float power = 2f;
+
+        ICombo combo;
+
+        protected override void Start()
+        {
+            base.Start();
+            combo = ApiProvider.Get<ICombo>();
+            SkillSetUp();
+        }
+
+        void SkillSetUp()
+        {
+            IKaomojiSetUp kaomojiSetUp = GetComponentInChildren<IKaomojiSetUp>();
+            if (kaomojiSetUp.TryGetSkill(out IWallReflection wallReflection, out int level))
+            {
+                reflectionPower = wallReflection.GetReflectionPower(level);
+            }
+        }
+        
         protected override void OnCollisionEnter2D(Collision2D col)
         {
             // 敵と衝突した
@@ -24,20 +45,27 @@ namespace Player
                 if (CanApplyDamage(otherRb))
                 {
                     IAttackable attackable = col.collider.GetComponent<IAttackable>();
-                    attackable?.TakeDamage(1f);
+                    attackable?.TakeDamage(ApplyDamageCalculation());
                     Debug.Log($"<color=blue>Player</color>が<color=red>Enemy</color>にダメージを与えました");
                 }
             }
-            // else if (col.collider.CompareTag("Wall"))
-            // {
-            //     ApplaySkillTagEffects();     // 反射に関連するスキルタグの効果を適用
-            // }
+            else if (col.collider.CompareTag("Wall"))
+            {
+                WallReflection(5, reflectionPower);        // 壁に衝突した場合の反射処理
+            }
         }
 
         protected override bool CanApplyDamage(Rigidbody2D otherRb)
         {
             // 相手より自分のほうが速い場合のみダメージを与える
             return otherRb != null && rb.linearVelocity.sqrMagnitude > otherRb.linearVelocity.sqrMagnitude * speedThreshold;
+        }
+
+        protected override float ApplyDamageCalculation()
+        {
+            combo.AddCombo();
+            float applyCombo = power * combo.ComboDamageRate;
+            return applyCombo;
         }
     }
 }

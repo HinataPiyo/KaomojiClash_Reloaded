@@ -8,6 +8,7 @@ namespace Wall
         Vector2 GetWallCenter();
         Vector2 GetWallRange();
         Vector2 GetRandomPositionWithinWall();
+        void DestroyWall();
     }
 
     public class WallController : MonoBehaviour, IWall
@@ -22,10 +23,7 @@ namespace Wall
             return (Vector2)transform.position + new Vector2(randomX, randomY);
         }
 
-        void Awake()
-        {
-            ApiProvider.Register<IWall>(this);
-        }
+        public void DestroyWall() => Destroy(gameObject);
 
         void OnDrawGizmos()
         {

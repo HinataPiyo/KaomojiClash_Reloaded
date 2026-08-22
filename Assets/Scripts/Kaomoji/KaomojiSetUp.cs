@@ -1,16 +1,26 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class KaomojiSetUp : MonoBehaviour
+public interface IKaomojiSetUp
+{
+    void SetUp(KaomojiData data);
+    List<SkillWithLevel> SkillsWithLevels { get; }
+    public bool TryGetSkill<T>(out T skill, out int level) where T : class;
+}
+
+public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp
 {
     [SerializeField] TextMeshPro kaomojiBody;
     static readonly char default_FaceLineLeft = '(';
     static readonly char default_FaceLineRight = ')';
 
+    public List<SkillWithLevel> SkillsWithLevels { get; private set; } = new List<SkillWithLevel>();
+
     public void SetUp(KaomojiData data)
     {
         string kaomoji = GetKaomojiCoupling(data);
-        Debug.Log($"Setting up Kaomoji: {kaomoji}");
+        SkillsWithLevels = SkillData.GetAllSkillsWithLevelsFromKaomojiData(data);
         kaomojiBody.text = kaomoji;
     }
 
@@ -50,5 +60,23 @@ public class KaomojiSetUp : MonoBehaviour
         if (rightHand != null) buffer[index++] = rightHand.Symbol;
 
         return new string(buffer);
+    }
+
+    /// <summary>
+    /// 指定された特定のスキルクラス型、またはインターフェース (T) を持つ最初のスキル情報を、安全かつキャスト不要な参照として取得します。
+    /// </summary>
+    public bool TryGetSkill<T>(out T skill, out int level) where T : class
+    {
+        var found = SkillsWithLevels.Find(s => s.Skill is T);
+        if (found != null)
+        {
+            skill = found.Skill as T;
+            level = found.Level;
+            return true;
+        }
+
+        skill = null;
+        level = 0;
+        return false;
     }
 }

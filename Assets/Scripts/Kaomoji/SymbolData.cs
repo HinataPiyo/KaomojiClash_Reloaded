@@ -10,10 +10,12 @@ public class SymbolData : ScriptableObject
     [SerializeField] SymbolType symbolType;
     [SerializeField] string symbolName;
     [SerializeField] char symbol;
+    [SerializeField] SkillData[] skillData;
 
     public SymbolType SymbolType => symbolType;
     public string SymbolName => symbolName;
     public char Symbol => symbol;
+    public SkillData[] SkillData => skillData;
 }
 
 public static class SymbolDataCollection

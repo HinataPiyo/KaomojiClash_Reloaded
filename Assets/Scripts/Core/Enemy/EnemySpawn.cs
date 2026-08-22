@@ -2,12 +2,12 @@ namespace Enemy
 {
     using System.Collections.Generic;
     using UnityEngine;
-    using Wall;
     using Wave;
 
     public interface IEnemySpawn
     {
-        void SpawnEnemy();
+        void OnlySpawnEnemy(Vector2 position);
+        void OtherSpawnEnemy(int enemyCount);
         bool IsTotalDestructed();
     }
 
@@ -17,8 +17,9 @@ namespace Enemy
 
         List<GameObject> spawnedEnemies = new List<GameObject>();
 
-        IWall wall;
         IWave wave;
+        IStage stage;
+        ICamera cam;
 
         /// <summary>
         /// 敵が全滅しているかどうかを判定する
@@ -32,17 +33,44 @@ namespace Enemy
 
         void Start()
         {
-            wall = ApiProvider.Get<IWall>();
             wave = ApiProvider.Get<IWave>();
+            stage = ApiProvider.Get<IStage>();
+            cam = ApiProvider.Get<ICamera>();
         }
 
-        public void SpawnEnemy()
+        void OnEnemyDeath(GameObject enemy)
         {
-            Vector2 spawnPosition = wall.GetRandomPositionWithinWall();
-            GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+            spawnedEnemies.Remove(enemy);
+            cam.RemoveTargetFromGroup(enemy.transform);
+            cam.SetCameraState(CameraState.EnemyDeath);
+        }
+
+        /// <summary>
+        /// 指定した位置に敵を生成する
+        /// </summary>
+        /// <param name="position">敵を生成する位置</param>
+        public void OnlySpawnEnemy(Vector2 position)
+        {
+            GameObject enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
+            IEnemyStamina stamina = enemy.GetComponent<IEnemyStamina>();
             KaomojiData kaomojiData = CreateEnemyKaomojiData();
-            enemy.GetComponentInChildren<KaomojiSetUp>().SetUp(kaomojiData);
+            stamina.OnEnemyDeathEvent += () => OnEnemyDeath(enemy);
+            enemy.GetComponentInChildren<IKaomojiSetUp>().SetUp(kaomojiData);
             spawnedEnemies.Add(enemy);
+            cam.AddTargetToGroup(enemy.transform);
+        }
+
+        /// <summary>
+        /// 敵をランダムな位置に生成する
+        /// </summary>
+        /// <param name="enemyCount">生成する敵の数</param>
+        public void OtherSpawnEnemy(int enemyCount)
+        {
+            for (int i = 0; i < enemyCount; i++)
+            {
+                Vector2 spawnPosition = stage.GetCurrentWall().GetRandomPositionWithinWall();
+                OnlySpawnEnemy(spawnPosition);
+            }
         }
 
         /// <summary>
@@ -53,6 +81,12 @@ namespace Enemy
         KaomojiData CreateEnemyKaomojiData()
         {
             KaomojiData data = ScriptableObject.CreateInstance<KaomojiData>();
+            if(wave == null)
+            {
+                Debug.LogError("Wave is not initialized.");
+                return data;
+            }
+
             for (int i = 0; i < wave.ReleaseStep; i++)
             {
                 SymbolType GetSymbolTypeByIndex(int index)
