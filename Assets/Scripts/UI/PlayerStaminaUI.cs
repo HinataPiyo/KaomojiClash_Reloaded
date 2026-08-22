@@ -80,7 +80,7 @@ namespace UI
                 targetStaminaRatio = newRatio;
             }
 
-            staminaText.text = $"{currentStamina}/{maxStamina}";
+            staminaText.text = $"{Mathf.FloorToInt(currentStamina)}/{Mathf.FloorToInt(maxStamina)}";
         }
     }
 }

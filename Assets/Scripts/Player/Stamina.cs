@@ -24,7 +24,7 @@ namespace Player
             currentStamina -= amount;
             worldUI.SetEnemyToPlayerDamageText(transform.position, amount);
             playerStaminaUI.UpdateStaminaUI(currentStamina, 5);
-            if (currentStamina < 0)
+            if (currentStamina <= 0)
             {
                 currentStamina = 0;
                 Die();
