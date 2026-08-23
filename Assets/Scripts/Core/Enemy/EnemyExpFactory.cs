@@ -12,7 +12,7 @@ namespace Enemy
 
     public class EnemyExpFactory : MonoBehaviour, IEnemyExpFactory
     {
-        static readonly int DefaultEXP = 10;
+        static readonly int DefaultEXP = 35;
 
         public int WaveEXPPool { get; private set; } = 0;
 

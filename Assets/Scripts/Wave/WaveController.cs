@@ -149,8 +149,10 @@ namespace Wave
                         break;
                     case BattleState.WaveCompleted:
                         playerExpHandler.AddPlayerEXP(enemyExpFactory.WaveEXPPool);    // Wave完了後に獲得したEXPをプレイヤーに加算
+                        yield return arenaObjectEdit.ArenaObjectSelectRoutine(playerExpHandler.LevelUpCount);    // プレイヤーのレベルアップ回数分、ArenaObjectを選択する
                         // Wave完了後の処理
                         yield return wait_TimeAfterWaveCompleted;
+                        playerExpHandler.ResetLevelUpCount();    // Wave完了後にレベルアップ回数をリセット
                         enemyExpFactory.ResetWaveEXPPool();      // Wave完了後にEXPプールをリセット
                         ChangeBattleState(BattleState.WaitingForNextWave);
                         break;

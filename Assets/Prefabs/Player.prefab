@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.Reflect
   speedThreshold: 1
-  power: 2
+  power: 5
 --- !u!1001 &1734654213857815156
 PrefabInstance:
   m_ObjectHideFlags: 0

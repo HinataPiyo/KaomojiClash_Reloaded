@@ -8,7 +8,8 @@ namespace Player
         int HasPlayerEXP { get; }
         void AddPlayerEXP(int exp);
         int Level { get; }
-        void CheckLevelUp();
+        int LevelUpCount { get; }
+        void ResetLevelUpCount();
     }
     
     public class ExpHandler : MonoBehaviour, IExpHandler
@@ -18,6 +19,10 @@ namespace Player
         public int Level { get; private set; } = 1;     // プレイヤーのレベルは例外で1スタートとする
         public int GetLevelUpBorder() => DefaultLevelUpBorder * Level;
 
+        public int LevelUpCount { get; private set; } = 0; // レベルアップ回数を追跡するプロパティ
+        public void ResetLevelUpCount() => LevelUpCount = 0; // レベルアップ回数をリセットするメソッド
+
+        
         IPlayerEXPUI playerEXPUI;
 
         void Awake()
@@ -31,12 +36,13 @@ namespace Player
             AddPlayerEXP(0); // 初期化時にUIを更新
         }
 
-        public void CheckLevelUp()
+        void CheckLevelUp()
         {
             int levelUpBorder = DefaultLevelUpBorder * Level;
             if (HasPlayerEXP >= levelUpBorder)
             {
                 Level++;
+                LevelUpCount++;
                 HasPlayerEXP -= levelUpBorder;
                 Debug.Log($"<color=green>Level Up! New Level: {Level}, Remaining EXP: {HasPlayerEXP}</color>");
             }
@@ -45,6 +51,7 @@ namespace Player
         public void AddPlayerEXP(int exp)
         {
             HasPlayerEXP += exp;
+            CheckLevelUp();
             playerEXPUI.SetEXP(HasPlayerEXP, exp, GetLevelUpBorder(), Level);
         }
     }

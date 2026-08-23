@@ -15,7 +15,7 @@ namespace Player
             cam = ApiProvider.Get<ICamera>();
             hitStop = ApiProvider.Get<IHitStop>();
             playerStaminaUI = ApiProvider.Get<IPlayerStaminaUI>();
-            currentStamina = 5;
+            currentStamina = 1000;
             playerStaminaUI.UpdateStaminaUI(currentStamina, 5);
         }
 
