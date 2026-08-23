@@ -16,16 +16,10 @@ namespace ArenaObject.Bumper
             // 自身ととの位置を取得する
             // 現在の速度
             Rigidbody2D rb = col.rigidbody;
-            Vector2 v = rb.linearVelocity;
+            Vector2 direction = (col.transform.position - transform.position).normalized;
 
-            // 衝突点の法線（最も信頼度が高い）
-            Vector2 n = col.contacts[0].normal;
-
-            // 反射ベクトルを計算
-            Vector2 reflected = Vector2.Reflect(v, n);
-
-            // 速度の大きさは維持したまま向きだけ変更
-            rb.linearVelocity = reflected.normalized * v.magnitude * Data.GetReflectionPower(Level);
+            //! PlayerのSpeedを暫定として入れる
+            rb.AddForce(direction * 5 * Data.GetReflectionPower(Level), ForceMode2D.Impulse); // 反射ベクトルを加える
 
             anim.SetTrigger("Reflect");
         }
