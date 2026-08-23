@@ -62,7 +62,7 @@ public abstract class ReflectBase : MonoBehaviour
     {
         // 壁の中心に向かって反射する
         IWall wall = stage.GetCurrentWall();
-        rb.AddForce((wall.GetWallCenter() - (Vector2)transform.position).normalized * userSpeed * reflectionPower, ForceMode2D.Impulse);
+        rb.AddForce(((Vector2)wall.GetWallTransform().position - (Vector2)transform.position).normalized * userSpeed * reflectionPower, ForceMode2D.Impulse);
     }
 
     protected abstract float ApplyDamageCalculation();

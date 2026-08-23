@@ -8,7 +8,7 @@ namespace ArenaObject.Bumper
 
         void Awake()
         {
-            anim = GetComponent<Animator>();
+            anim = GetComponentInChildren<Animator>();
         }
 
         void OnCollisionEnter2D(Collision2D col)

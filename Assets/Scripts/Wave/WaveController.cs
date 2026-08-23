@@ -10,27 +10,36 @@ namespace Wave
         int EnemySpawnCount();
         int ReleaseStep { get; }
 
-        void ChangeBattleState(BattleState newState);
         public bool IsStopCharacter { get; }
         public int GetWaveCount();
+    }
+
+    public interface IBattleState
+    {
+        BattleState CurrentBattleState { get; }
+        void ChangeBattleState(BattleState newState);
     }
 
     public enum BattleState
     {
         WaitingForNextWave,
         WaveInProgress,
+        ArenaObjectEditing,
         WaveCompleted,
         WaveFailed
     }
 
-    public class WaveController : MonoBehaviour, IWave
+    public class WaveController : MonoBehaviour, IWave, IBattleState
     {
         [SerializeField] WaveConfig waveConfig;
+        [Header("テスト")]
+        [SerializeField] ArenaObjectData testArenaObjectData;
 
         IEnemySpawn enemySpawn;
         IEnemyExpFactory enemyExpFactory;
         IPlayerSpawn playerSpawn;
         IExpHandler playerExpHandler;
+        IArenaObjectEdit arenaObjectEdit;
         IStage stage;
         ICamera cam;
 
@@ -47,6 +56,7 @@ namespace Wave
         public bool IsStopCharacter { get; private set; } = true;
         public int ReleaseStep => releaseStep;
         public int GetWaveCount() => waveCount;
+        public BattleState CurrentBattleState => battleState;
         public void ChangeBattleState(BattleState newState) => battleState = newState;
 
         public int EnemySpawnCount()
@@ -69,6 +79,7 @@ namespace Wave
         void Awake()
         {
             ApiProvider.Register<IWave>(this);
+            ApiProvider.Register<IBattleState>(this);
             wait_EncountToStartBattle = new WaitForSeconds(waveConfig.EncountToStartBattle);
             wait_TimeAfterWaveCompleted = new WaitForSeconds(waveConfig.TimeAfterWaveCompleted);
             wait_TimeAfterWaveFailed = new WaitForSeconds(waveConfig.TimeAfterWaveFailed);
@@ -79,6 +90,7 @@ namespace Wave
             enemySpawn = ApiProvider.Get<IEnemySpawn>();
             playerSpawn = ApiProvider.Get<IPlayerSpawn>();
             playerExpHandler = ApiProvider.Get<IExpHandler>();
+            arenaObjectEdit = ApiProvider.Get<IArenaObjectEdit>();
             stage = ApiProvider.Get<IStage>();
             cam = ApiProvider.Get<ICamera>();
             enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
@@ -112,9 +124,9 @@ namespace Wave
                         
                         yield return wait_MovePlayerToEnemy;        // プレイヤーが敵の位置に移動するのを待つ
 
-                        // Wallを生成
-                        stage.CreateWall(spawnPosition);
-
+                        stage.CheckCreateWall(spawnPosition);      // Wallを生成する
+                        arenaObjectEdit.CreateArenaObjects(testArenaObjectData);    // ArenaObjectを生成する
+                        
                         // プレイヤーが敵にエンカウントしたらStateを変える
                         ChangeBattleState(BattleState.WaveInProgress);
                         break;
@@ -132,7 +144,7 @@ namespace Wave
                         yield return wait_UntilAllEnemiesDestructed;
                         IsStopCharacter = true;     // プレイヤーの入力を禁止
 
-                        stage.GetCurrentWall().DestroyWall();      // Wallを破壊する
+                        stage.GetCurrentWall().InactivateWall();      // Wallを非表示
                         ChangeBattleState(BattleState.WaveCompleted);                       
                         break;
                     case BattleState.WaveCompleted:

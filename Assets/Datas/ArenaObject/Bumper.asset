@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArenaObject.Bumper.Data
   objectName: "\u30D0\u30F3\u30D1\u30FC"
   icon: {fileID: 0}
-  effectPrefab: {fileID: 0}
+  effectPrefab: {fileID: 5215190597848795299, guid: a18ebfda8745d8442a89cc3f6dfce67b, type: 3}
   size: {x: 1, y: 1}
+  reflectionPower: 1.1
+  multiplier: 0.2
