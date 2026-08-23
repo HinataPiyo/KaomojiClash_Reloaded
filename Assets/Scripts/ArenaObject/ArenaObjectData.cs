@@ -29,4 +29,16 @@ public static class ArenaObjectDataCollection
         collections = Resources.LoadAll<ArenaObjectData>("ArenaObjectDatas");
         await Task.Yield();
     }
+
+    public static ArenaObjectData GetRandomArenaObjectData()
+    {
+        if (collections == null || collections.Length == 0)
+        {
+            Debug.LogError("ArenaObjectDataCollection is not loaded or empty.");
+            return null;
+        }
+
+        int randomIndex = Random.Range(0, collections.Length);
+        return collections[randomIndex];
+    }
 }

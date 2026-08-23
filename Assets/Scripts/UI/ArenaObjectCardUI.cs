@@ -12,9 +12,8 @@ namespace UI
         [SerializeField] GameObject newMark;
         Button button;
         ArenaObjectData data;
-        
 
-        IArenaObjectEdit arenaObjectEdit;
+        IArenaObjectSelect arenaObjectSelect;
 
         void Awake()
         {
@@ -24,7 +23,7 @@ namespace UI
 
         void Start()
         {
-            arenaObjectEdit = ApiProvider.Get<IArenaObjectEdit>();
+            arenaObjectSelect = ApiProvider.Get<IArenaObjectSelect>();
         }
 
         public void SetData(ArenaObjectData data, int level, bool isNew)
@@ -39,7 +38,7 @@ namespace UI
         void ButtonOnClick()
         {
             // ArenaObjectが選択されたときの処理をここに追加
-            arenaObjectEdit.EndSelectArenaObject(data);
+            arenaObjectSelect.EndSelectArenaObject(data);
         }
     }
 }

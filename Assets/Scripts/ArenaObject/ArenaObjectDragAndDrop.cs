@@ -33,15 +33,15 @@ public class ArenaObjectDragAndDrop : MonoBehaviour
 
     void Update()
     {
-        // if (battleState.CurrentBattleState != BattleState.ArenaObjectEditing)
-        // {
-        //     if (isDragging || isPressed)
-        //     {
-        //         isDragging = false;
-        //         isPressed = false;
-        //     }
-        //     return;
-        // }
+        if (battleState.CurrentBattleState != BattleState.ArenaObjectSelecting)
+        {
+            if (isDragging || isPressed)
+            {
+                isDragging = false;
+                isPressed = false;
+            }
+            return;
+        }
 
         bool isPressedNow = press.IsInProgress();
 

@@ -24,7 +24,7 @@ namespace Wave
     {
         WaitingForNextWave,
         WaveInProgress,
-        ArenaObjectEditing,
+        ArenaObjectSelecting,
         WaveCompleted,
         WaveFailed
     }
@@ -32,14 +32,12 @@ namespace Wave
     public class WaveController : MonoBehaviour, IWave, IBattleState
     {
         [SerializeField] WaveConfig waveConfig;
-        [Header("テスト")]
-        [SerializeField] ArenaObjectData testArenaObjectData;
 
         IEnemySpawn enemySpawn;
         IEnemyExpFactory enemyExpFactory;
         IPlayerSpawn playerSpawn;
         IExpHandler playerExpHandler;
-        IArenaObjectEdit arenaObjectEdit;
+        IArenaObjectSelect arenaObjectSelect;
         IStage stage;
         ICamera cam;
 
@@ -90,7 +88,7 @@ namespace Wave
             enemySpawn = ApiProvider.Get<IEnemySpawn>();
             playerSpawn = ApiProvider.Get<IPlayerSpawn>();
             playerExpHandler = ApiProvider.Get<IExpHandler>();
-            arenaObjectEdit = ApiProvider.Get<IArenaObjectEdit>();
+            arenaObjectSelect = ApiProvider.Get<IArenaObjectSelect>();
             stage = ApiProvider.Get<IStage>();
             cam = ApiProvider.Get<ICamera>();
             enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
@@ -125,7 +123,6 @@ namespace Wave
                         yield return wait_MovePlayerToEnemy;        // プレイヤーが敵の位置に移動するのを待つ
 
                         stage.CheckCreateWall(spawnPosition);      // Wallを生成する
-                        arenaObjectEdit.CreateArenaObjects(testArenaObjectData);    // ArenaObjectを生成する
                         
                         // プレイヤーが敵にエンカウントしたらStateを変える
                         ChangeBattleState(BattleState.WaveInProgress);
@@ -144,21 +141,31 @@ namespace Wave
                         yield return wait_UntilAllEnemiesDestructed;
                         IsStopCharacter = true;     // プレイヤーの入力を禁止
 
-                        ChangeBattleState(BattleState.WaveCompleted);                       
-                        break;
-                    case BattleState.WaveCompleted:
                         playerExpHandler.AddPlayerEXP(enemyExpFactory.WaveEXPPool);    // Wave完了後に獲得したEXPをプレイヤーに加算
 
-                        // プレイヤーのレベルアップ回数分、ArenaObjectを選択する
-                        yield return arenaObjectEdit.ArenaObjectSelectRoutine(playerExpHandler.LevelUpCount);
-
+                        if(playerExpHandler.LevelUpCount > 0)
+                        {
+                            ChangeBattleState(BattleState.ArenaObjectSelecting);
+                            break;      // ArenaObjectの選択処理に移行するため、ここでループを抜ける
+                        }
+                        
+                        ChangeBattleState(BattleState.WaveCompleted);
                         stage.GetCurrentWall().InactivateWall();      // Wallを非表示
 
+                        break;
+                    case BattleState.WaveCompleted:
                         // Wave完了後の処理
                         yield return wait_TimeAfterWaveCompleted;
                         playerExpHandler.ResetLevelUpCount();    // Wave完了後にレベルアップ回数をリセット
                         enemyExpFactory.ResetWaveEXPPool();      // Wave完了後にEXPプールをリセット
                         ChangeBattleState(BattleState.WaitingForNextWave);
+                        break;
+                    case BattleState.ArenaObjectSelecting:
+                        // プレイヤーのレベルアップ回数分、ArenaObjectを選択する
+                        yield return arenaObjectSelect.ArenaObjectSelectRoutine(playerExpHandler.LevelUpCount);
+                        stage.GetCurrentWall().InactivateWall();      // Wallを非表示
+
+                        ChangeBattleState(BattleState.WaveCompleted);
                         break;
                     case BattleState.WaveFailed:
                         // Wave失敗後の処理
