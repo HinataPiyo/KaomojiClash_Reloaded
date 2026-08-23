@@ -38,6 +38,7 @@ public class StageController : MonoBehaviour, IStage
         if (currentWall != null)
         {
             currentWall.ActivateWall();
+            currentWall.transform.position = centerPosition;
             return;
         }
 
