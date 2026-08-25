@@ -20,6 +20,7 @@ namespace Enemy
         IWave wave;
         IStage stage;
         ICamera cam;
+        IEnemyExpFactory enemyExpFactory;
 
         /// <summary>
         /// 敵が全滅しているかどうかを判定する
@@ -36,13 +37,15 @@ namespace Enemy
             wave = ApiProvider.Get<IWave>();
             stage = ApiProvider.Get<IStage>();
             cam = ApiProvider.Get<ICamera>();
+            enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
         }
 
-        void OnEnemyDeath(GameObject enemy)
+        void OnEnemyDeath(GameObject enemy, int exp = 0)
         {
             spawnedEnemies.Remove(enemy);
             cam.RemoveTargetFromGroup(enemy.transform);
             cam.SetCameraState(CameraState.EnemyDeath);
+            enemyExpFactory.AddWaveEXPPool(exp);
         }
 
         /// <summary>
@@ -54,8 +57,11 @@ namespace Enemy
             GameObject enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
             IEnemyStamina stamina = enemy.GetComponent<IEnemyStamina>();
             KaomojiData kaomojiData = CreateEnemyKaomojiData();
-            stamina.OnEnemyDeathEvent += () => OnEnemyDeath(enemy);
-            enemy.GetComponentInChildren<IKaomojiSetUp>().SetUp(kaomojiData);
+            IKaomojiSetUp kaomojiSetUp = enemy.GetComponentInChildren<IKaomojiSetUp>();
+            int enemyExp = enemyExpFactory.CreateEnemyEXP(kaomojiData);
+
+            stamina.OnEnemyDeathEvent += () => OnEnemyDeath(enemy, enemyExp);
+            kaomojiSetUp.SetUp(kaomojiData, enemyExp);
             spawnedEnemies.Add(enemy);
             cam.AddTargetToGroup(enemy.transform);
         }

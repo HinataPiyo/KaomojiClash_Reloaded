@@ -1,6 +1,5 @@
 namespace Wave
 {
-    using System;
     using UnityEngine;
 
     [CreateAssetMenu(fileName = "WaveConfig", menuName = "KaomojiClash_Reloaded/WaveConfig")]

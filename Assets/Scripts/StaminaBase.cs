@@ -13,6 +13,9 @@ namespace Base
         protected float currentStamina;
         protected IWorldUI worldUI;
 
+        protected virtual void Awake() { }
+        
+
         protected virtual void Start()
         {
             worldUI = ApiProvider.Get<IWorldUI>();

@@ -4,7 +4,7 @@ using Wall;
 public interface IStage
 {
     Vector2 EncountPosition(int waveCount);
-    void CreateWall(Vector2 centerPosition);
+    void CheckCreateWall(Vector2 centerPosition);
     public IWall GetCurrentWall();
 }
 
@@ -33,8 +33,15 @@ public class StageController : MonoBehaviour, IStage
         return new Vector2(x, 0f);
     }
 
-    public void CreateWall(Vector2 centerPosition)
+    public void CheckCreateWall(Vector2 centerPosition)
     {
+        if (currentWall != null)
+        {
+            currentWall.ActivateWall();
+            currentWall.transform.position = centerPosition;
+            return;
+        }
+
         currentWall = Instantiate(wall_Prefab, centerPosition, Quaternion.identity);
     }
 }

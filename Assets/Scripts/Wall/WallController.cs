@@ -5,16 +5,17 @@ namespace Wall
 
     public interface IWall
     {
-        Vector2 GetWallCenter();
+        Transform GetWallTransform();
         Vector2 GetWallRange();
         Vector2 GetRandomPositionWithinWall();
-        void DestroyWall();
+        void InactivateWall();
+        void ActivateWall();
     }
 
     public class WallController : MonoBehaviour, IWall
     {
         [SerializeField] Vector2 wallRange;
-        public Vector2 GetWallCenter() => transform.position;
+        public Transform GetWallTransform() => transform;
         public Vector2 GetWallRange() => wallRange;
         public Vector2 GetRandomPositionWithinWall()
         {
@@ -23,7 +24,8 @@ namespace Wall
             return (Vector2)transform.position + new Vector2(randomX, randomY);
         }
 
-        public void DestroyWall() => Destroy(gameObject);
+        public void InactivateWall() => gameObject.SetActive(false);
+        public void ActivateWall() => gameObject.SetActive(true);
 
         void OnDrawGizmos()
         {
