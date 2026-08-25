@@ -11,7 +11,7 @@ public abstract class ReflectBase : MonoBehaviour
     const float REFRECT_SPEED_BORDER = 1.5f;        // 反射可能な速度の閾値
     [SerializeField] protected float speedThreshold = 0.92f;        // ダメージを与えるための速度の閾値（相手より自分のほうが速い場合のみダメージを与える）
 
-    void Awake()
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
@@ -65,6 +65,4 @@ public abstract class ReflectBase : MonoBehaviour
         IWall wall = stage.GetCurrentWall();
         rb.AddForce(((Vector2)wall.GetWallTransform().position - (Vector2)transform.position).normalized * reflectionPower, ForceMode2D.Impulse);
     }
-
-    protected abstract float ApplyDamageCalculation();
 }

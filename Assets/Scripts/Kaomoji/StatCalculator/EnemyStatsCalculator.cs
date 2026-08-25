@@ -25,5 +25,39 @@ namespace Enemy
         {
             return statsConfig.Default_Defense * coreStats.Defense;
         }
+
+        // -- 攻撃関連 --
+
+        public override float ApplyDamageCalculation()
+        {
+            return GetPower();
+        }
+
+        // -- 移動関連 --
+
+        public override float GetMaxDraggingDistance()
+        {
+            return statsConfig.MaxDraggingDistance;
+        }
+
+        public float GetIdleTime()
+        {
+            return statsConfig.IdleTime;
+        }
+
+        public float GetDraggingIdleTime()
+        {
+            return statsConfig.DraggingIdleTime;
+        }
+
+        public float GetBeforeLaunchIdleDuration()
+        {
+            return statsConfig.BeforeLaunchIdleDuration;
+        }
+
+        public override float LaunchForce()
+        {
+            return GetSpeed() * GetMaxDraggingDistance();
+        }
     }
 }

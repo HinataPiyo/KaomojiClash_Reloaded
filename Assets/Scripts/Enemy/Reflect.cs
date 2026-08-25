@@ -5,6 +5,14 @@ namespace Enemy
 
     public class Reflect : ReflectBase
     {
+        EnemyStatsCalculator statsCalc;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            statsCalc = GetComponent<EnemyStatsCalculator>();
+        }
+
         protected override void OnCollisionEnter2D(Collision2D col)
         {
             // プレイヤーと衝突した
@@ -24,7 +32,7 @@ namespace Enemy
                 if (CanApplyDamage(otherRb))
                 {
                     IAttackable attackable = col.collider.GetComponent<IAttackable>();
-                    attackable?.TakeDamage(ApplyDamageCalculation());
+                    attackable?.TakeDamage(statsCalc.ApplyDamageCalculation());
                 }
             }
         }
@@ -33,11 +41,6 @@ namespace Enemy
         {
             // 相手より自分のほうが速い場合のみダメージを与える
             return otherRb != null && rb.linearVelocity.sqrMagnitude > otherRb.linearVelocity.sqrMagnitude * speedThreshold;
-        }
-        
-        protected override float ApplyDamageCalculation()
-        {
-            return 1f;
         }
     }
 }

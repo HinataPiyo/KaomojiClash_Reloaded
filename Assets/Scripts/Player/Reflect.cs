@@ -5,16 +5,11 @@ namespace Player
 
     public class Reflect : ReflectBase
     {
-        [SerializeField] float power = 2f;
-
-        ICombo combo;
         PlayerStatsCalculator statsCalc;
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
-            combo = ApiProvider.Get<ICombo>();
-
+            base.Awake();
             statsCalc = GetComponent<PlayerStatsCalculator>();
         }
         
@@ -37,7 +32,7 @@ namespace Player
                 if (CanApplyDamage(otherRb))
                 {
                     IAttackable attackable = col.collider.GetComponent<IAttackable>();
-                    attackable?.TakeDamage(ApplyDamageCalculation());
+                    attackable?.TakeDamage(statsCalc.ApplyDamageCalculation());
                     Debug.Log($"<color=blue>Player</color>が<color=red>Enemy</color>にダメージを与えました");
                 }
             }
@@ -52,13 +47,6 @@ namespace Player
         {
             // 相手より自分のほうが速い場合のみダメージを与える
             return otherRb != null && rb.linearVelocity.sqrMagnitude > otherRb.linearVelocity.sqrMagnitude * speedThreshold;
-        }
-
-        protected override float ApplyDamageCalculation()
-        {
-            combo.AddCombo();
-            float applyCombo = power * combo.ComboDamageRate;
-            return applyCombo;
         }
     }
 }

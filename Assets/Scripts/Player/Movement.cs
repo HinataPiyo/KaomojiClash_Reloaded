@@ -6,12 +6,11 @@ namespace Player
 
     public class Movement : MonoBehaviour
     {
-        [SerializeField] float default_Speed = 5f;
-        [SerializeField] float max_DraggingDistance = 3f;
-
         IWave wave;
         IMoveDirectionArrow moveDirectionArrow;
         UI.IPlayerHereArrow playerHereArrow;
+
+        PlayerStatsCalculator statsCalc;
 
         Rigidbody2D rb;
         InputAction press;
@@ -25,6 +24,7 @@ namespace Player
         void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            statsCalc = GetComponent<PlayerStatsCalculator>();
             moveDirectionArrow = GetComponentInChildren<IMoveDirectionArrow>();
             press = InputSystem.actions["Press"];
             point = InputSystem.actions["Point"];
@@ -91,8 +91,7 @@ namespace Player
             Vector2 currentWorldPos = Camera.main.ScreenToWorldPoint(currentPosition);
 
             Vector2 direction = currentWorldPos - startWorldPos;
-            float distance = Mathf.Min(direction.magnitude, max_DraggingDistance);
-            Vector2 force = -direction.normalized * distance * default_Speed;
+            Vector2 force = -direction.normalized * statsCalc.LaunchForce(direction.magnitude);
 
             rb.AddForce(force, ForceMode2D.Impulse);
         }

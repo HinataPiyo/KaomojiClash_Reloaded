@@ -12,16 +12,12 @@ namespace Enemy
             BeforeLaunchIdle
         }
 
-        [SerializeField] float default_Speed = 5f;
-        [SerializeField] float idleTime = 1f;                        // 何もしない時間
-        [SerializeField] float max_DraggingDistance = 3f;
-        [SerializeField] float draggingIdleTime = 1f;                // ドラッグ中の待機時間
-        [SerializeField] float beforeLaunchIdleDuration = 0.25f;     // 発射方向が確定したのちの待機時間
-
         Rigidbody2D rb;
         Vector2 startPosition;
         Vector2 currentTargetPosition;
         Vector2 launchDirection;
+
+        EnemyStatsCalculator statsCalc;
 
         float elapsedTime;
         MovementState currentState = MovementState.Idle;
@@ -32,6 +28,7 @@ namespace Enemy
         void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            statsCalc = GetComponent<EnemyStatsCalculator>();
             moveDirectionArrow = GetComponentInChildren<IMoveDirectionArrow>();
         }
 
@@ -51,7 +48,7 @@ namespace Enemy
             switch (currentState)
             {
                 case MovementState.Idle:
-                    if(elapsedTime >= idleTime)
+                    if(elapsedTime >= statsCalc.GetIdleTime())
                     {
                         currentState = MovementState.Dragging;
                         elapsedTime = 0f;
@@ -66,7 +63,7 @@ namespace Enemy
                     launchDirection = (currentTargetPosition - startPosition).normalized;       // 発射方向を計算
                     moveDirectionArrow.SetArrowDirection(launchDirection);
                     moveDirectionArrow.UpdateScale(Vector2.Distance(startPosition, currentTargetPosition));    // 矢印の長さを更新s
-                    if (elapsedTime >= draggingIdleTime)
+                    if (elapsedTime >= statsCalc.GetDraggingIdleTime())
                     {
                         currentState = MovementState.BeforeLaunchIdle;
                         elapsedTime = 0f;
@@ -75,7 +72,7 @@ namespace Enemy
 
                 case MovementState.BeforeLaunchIdle:
                     // 発射方向が確定したのちの待機時間
-                    if (elapsedTime >= beforeLaunchIdleDuration)
+                    if (elapsedTime >= statsCalc.GetBeforeLaunchIdleDuration())
                     {
                         currentState = MovementState.Idle;
                         elapsedTime = 0f;
@@ -90,7 +87,7 @@ namespace Enemy
         void Launch()
         {
             rb.linearVelocity = Vector2.zero;
-            Vector2 force = launchDirection * default_Speed * max_DraggingDistance;
+            Vector2 force = launchDirection * statsCalc.LaunchForce();
             rb.AddForce(force, ForceMode2D.Impulse);
         }
     }

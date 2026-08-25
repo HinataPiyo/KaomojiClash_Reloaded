@@ -11,10 +11,18 @@ namespace Enemy
     {
         public event System.Action OnEnemyDeathEvent;
 
+        EnemyStatsCalculator statsCalc;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            statsCalc = GetComponent<EnemyStatsCalculator>();
+        }
+
         protected override void Start()
         {
             base.Start();
-            currentStamina = 10;
+            currentStamina = statsCalc.GetStamina();
         }
 
         public override void TakeDamage(float amount)
