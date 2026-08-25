@@ -17,7 +17,7 @@ MonoBehaviour:
   symbol: 969
   skillData: []
   coreStats:
-    Stamina: 10
-    Power: 5
-    Speed: 5
+    Stamina: 1.2
+    Power: 1.2
+    Speed: 1.2
     Defense: 1

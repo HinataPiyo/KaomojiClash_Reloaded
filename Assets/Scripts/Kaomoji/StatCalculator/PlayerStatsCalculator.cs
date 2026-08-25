@@ -4,24 +4,26 @@ namespace Player
     
     public class PlayerStatsCalculator : StatsCalculator
     {
+        [SerializeField] PlayerCoreStatsConfig statsConfig;
+
         public override float GetStamina()
         {
-            return 0;
+            return statsConfig.Default_Stamina * coreStats.Stamina;
         }
 
         public override float GetPower()
         {
-            return 0;
+            return statsConfig.Default_Power * coreStats.Power;
         }
 
         public override float GetSpeed()
         {
-            return coreStats.Speed;
+            return statsConfig.Default_Speed * coreStats.Speed;
         }
 
         public override float GetDefense()
         {
-            return 0;
+            return statsConfig.Default_Defense * coreStats.Defense;
         }
 
         public float GetWallReflectionPower()

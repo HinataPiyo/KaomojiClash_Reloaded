@@ -186,6 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b3c545d87ecd6846bfee53929b6a764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerStatsCalculator
+  statsConfig: {fileID: 11400000, guid: 14cade6c26d36bb4aa60da7d980855fb, type: 2}
 --- !u!1001 &1734654213857815156
 PrefabInstance:
   m_ObjectHideFlags: 0
