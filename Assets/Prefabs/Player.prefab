@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6833340970675205331}
   - component: {fileID: 5460188073533403749}
   - component: {fileID: 6367578135901423655}
+  - component: {fileID: 3116838989438123047}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -173,6 +174,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player.Reflect
   speedThreshold: 1
   power: 5
+--- !u!114 &3116838989438123047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1535408297127643199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b3c545d87ecd6846bfee53929b6a764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerStatsCalculator
 --- !u!1001 &1734654213857815156
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8724956158284372868}
   - component: {fileID: 6470174354672826285}
   - component: {fileID: 6805199749487719660}
+  - component: {fileID: 334498339806427939}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -144,6 +145,19 @@ MonoBehaviour:
   max_DraggingDistance: 3
   draggingIdleTime: 1
   beforeLaunchIdleDuration: 0.1
+--- !u!114 &334498339806427939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7589937117045598796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77dfad5ff1230324e8ca7fe5b8af6b82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy.EnemyStatsCalculator
+  statsConfig: {fileID: 11400000, guid: 542d5fa52abc58c42916f0eda486eea3, type: 2}
 --- !u!1001 &654387665428938186
 PrefabInstance:
   m_ObjectHideFlags: 0

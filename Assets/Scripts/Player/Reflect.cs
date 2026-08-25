@@ -5,25 +5,17 @@ namespace Player
 
     public class Reflect : ReflectBase
     {
-        float reflectionPower;
         [SerializeField] float power = 2f;
 
         ICombo combo;
+        PlayerStatsCalculator statsCalc;
 
         protected override void Start()
         {
             base.Start();
             combo = ApiProvider.Get<ICombo>();
-            SkillSetUp();
-        }
 
-        void SkillSetUp()
-        {
-            IKaomojiSetUp kaomojiSetUp = GetComponentInChildren<IKaomojiSetUp>();
-            if (kaomojiSetUp.TryGetSkill(out IWallReflection wallReflection, out int level))
-            {
-                reflectionPower = wallReflection.GetReflectionPower(level);
-            }
+            statsCalc = GetComponent<PlayerStatsCalculator>();
         }
         
         protected override void OnCollisionEnter2D(Collision2D col)
@@ -51,7 +43,8 @@ namespace Player
             }
             else if (col.collider.CompareTag("Wall"))
             {
-                WallReflection(5, reflectionPower);        // 壁に衝突した場合の反射処理
+                // 5はPlayerのデフォSpeed
+                WallReflection(statsCalc.GetWallReflectionPower());
             }
         }
 

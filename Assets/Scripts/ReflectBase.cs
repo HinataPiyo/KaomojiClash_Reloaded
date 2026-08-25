@@ -1,6 +1,7 @@
 using UnityEngine;
 using Wall;
 
+
 public abstract class ReflectBase : MonoBehaviour
 {
     protected Rigidbody2D rb;
@@ -58,11 +59,11 @@ public abstract class ReflectBase : MonoBehaviour
     /// 壁に衝突した場合の反射処理
     /// 速度に関係なく壁の中心に向かって反射する
     /// </summary>
-    protected void WallReflection(float userSpeed, float reflectionPower)
+    protected void WallReflection(float reflectionPower)
     {
         // 壁の中心に向かって反射する
         IWall wall = stage.GetCurrentWall();
-        rb.AddForce(((Vector2)wall.GetWallTransform().position - (Vector2)transform.position).normalized * userSpeed * reflectionPower, ForceMode2D.Impulse);
+        rb.AddForce(((Vector2)wall.GetWallTransform().position - (Vector2)transform.position).normalized * reflectionPower, ForceMode2D.Impulse);
     }
 
     protected abstract float ApplyDamageCalculation();

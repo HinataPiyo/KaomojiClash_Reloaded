@@ -18,6 +18,8 @@ namespace ArenaObject.Bumper
             Rigidbody2D rb = col.rigidbody;
             Vector2 direction = (col.transform.position - transform.position).normalized;
 
+            //! 次回は、Player、Enemyのステータスをまとめて計算し参照するクラスを作る
+
             //! PlayerのSpeedを暫定として入れる
             rb.AddForce(direction * 5 * Data.GetReflectionPower(Level), ForceMode2D.Impulse); // 反射ベクトルを加える
 

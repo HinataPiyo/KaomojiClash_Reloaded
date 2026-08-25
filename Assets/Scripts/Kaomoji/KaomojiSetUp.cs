@@ -6,14 +6,21 @@ public interface IKaomojiSetUp
 {
     void SetUp(KaomojiData data, int exp = 0);
     List<SkillWithLevel> SkillsWithLevels { get; }
-    public bool TryGetSkill<T>(out T skill, out int level) where T : class;
 }
 
-public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp
+public interface IKaomojiStats
+{
+    bool TryGetSkill<T>(out T skill, out int level) where T : class;
+    CoreStats TryGetCoreStats();
+}
+
+public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
 {
     [SerializeField] TextMeshPro kaomojiBody;
     static readonly char default_FaceLineLeft = '(';
     static readonly char default_FaceLineRight = ')';
+
+    KaomojiData data;
 
     int hasExp = 0;
 
@@ -24,7 +31,11 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp
         string kaomoji = GetKaomojiCoupling(data);
         SkillsWithLevels = SkillData.GetAllSkillsWithLevelsFromKaomojiData(data);
         kaomojiBody.text = kaomoji;
+        this.data = data;
         hasExp = exp;
+
+        IStatsCalculator statsCalculator = GetComponentInParent<IStatsCalculator>();
+        statsCalculator?.SetUp(this);
     }
 
     /// <summary>
@@ -81,5 +92,22 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp
         skill = null;
         level = 0;
         return false;
+    }
+
+    /// <summary>
+    /// KaomojiDataのMouthTypeに関連するCoreStatsを取得する。
+    /// もしMouthTypeが存在しない場合、またはCoreStatsが定義されていない場合はnullを返す。
+    /// </summary>
+    public CoreStats TryGetCoreStats()
+    {
+        if (data == null) return null;
+
+        SymbolData mouthData = data.GetSymbolDataByType(SymbolType.Mouth);
+        if (mouthData is SymbolMouthData symbolMouthData)
+        {
+            return symbolMouthData.CoreStats;
+        }
+
+        return null;
     }
 }
