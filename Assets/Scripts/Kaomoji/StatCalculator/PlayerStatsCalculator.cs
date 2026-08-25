@@ -47,7 +47,10 @@ namespace Player
             return statsConfig.MaxDraggingDistance;
         }
 
-        public override float LaunchForce(){ return 0; }
+        public override float LaunchForce()
+        {
+            return GetSpeed() * GetMaxDraggingDistance();
+        }
 
         // プレイヤーの発射力は、ドラッグ距離と速度に基づいて計算される。
         public float LaunchForce(float length)
