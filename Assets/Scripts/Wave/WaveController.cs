@@ -3,6 +3,7 @@ namespace Wave
     using System.Collections;
     using Enemy;
     using Player;
+    using UI;
     using UnityEngine;
 
     public interface IWave
@@ -38,6 +39,7 @@ namespace Wave
         IPlayerSpawn playerSpawn;
         IExpHandler playerExpHandler;
         IArenaObjectSelect arenaObjectSelect;
+        IStartWaveAnimationUI waveStartAnimationUI;
         IStage stage;
         ICamera cam;
 
@@ -45,7 +47,8 @@ namespace Wave
 
         int waveCount = 0;
         int releaseStep = 1;
-        WaitForSeconds wait_EncountToStartBattle;
+        WaitForSeconds wait_EncountAnimationTime;
+        WaitForSeconds wait_StartWaveAnimationTime;
         WaitForSeconds wait_TimeAfterWaveCompleted;
         WaitForSeconds wait_TimeAfterWaveFailed;
         WaitUntil wait_UntilAllEnemiesDestructed;
@@ -78,7 +81,8 @@ namespace Wave
         {
             ApiProvider.Register<IWave>(this);
             ApiProvider.Register<IBattleState>(this);
-            wait_EncountToStartBattle = new WaitForSeconds(waveConfig.EncountToStartBattle);
+            wait_EncountAnimationTime = new WaitForSeconds(waveConfig.EncountAnimationTime);
+            wait_StartWaveAnimationTime = new WaitForSeconds(waveConfig.StartWaveAnimationTime);
             wait_TimeAfterWaveCompleted = new WaitForSeconds(waveConfig.TimeAfterWaveCompleted);
             wait_TimeAfterWaveFailed = new WaitForSeconds(waveConfig.TimeAfterWaveFailed);
         }
@@ -92,6 +96,7 @@ namespace Wave
             stage = ApiProvider.Get<IStage>();
             cam = ApiProvider.Get<ICamera>();
             enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
+            waveStartAnimationUI = ApiProvider.Get<IStartWaveAnimationUI>();
 
             wait_UntilAllEnemiesDestructed = new WaitUntil(() => enemySpawn.IsTotalDestructed());
             wait_MovePlayerToEnemy = new WaitUntil(() => !playerSpawn.IsMoveToEnemy);
@@ -132,7 +137,10 @@ namespace Wave
                         int spawnCount = EnemySpawnCount();
                         enemySpawn.OtherSpawnEnemy(spawnCount);
 
-                        yield return wait_EncountToStartBattle;     // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
+                        yield return wait_EncountAnimationTime;      // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
+
+                        waveStartAnimationUI.ShowStartWaveAnimation();    // Wave開始のアニメーションを表示
+                        yield return wait_StartWaveAnimationTime;     // Wave開始のアニメーションを表示する時間
 
                         cam.SetCameraState(CameraState.Battle);
                         IsStopCharacter = false;                    // プレイヤーの入力を許可

@@ -1,9 +1,8 @@
 namespace Player
 {
-
-
     using UnityEngine;
-
+    using UI;
+    
     public interface IPlayerSpawn
     {
         void SpawnPlayer();
@@ -20,6 +19,7 @@ namespace Player
 
         GameObject playerInstance;
         ICamera cam;
+        IWaveStartWorldUI waveStartWorldUI;
 
         static readonly float encountDistance = 2f; // プレイヤーと敵のエンカウント距離
         Vector2 nextWaveEnemyPosition;
@@ -41,6 +41,8 @@ namespace Player
         void Start()
         {
             cam = ApiProvider.Get<ICamera>();
+            waveStartWorldUI = ApiProvider.Get<IWaveStartWorldUI>();
+
             // ゲーム開始時にプレイヤーを生成
             SpawnPlayer();
         }
@@ -54,6 +56,9 @@ namespace Player
                 if (Vector2.Distance(playerInstance.transform.position, nextWaveEnemyPosition) <= encountDistance)
                 {
                     cam.SetCameraState(CameraState.Encount);
+                    // Playerと対象の敵との間の位置を取得する
+                    Vector2 contactPosition = (playerInstance.transform.position + (Vector3)nextWaveEnemyPosition) / 2f;
+                    waveStartWorldUI.ShowContactObjectUI(contactPosition);
                     IsMoveToEnemy = false;
                 }
             }

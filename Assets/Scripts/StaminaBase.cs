@@ -11,14 +11,14 @@ namespace Base
     public abstract class StaminaBase : MonoBehaviour, IAttackable
     {
         protected float currentStamina;
-        protected IWorldUI worldUI;
+        protected IDamageWorldUI worldUI;
 
         protected virtual void Awake() { }
         
 
         protected virtual void Start()
         {
-            worldUI = ApiProvider.Get<IWorldUI>();
+            worldUI = ApiProvider.Get<IDamageWorldUI>();
         }
 
         /// <summary>
