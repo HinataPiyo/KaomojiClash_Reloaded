@@ -94,16 +94,14 @@ namespace Player
                     baseStatusView?.SetPlayerStatus(playerStatsCalculator);
                     statusRaderChartView?.SetPlayerStatus(playerStatsCalculator);
                     playerInstance.SetActive(false);
+
+                    Debug.Log("<color=green>Player spawned and set up successfully.</color>");
                     return;
                 }
             }
             else
             {
                 Debug.Log("既にプレイヤーが存在します。");
-                if (ApiProvider.Get<ISceneChange>().CurrentScene == SceneName.Battle)
-                {
-                    playerInstance.SetActive(true);
-                }
             }
 
             cam?.SetCameraTarget(playerInstance.transform);

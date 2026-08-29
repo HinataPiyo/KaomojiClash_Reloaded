@@ -3,7 +3,7 @@ namespace Player
     using Base;
     using UI;
 
-    public class Stamina : StaminaBase
+    public class Stamina : StaminaBase, IInitializeStats
     {
         ICamera cam;
         IHitStop hitStop;
@@ -17,14 +17,18 @@ namespace Player
             statsCalc = GetComponent<PlayerStatsCalculator>();
         }
 
+        public void InitializeStats()
+        {
+            currentStamina = statsCalc.GetStamina();
+        }
+
         protected override void Start()
         {
             base.Start();
             cam = ApiProvider.Get<ICamera>();
             hitStop = ApiProvider.Get<IHitStop>();
-            playerStaminaUI = ApiProvider.Get<IPlayerStaminaUI>();
 
-            currentStamina = statsCalc.GetStamina();
+            playerStaminaUI = ApiProvider.Get<IPlayerStaminaUI>();
             playerStaminaUI.UpdateStaminaUI(currentStamina, statsCalc.GetStamina());
         }
 

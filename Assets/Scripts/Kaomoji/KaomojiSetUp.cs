@@ -15,6 +15,11 @@ public interface IKaomojiStats
     CriticalStats TryGetCriticalStats();
 }
 
+public interface IInitializeStats
+{
+    void InitializeStats();
+}
+
 public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
 {
     [SerializeField] TextMeshPro kaomojiBody;
@@ -37,6 +42,12 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
 
         IStatsCalculator statsCalculator = GetComponentInParent<IStatsCalculator>();
         statsCalculator?.SetUp(this);
+        
+        IInitializeStats[] statsInitializer = GetComponentsInParent<IInitializeStats>();
+        foreach (var initializer in statsInitializer)
+        {
+            initializer.InitializeStats();
+        }
     }
 
     /// <summary>

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public interface ISceneChange
 {
@@ -36,6 +35,7 @@ public class SceneChange : MonoBehaviour, ISceneChange
 
     public void ChangeScene(SceneName sceneName)
     {
+        CurrentScene = sceneName;
         StartCoroutine(LoadSceneAsync(sceneName));
     }
 
@@ -47,5 +47,7 @@ public class SceneChange : MonoBehaviour, ISceneChange
         {
             yield return null;
         }
+
+        Debug.Log($"<color=green>Scene changed to {sceneName}</color>");
     }
 }
