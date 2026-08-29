@@ -4,6 +4,7 @@ public interface IAudioManager
 {
     void PlaySE(SEAudioName name);
     void PlayBGM(BGMName name);
+    void PlayReflectSE();
     void StopBGM();
 }
 
@@ -53,5 +54,10 @@ public class AudioManager : MonoBehaviour, IAudioManager
     public void StopBGM()
     {
         bgmSource.Stop();
+    }
+    public void PlayReflectSE()
+    {
+        AudioClip clip = audioDatabase.GetReflectClip();
+        if (clip != null) seSource.PlayOneShot(clip);
     }
 }
