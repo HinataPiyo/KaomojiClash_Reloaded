@@ -13,11 +13,13 @@ public abstract class StatsCalculator : MonoBehaviour, IStatsCalculator
 {
     protected IKaomojiStats stats;
     protected CoreStats coreStats;
+    protected CriticalStats criticalStats;
 
     public void SetUp(IKaomojiStats kaomojiStats)
     {
         stats = kaomojiStats;
         coreStats = stats.TryGetCoreStats();
+        criticalStats = stats.TryGetCriticalStats();
 
         if(coreStats == null)
         {
@@ -29,6 +31,9 @@ public abstract class StatsCalculator : MonoBehaviour, IStatsCalculator
     public abstract float GetSpeed();
     public abstract float GetPower();
     public abstract float GetGuard();
+
+    public abstract float GetCriticalDamage();
+    public abstract float GetCriticalRate();
 
     public abstract float ApplyDamageCalculation();
 

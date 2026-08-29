@@ -12,6 +12,7 @@ public interface IKaomojiStats
 {
     bool TryGetSkill<T>(out T skill, out int level) where T : class;
     CoreStats TryGetCoreStats();
+    CriticalStats TryGetCriticalStats();
 }
 
 public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
@@ -106,6 +107,22 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
         if (mouthData is SymbolMouthData symbolMouthData)
         {
             return symbolMouthData.CoreStats;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// KaomojiDataのRightEyeTypeに関連するCriticalStatsを取得する。
+    /// </summary>
+    public CriticalStats TryGetCriticalStats()
+    {
+        if (data == null) return null;
+
+        SymbolData eyeData = data.GetSymbolDataByType(SymbolType.RightEye);
+        if (eyeData is SymbolEyeData symbolEyeData)
+        {
+            return symbolEyeData.CriticalStats;
         }
 
         return null;

@@ -26,6 +26,16 @@ namespace Enemy
             return statsConfig.Default_Guard * coreStats.Guard;
         }
 
+        public override float GetCriticalDamage()
+        {
+            return statsConfig.Default_CriticalDamage * criticalStats.CriticalDamage;
+        }
+        
+        public override float GetCriticalRate()
+        {
+            return statsConfig.Default_CriticalRate * criticalStats.CriticalRate;
+        }
+
         // -- 攻撃関連 --
 
         public override float ApplyDamageCalculation()

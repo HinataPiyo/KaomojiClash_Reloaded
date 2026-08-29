@@ -78,6 +78,34 @@ namespace Player
 
 #endregion
 
+
+#region Critical
+        public override float GetCriticalDamage()
+        {
+            if(criticalStats == null) return statsConfig.Default_CriticalDamage;
+            return statsConfig.Default_CriticalDamage * criticalStats.CriticalDamage;
+        }
+
+        public (float, float) GetCriticalDamage(float maxCoreCriticalDamage)
+        {
+            if(criticalStats == null) return (0, statsConfig.Default_CriticalDamage);
+            return (statsConfig.Default_CriticalDamage * criticalStats.CriticalDamage, statsConfig.Default_CriticalDamage * maxCoreCriticalDamage);
+        }
+
+        public override float GetCriticalRate()
+        {
+            if(criticalStats == null) return statsConfig.Default_CriticalRate;
+            return statsConfig.Default_CriticalRate * criticalStats.CriticalRate;
+        }
+
+        public (float, float) GetCriticalRate(float maxCoreCriticalRate)
+        {
+            if(criticalStats == null) return (0, statsConfig.Default_CriticalRate);
+            return (statsConfig.Default_CriticalRate * criticalStats.CriticalRate, statsConfig.Default_CriticalRate * maxCoreCriticalRate);
+        }
+
+#endregion
+
         // -- 攻撃関連 --
         public override float ApplyDamageCalculation()
         {

@@ -19,6 +19,8 @@ namespace Player
                 StatusType.Power => Default_Power,
                 StatusType.Stamina => Default_Stamina,
                 StatusType.Guard => Default_Guard,
+                StatusType.CriticalDamage => Default_CriticalDamage,
+                StatusType.CriticalRate => Default_CriticalRate,
                 _ => throw new System.ArgumentException($"Invalid StatusType: {type}"),
             };
         }
