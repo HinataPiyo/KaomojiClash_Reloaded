@@ -22,7 +22,7 @@ namespace UI
         void Start()
         {
             CreateSymbolTypeButton(SymbolType.Mouth); // 初期状態としてMouthを選択
-            OnSymbolTypeChanged?.Invoke(SymbolType.Mouth);
+            OnSymbolTypeChanged += (type) => ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
         }
 
         /// <summary>

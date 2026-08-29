@@ -5,6 +5,9 @@ namespace UI
 
     public enum PanelName
     { Home, KaomojiBuild }
+
+    public enum NextOrBack
+    { Next, Back }
     public class PanelChangeButton : MonoBehaviour
     {
         [System.Serializable]
@@ -13,6 +16,8 @@ namespace UI
             public PanelName panelName;
             public Canvas canvas;
         }
+
+        [SerializeField] NextOrBack thisNextOrBack;
 
         [SerializeField] Entry thisEntry;
         [SerializeField] Entry targetEntry;
@@ -29,6 +34,15 @@ namespace UI
         {
             thisEntry.canvas.enabled = false;
             targetEntry.canvas.enabled = true;
+
+            if(thisNextOrBack == NextOrBack.Next)
+            {
+                ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
+            }
+            else if(thisNextOrBack == NextOrBack.Back)
+            {
+                ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.Cancel_00);
+            }
         }
     }
 }

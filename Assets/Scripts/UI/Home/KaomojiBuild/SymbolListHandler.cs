@@ -11,6 +11,7 @@ namespace UI
         void Awake()
         {
             SymbolTypeChangeHandler.OnSymbolTypeChanged += CreateSymbolList;
+            CreateSymbolList(SymbolType.Mouth); // 初期状態としてMouthを選択
         }
 
         void OnDestroy()

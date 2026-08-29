@@ -25,5 +25,15 @@ namespace UI
         {
             gameObject.SetActive(false);
         }
+
+        public void StartReadySE()
+        {
+            ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.Ready);
+        }
+
+        public void StartFightSE()
+        {
+            ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.Fight);
+        }
     }
 }

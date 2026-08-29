@@ -42,6 +42,7 @@ namespace Wave
         IStartWaveAnimationUI waveStartAnimationUI;
         IStage stage;
         ICamera cam;
+        IAudioManager audioManager;
 
         BattleState battleState = BattleState.WaitingForNextWave;
 
@@ -97,6 +98,7 @@ namespace Wave
             cam = ApiProvider.Get<ICamera>();
             enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
             waveStartAnimationUI = ApiProvider.Get<IStartWaveAnimationUI>();
+            audioManager = ApiProvider.Get<IAudioManager>();
 
             wait_UntilAllEnemiesDestructed = new WaitUntil(() => enemySpawn.IsTotalDestructed());
             wait_MovePlayerToEnemy = new WaitUntil(() => !playerSpawn.IsMoveToEnemy);
@@ -118,6 +120,8 @@ namespace Wave
                         IsStopCharacter = true;      // プレイヤーの入力を禁止
                         waveCount++;
 
+                        audioManager.PlayBGM(BGMName.Battle_Moving);
+
                         cam.SetCameraState(CameraState.PlayerMoving);
                         Vector2 spawnPosition = stage.EncountPosition(waveCount);
                         enemySpawn.OnlySpawnEnemy(spawnPosition);       // 最初は一体生成する
@@ -128,7 +132,10 @@ namespace Wave
                         yield return wait_MovePlayerToEnemy;        // プレイヤーが敵の位置に移動するのを待つ
 
                         stage.CheckCreateWall(spawnPosition);      // Wallを生成する
-                        
+
+                        audioManager.StopBGM();
+                        audioManager.PlaySE(SEAudioName.Contact);
+
                         // プレイヤーが敵にエンカウントしたらStateを変える
                         ChangeBattleState(BattleState.WaveInProgress);
                         break;
@@ -142,6 +149,7 @@ namespace Wave
                         waveStartAnimationUI.ShowStartWaveAnimation();    // Wave開始のアニメーションを表示
                         yield return wait_StartWaveAnimationTime;     // Wave開始のアニメーションを表示する時間
 
+                        audioManager.PlayBGM(BGMName.Battle_Fighting);
                         cam.SetCameraState(CameraState.Battle);
                         IsStopCharacter = false;                    // プレイヤーの入力を許可
 

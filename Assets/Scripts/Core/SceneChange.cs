@@ -50,13 +50,20 @@ public class SceneChange : MonoBehaviour, ISceneChange
 
     IEnumerator LoadSceneAsync(SceneName sceneName)
     {
-        AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneNameToString[sceneName]);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneNameToString[sceneName]);
 
         while (!asyncLoad.isDone)
         {
             yield return null;
         }
 
+        ApiProvider.Get<IAudioManager>().PlayBGM(sceneName switch
+        {
+            SceneName.Title => BGMName.None,
+            SceneName.Home => BGMName.Home,
+            SceneName.Battle => BGMName.None,
+            _ => throw new System.Exception("Unknown scene name")
+        });
         Debug.Log($"<color=green>Scene changed to {sceneName}</color>");
     }
 }
