@@ -28,7 +28,7 @@ public abstract class StatsCalculator : MonoBehaviour, IStatsCalculator
     public abstract float GetStamina();
     public abstract float GetSpeed();
     public abstract float GetPower();
-    public abstract float GetDefense();
+    public abstract float GetGuard();
 
     public abstract float ApplyDamageCalculation();
 

@@ -9,28 +9,74 @@ namespace Player
 
         void Start()
         {
-            combo = ApiProvider.Get<ICombo>();
+            if(ApiProvider.Get<ISceneChange>().CurrentScene == SceneName.Battle)
+            {
+                combo = ApiProvider.Get<ICombo>();
+            }
         }
+
+// -- ステータス関連 --
+
+#region Stamina
 
         public override float GetStamina()
         {
             return statsConfig.Default_Stamina * coreStats.Stamina;
         }
 
+        public (float, float) GetStamina(float maxCoreStamina)
+        {
+            return (statsConfig.Default_Stamina * coreStats.Stamina, statsConfig.Default_Stamina * maxCoreStamina);
+        }
+
+#endregion
+
+#region Power
+
         public override float GetPower()
         {
             return statsConfig.Default_Power * coreStats.Power * combo.ComboDamageRate;
         }
+
+        public (float, float) GetPower(float maxCorePower)
+        {
+            return (statsConfig.Default_Power * coreStats.Power, statsConfig.Default_Power * maxCorePower);
+        }
+
+#endregion
+
+#region Speed
 
         public override float GetSpeed()
         {
             return statsConfig.Default_Speed * coreStats.Speed;
         }
 
-        public override float GetDefense()
+        public (float, float) GetSpeed(float maxCoreSpeed)
         {
-            return statsConfig.Default_Defense * coreStats.Defense;
+            if(coreStats == null)
+            {
+                Debug.LogWarning("CoreStats is null. Please check the KaomojiData setup.");
+                return (0f, 0f);
+            }
+            return (statsConfig.Default_Speed * coreStats.Speed, statsConfig.Default_Speed * maxCoreSpeed);
         }
+
+#endregion
+
+#region Guard
+
+        public override float GetGuard()
+        {
+            return statsConfig.Default_Guard * coreStats.Guard;
+        }
+
+        public (float, float) GetGuard(float maxCoreGuard)
+        {
+            return (statsConfig.Default_Guard * coreStats.Guard, statsConfig.Default_Guard * maxCoreGuard);
+        }
+
+#endregion
 
         // -- 攻撃関連 --
         public override float ApplyDamageCalculation()

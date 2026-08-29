@@ -21,9 +21,9 @@ namespace Enemy
             return statsConfig.Default_Power * coreStats.Power;
         }
 
-        public override float GetDefense()
+        public override float GetGuard()
         {
-            return statsConfig.Default_Defense * coreStats.Defense;
+            return statsConfig.Default_Guard * coreStats.Guard;
         }
 
         // -- 攻撃関連 --

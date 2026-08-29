@@ -17,6 +17,9 @@ namespace Player
         [SerializeField] GameObject playerPrefab;
         [SerializeField] KaomojiData playerKaomojiData;
 
+        [Header("Homeの設定")]
+        [SerializeField] StatusRaderChartUIController statusRaderChartUICtrl;
+
         GameObject playerInstance;
         ICamera cam;
         IWaveStartWorldUI waveStartWorldUI;
@@ -40,8 +43,11 @@ namespace Player
 
         void Start()
         {
-            cam = ApiProvider.Get<ICamera>();
-            waveStartWorldUI = ApiProvider.Get<IWaveStartWorldUI>();
+            if(ApiProvider.Get<ISceneChange>().CurrentScene == SceneName.Battle)
+            {
+                cam = ApiProvider.Get<ICamera>();
+                waveStartWorldUI = ApiProvider.Get<IWaveStartWorldUI>();
+            }
 
             // ゲーム開始時にプレイヤーを生成
             SpawnPlayer();
@@ -81,12 +87,23 @@ namespace Player
             {
                 playerInstance = Instantiate(playerPrefab, transform.position, Quaternion.identity);
                 playerInstance.GetComponentInChildren<IKaomojiSetUp>().SetUp(playerKaomojiData);
-                cam.SetCameraTarget(playerInstance.transform);
+                if (ApiProvider.Get<ISceneChange>().CurrentScene != SceneName.Battle)
+                {
+                    statusRaderChartUICtrl?.UpdateRadarChart(playerInstance.GetComponent<PlayerStatsCalculator>());
+                    playerInstance.SetActive(false);
+                    return;
+                }
             }
             else
             {
                 Debug.Log("既にプレイヤーが存在します。");
+                if (ApiProvider.Get<ISceneChange>().CurrentScene == SceneName.Battle)
+                {
+                    playerInstance.SetActive(true);
+                }
             }
+
+            cam?.SetCameraTarget(playerInstance.transform);
         }
     }
 }

@@ -13,8 +13,13 @@ public class SymbolMouthData : SymbolData
 [System.Serializable]
 public class CoreStats
 {
-    [Range(1, 1.5f)] public float Stamina;
-    [Range(1, 1.5f)] public float Power;
-    [Range(1, 1.5f)] public float Speed;
-    [Range(1, 1.5f)] public float Defense;
+    public const float Max_Stamina = 1.5f;
+    public const float Max_Power = 1.5f;
+    public const float Max_Speed = 1.5f;
+    public const float Max_Guard = 1.5f;
+
+    [Range(1, Max_Stamina)] public float Stamina;
+    [Range(1, Max_Power)] public float Power;
+    [Range(1, Max_Speed)] public float Speed;
+    [Range(1, Max_Guard)] public float Guard;
 }
