@@ -48,6 +48,10 @@ public class StatusRadarChart : Graphic
     [SerializeField, Min(0f)]
     private float statusLineWidth = 2f;
 
+    [Header("Animation Settings")]
+    [SerializeField, Min(0.1f)]
+    private float lerpSpeed = 10f;
+
     private float[] values;
     private float[] displayValues;
 
@@ -80,7 +84,7 @@ public class StatusRadarChart : Graphic
 
         axisCount = Mathf.Max(3, newRadarStatuses.Length);
 
-        values = new float[axisCount];
+        EnsureValueArray();
 
         for (int i = 0; i < axisCount; i++)
         {
@@ -91,9 +95,6 @@ public class StatusRadarChart : Graphic
             );
         }
 
-        displayValues = new float[axisCount];
-        values.CopyTo(displayValues, 0);
-
         SetVerticesDirty();
     }
 
@@ -102,14 +103,15 @@ public class StatusRadarChart : Graphic
     /// </summary>
     public void SetValue(StatusType type, float value, float maxValue)
     {
+        EnsureValueArray();
         int index = (int)type;
         if (index < 0 || index >= values.Length)
             return;
 
         values[index] = Mathf.Clamp(
-            value,
+            value / maxValue,
             0f,
-            maxValue
+            1f
         );
 
         SetVerticesDirty();
@@ -145,21 +147,70 @@ public class StatusRadarChart : Graphic
         if (values == null || values.Length != axisCount)
         {
             float[] oldValues = values;
-
             values = new float[axisCount];
 
             if (oldValues != null)
             {
-                int copyCount = Mathf.Min(
-                    oldValues.Length,
-                    values.Length
-                );
-
+                int copyCount = Mathf.Min(oldValues.Length, values.Length);
                 for (int i = 0; i < copyCount; i++)
                 {
                     values[i] = oldValues[i];
                 }
             }
+        }
+
+        if (displayValues == null || displayValues.Length != axisCount)
+        {
+            float[] oldDisplayValues = displayValues;
+            displayValues = new float[axisCount];
+
+            if (oldDisplayValues != null)
+            {
+                int copyCount = Mathf.Min(oldDisplayValues.Length, displayValues.Length);
+                for (int i = 0; i < copyCount; i++)
+                {
+                    displayValues[i] = oldDisplayValues[i];
+                }
+            }
+            else if (values != null)
+            {
+                values.CopyTo(displayValues, 0);
+            }
+        }
+    }
+
+    protected virtual void Update()
+    {
+        if (!Application.isPlaying)
+        {
+            if (values != null && displayValues != null && values.Length == displayValues.Length)
+            {
+                values.CopyTo(displayValues, 0);
+            }
+            return;
+        }
+
+        if (values == null || displayValues == null || values.Length != axisCount || displayValues.Length != axisCount)
+            return;
+
+        bool dirty = false;
+        for (int i = 0; i < axisCount; i++)
+        {
+            if (Mathf.Abs(displayValues[i] - values[i]) > 0.0001f)
+            {
+                displayValues[i] = Mathf.Lerp(displayValues[i], values[i], Time.deltaTime * lerpSpeed);
+
+                if (Mathf.Abs(displayValues[i] - values[i]) < 0.001f)
+                {
+                    displayValues[i] = values[i];
+                }
+                dirty = true;
+            }
+        }
+
+        if (dirty)
+        {
+            SetVerticesDirty();
         }
     }
 
@@ -224,14 +275,14 @@ public class StatusRadarChart : Graphic
 
     private void DrawStatus(VertexHelper vh)
     {
-        if (values == null || values.Length < axisCount)
+        if (displayValues == null || displayValues.Length < axisCount)
             return;
 
         Vector2[] points = new Vector2[axisCount];
 
         for (int i = 0; i < axisCount; i++)
         {
-            float normalized = values[i];
+            float normalized = displayValues[i];
 
             points[i] = GetPoint(
                 i,
