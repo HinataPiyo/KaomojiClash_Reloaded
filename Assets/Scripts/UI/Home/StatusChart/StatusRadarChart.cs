@@ -8,6 +8,7 @@ public class RadarStatus
 {
     public StatusType type;
     public float value;
+    public float minValue;
     public float maxValue;
 }
 
@@ -88,31 +89,15 @@ public class StatusRadarChart : Graphic
 
         for (int i = 0; i < axisCount; i++)
         {
-            values[i] = Mathf.Clamp(
-                newRadarStatuses[i].value / newRadarStatuses[i].maxValue,
-                0f,
-                1f
-            );
+            float val = newRadarStatuses[i].value;
+            float min = newRadarStatuses[i].minValue;
+            float max = newRadarStatuses[i].maxValue;
+
+            float clampedValue = Mathf.Clamp(val, min, max);
+            float range = max - min;
+
+            values[i] = range > 0f ? (clampedValue - min) / range : 0f;
         }
-
-        SetVerticesDirty();
-    }
-
-    /// <summary>
-    /// 指定したステータスだけ変更します。
-    /// </summary>
-    public void SetValue(StatusType type, float value, float maxValue)
-    {
-        EnsureValueArray();
-        int index = (int)type;
-        if (index < 0 || index >= values.Length)
-            return;
-
-        values[index] = Mathf.Clamp(
-            value / maxValue,
-            0f,
-            1f
-        );
 
         SetVerticesDirty();
     }

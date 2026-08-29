@@ -34,6 +34,9 @@ namespace Wave
     {
         [SerializeField] WaveConfig waveConfig;
 
+        public static event System.Action OnWaitingForNextWave;
+        public static event System.Action OnWaveInProgress;
+
         IEnemySpawn enemySpawn;
         IEnemyExpFactory enemyExpFactory;
         IPlayerSpawn playerSpawn;
@@ -122,6 +125,8 @@ namespace Wave
 
                         audioManager.PlayBGM(BGMName.Battle_Moving);
 
+                        OnWaitingForNextWave?.Invoke();
+
                         cam.SetCameraState(CameraState.PlayerMoving);
                         Vector2 spawnPosition = stage.EncountPosition(waveCount);
                         enemySpawn.OnlySpawnEnemy(spawnPosition);       // 最初は一体生成する
@@ -145,6 +150,7 @@ namespace Wave
                         enemySpawn.OtherSpawnEnemy(spawnCount);
 
                         yield return wait_EncountAnimationTime;      // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
+                        OnWaveInProgress?.Invoke();
 
                         waveStartAnimationUI.ShowStartWaveAnimation();    // Wave開始のアニメーションを表示
                         yield return wait_StartWaveAnimationTime;     // Wave開始のアニメーションを表示する時間

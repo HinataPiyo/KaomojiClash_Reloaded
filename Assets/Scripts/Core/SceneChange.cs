@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +13,8 @@ public interface ISceneChange
 public enum SceneName { Title, Home, Battle }
 public class SceneChange : MonoBehaviour, ISceneChange
 {
-    SceneChange I;
+    static SceneChange I;
+    SceneName beforeScene;
     static readonly Dictionary<SceneName, string> sceneNameToString = new Dictionary<SceneName, string>
     {
         { SceneName.Title, "TitleScene" },
@@ -40,22 +42,19 @@ public class SceneChange : MonoBehaviour, ISceneChange
             "BattleScene" => SceneName.Battle,
             _ => throw new System.Exception("Unknown scene name")
         };
+        beforeScene = CurrentScene;
     }
 
     public void ChangeScene(SceneName sceneName)
     {
-        CurrentScene = sceneName;
         StartCoroutine(LoadSceneAsync(sceneName));
     }
 
     IEnumerator LoadSceneAsync(SceneName sceneName)
     {
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneNameToString[sceneName]);
-
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
+        beforeScene = CurrentScene;
+        ApiProvider.Get<ILetterBox>().Close();
+        yield return new WaitForSeconds(1.0f);
 
         ApiProvider.Get<IAudioManager>().PlayBGM(sceneName switch
         {
@@ -64,6 +63,29 @@ public class SceneChange : MonoBehaviour, ISceneChange
             SceneName.Battle => BGMName.None,
             _ => throw new System.Exception("Unknown scene name")
         });
+
+        // これは非同期でシーンをロードするための処理です。シーンのロードが完了するまで待機します。
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneNameToString[sceneName]);
+        CurrentScene = sceneName;
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        LetterBoxAnimation();
         Debug.Log($"<color=green>Scene changed to {sceneName}</color>");
+    }
+
+    void LetterBoxAnimation()
+    {
+        if(CurrentScene == SceneName.Battle)
+        {
+            ApiProvider.Get<ILetterBox>().AllOpen();
+        }
+        else
+        {
+            ApiProvider.Get<ILetterBox>().Open();
+        }
     }
 }
