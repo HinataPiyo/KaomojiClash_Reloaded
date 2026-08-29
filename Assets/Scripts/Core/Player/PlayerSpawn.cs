@@ -17,9 +17,6 @@ namespace Player
         [SerializeField] GameObject playerPrefab;
         [SerializeField] KaomojiData playerKaomojiData;
 
-        [SerializeField] BaseStatusView baseStatusView;
-        [SerializeField] StatusRaderChartView statusRaderChartView;
-
         GameObject playerInstance;
         ICamera cam;
         IWaveStartWorldUI waveStartWorldUI;
@@ -87,24 +84,12 @@ namespace Player
             {
                 playerInstance = Instantiate(playerPrefab, transform.position, Quaternion.identity);
                 playerInstance.GetComponentInChildren<IKaomojiSetUp>().SetUp(playerKaomojiData);
-                if (ApiProvider.Get<ISceneChange>().CurrentScene != SceneName.Battle)
-                {
-                    // プレイヤーのステータスをUIに反映
-                    PlayerStatsCalculator playerStatsCalculator = playerInstance.GetComponent<PlayerStatsCalculator>();
-                    baseStatusView?.SetPlayerStatus(playerStatsCalculator);
-                    statusRaderChartView?.SetPlayerStatus(playerStatsCalculator);
-                    playerInstance.SetActive(false);
-
-                    Debug.Log("<color=green>Player spawned and set up successfully.</color>");
-                    return;
-                }
+                cam?.SetCameraTarget(playerInstance.transform);
             }
             else
             {
                 Debug.Log("既にプレイヤーが存在します。");
             }
-
-            cam?.SetCameraTarget(playerInstance.transform);
         }
     }
 }

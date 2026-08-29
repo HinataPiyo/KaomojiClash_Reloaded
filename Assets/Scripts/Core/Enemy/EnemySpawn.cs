@@ -122,7 +122,7 @@ namespace Enemy
                 }
                 
                 // 取得したSymbolDataをKaomojiDataにセットする
-                data.SetSymbolDataByType(type, symbolData);
+                data.SetSymbolDataByType(symbolData);
             }
 
             Debug.Log($"Created enemy KaomojiData: {data}");

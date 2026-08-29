@@ -29,9 +29,9 @@ public class KaomojiData : ScriptableObject
         };
     }
 
-    public void SetSymbolDataByType(SymbolType type, SymbolData data)
+    public void SetSymbolDataByType(SymbolData data)
     {
-        switch (type)
+        switch (data.SymbolType)
         {
             case SymbolType.Mouth:
                 symbol_Mouth = data;
@@ -49,7 +49,7 @@ public class KaomojiData : ScriptableObject
                 symbol_RightHand = data;
                 break;
             default:
-                throw new System.ArgumentException($"Invalid SymbolType: {type}");
+                throw new System.ArgumentException($"Invalid SymbolType: {data.SymbolType}");
         }
     }
 

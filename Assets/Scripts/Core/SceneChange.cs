@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public interface ISceneChange
 {
@@ -31,6 +32,14 @@ public class SceneChange : MonoBehaviour, ISceneChange
         I = this;
         DontDestroyOnLoad(gameObject);
         ApiProvider.Register<ISceneChange>(this);
+
+        CurrentScene = SceneManager.GetActiveScene().name switch
+        {
+            "TitleScene" => SceneName.Title,
+            "HomeScene" => SceneName.Home,
+            "BattleScene" => SceneName.Battle,
+            _ => throw new System.Exception("Unknown scene name")
+        };
     }
 
     public void ChangeScene(SceneName sceneName)

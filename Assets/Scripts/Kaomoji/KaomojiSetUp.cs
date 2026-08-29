@@ -11,8 +11,7 @@ public interface IKaomojiSetUp
 public interface IKaomojiStats
 {
     bool TryGetSkill<T>(out T skill, out int level) where T : class;
-    CoreStats TryGetCoreStats();
-    CriticalStats TryGetCriticalStats();
+    public KaomojiData Data { get; }
 }
 
 public interface IInitializeStats
@@ -26,7 +25,7 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
     static readonly char default_FaceLineLeft = '(';
     static readonly char default_FaceLineRight = ')';
 
-    KaomojiData data;
+    public KaomojiData Data { get; private set; }
 
     int hasExp = 0;
 
@@ -37,7 +36,7 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
         string kaomoji = GetKaomojiCoupling(data);
         SkillsWithLevels = SkillData.GetAllSkillsWithLevelsFromKaomojiData(data);
         kaomojiBody.text = kaomoji;
-        this.data = data;
+        Data = data;
         hasExp = exp;
 
         IStatsCalculator statsCalculator = GetComponentInParent<IStatsCalculator>();
@@ -110,7 +109,7 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
     /// KaomojiDataのMouthTypeに関連するCoreStatsを取得する。
     /// もしMouthTypeが存在しない場合、またはCoreStatsが定義されていない場合はnullを返す。
     /// </summary>
-    public CoreStats TryGetCoreStats()
+    public static CoreStats TryGetCoreStats(KaomojiData data)
     {
         if (data == null) return null;
 
@@ -126,7 +125,7 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
     /// <summary>
     /// KaomojiDataのRightEyeTypeに関連するCriticalStatsを取得する。
     /// </summary>
-    public CriticalStats TryGetCriticalStats()
+    public static CriticalStats TryGetCriticalStats(KaomojiData data)
     {
         if (data == null) return null;
 

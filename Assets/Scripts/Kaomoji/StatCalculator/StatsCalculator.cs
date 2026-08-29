@@ -18,8 +18,19 @@ public abstract class StatsCalculator : MonoBehaviour, IStatsCalculator
     public void SetUp(IKaomojiStats kaomojiStats)
     {
         stats = kaomojiStats;
-        coreStats = stats.TryGetCoreStats();
-        criticalStats = stats.TryGetCriticalStats();
+        coreStats = KaomojiSetUp.TryGetCoreStats(stats.Data);
+        criticalStats = KaomojiSetUp.TryGetCriticalStats(stats.Data);
+
+        if(coreStats == null)
+        {
+            Debug.LogWarning("CoreStats is null. Please check the KaomojiData setup.");
+        }
+    }
+
+    public void SetUp(KaomojiData kaomojiData)
+    {
+        coreStats = KaomojiSetUp.TryGetCoreStats(kaomojiData);
+        criticalStats = KaomojiSetUp.TryGetCriticalStats(kaomojiData);
 
         if(coreStats == null)
         {

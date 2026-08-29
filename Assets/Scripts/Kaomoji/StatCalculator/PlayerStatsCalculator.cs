@@ -153,7 +153,7 @@ namespace Player
         public float GetWallReflectionPower()
         {
             stats.TryGetSkill(out IWallReflection wallReflection, out int level);
-            return GetSpeed() * wallReflection.GetReflectionPower(level);
+            return GetSpeed() * wallReflection?.GetReflectionPower(level) ?? 0f;
         }
     }
 }
