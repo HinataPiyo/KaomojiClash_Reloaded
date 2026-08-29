@@ -19,89 +19,105 @@ namespace Player
 
 #region Stamina
 
+        public float GetBaseStamina()
+        {
+            return statsConfig.Default_Stamina;
+        }
+
         public override float GetStamina()
         {
-            return statsConfig.Default_Stamina * coreStats.Stamina;
+            return GetBaseStamina() * coreStats.Stamina;
         }
 
         public (float, float) GetStamina(float maxCoreStamina)
         {
-            return (statsConfig.Default_Stamina * coreStats.Stamina, statsConfig.Default_Stamina * maxCoreStamina);
+            return (GetBaseStamina() * coreStats.Stamina, GetBaseStamina() * maxCoreStamina);
         }
 
 #endregion
 
 #region Power
 
+        public float GetBasePower()
+        {
+            return statsConfig.Default_Power;
+        }
+
         public override float GetPower()
         {
-            return statsConfig.Default_Power * coreStats.Power * combo.ComboDamageRate;
+            return GetBasePower() * coreStats.Power * combo.ComboDamageRate;
         }
 
         public (float, float) GetPower(float maxCorePower)
         {
-            return (statsConfig.Default_Power * coreStats.Power, statsConfig.Default_Power * maxCorePower);
+            return (GetBasePower() * coreStats.Power, GetBasePower() * maxCorePower);
         }
 
 #endregion
 
 #region Speed
 
+        public float GetBaseSpeed()
+        {
+            return statsConfig.Default_Speed;
+        }
+
         public override float GetSpeed()
         {
-            return statsConfig.Default_Speed * coreStats.Speed;
+            return GetBaseSpeed() * coreStats.Speed;
         }
 
         public (float, float) GetSpeed(float maxCoreSpeed)
         {
-            if(coreStats == null)
-            {
-                Debug.LogWarning("CoreStats is null. Please check the KaomojiData setup.");
-                return (0f, 0f);
-            }
-            return (statsConfig.Default_Speed * coreStats.Speed, statsConfig.Default_Speed * maxCoreSpeed);
+            return (GetBaseSpeed() * coreStats.Speed, GetBaseSpeed() * maxCoreSpeed);
         }
 
 #endregion
 
 #region Guard
 
+        public float GetBaseGuard()
+        {
+            return statsConfig.Default_Guard;
+        }
+
         public override float GetGuard()
         {
-            return statsConfig.Default_Guard * coreStats.Guard;
+            return GetBaseGuard() * coreStats.Guard;
         }
 
         public (float, float) GetGuard(float maxCoreGuard)
         {
-            return (statsConfig.Default_Guard * coreStats.Guard, statsConfig.Default_Guard * maxCoreGuard);
+            return (GetBaseGuard() * coreStats.Guard, GetBaseGuard() * maxCoreGuard);
         }
 
 #endregion
 
 
 #region Critical
+
         public override float GetCriticalDamage()
         {
             if(criticalStats == null) return statsConfig.Default_CriticalDamage;
-            return statsConfig.Default_CriticalDamage * criticalStats.CriticalDamage;
+            return statsConfig.Default_CriticalDamage + criticalStats.CriticalDamage;
         }
 
         public (float, float) GetCriticalDamage(float maxCoreCriticalDamage)
         {
             if(criticalStats == null) return (0, statsConfig.Default_CriticalDamage);
-            return (statsConfig.Default_CriticalDamage * criticalStats.CriticalDamage, statsConfig.Default_CriticalDamage * maxCoreCriticalDamage);
+            return (statsConfig.Default_CriticalDamage + criticalStats.CriticalDamage, statsConfig.Default_CriticalDamage + maxCoreCriticalDamage);
         }
 
         public override float GetCriticalRate()
         {
             if(criticalStats == null) return statsConfig.Default_CriticalRate;
-            return statsConfig.Default_CriticalRate * criticalStats.CriticalRate;
+            return statsConfig.Default_CriticalRate + criticalStats.CriticalRate;
         }
 
         public (float, float) GetCriticalRate(float maxCoreCriticalRate)
         {
             if(criticalStats == null) return (0, statsConfig.Default_CriticalRate);
-            return (statsConfig.Default_CriticalRate * criticalStats.CriticalRate, statsConfig.Default_CriticalRate * maxCoreCriticalRate);
+            return (statsConfig.Default_CriticalRate + criticalStats.CriticalRate, statsConfig.Default_CriticalRate + maxCoreCriticalRate);
         }
 
 #endregion

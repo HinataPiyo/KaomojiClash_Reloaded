@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 public enum SymbolType { Mouth, LeftEye, RightEye, LeftHand, RightHand, MAX }
-public enum StatusType { Speed, Power, Stamina, Guard, CriticalDamage, CriticalRate }
+public enum StatusType { Stamina, Power, Speed, Guard, CriticalDamage, CriticalRate }
 
 [CreateAssetMenu(fileName = "SymbolData", menuName = "KaomojiClash_Reloaded/SymbolData")]
 public class SymbolData : ScriptableObject

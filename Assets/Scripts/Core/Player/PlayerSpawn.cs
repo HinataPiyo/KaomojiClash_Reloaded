@@ -17,8 +17,8 @@ namespace Player
         [SerializeField] GameObject playerPrefab;
         [SerializeField] KaomojiData playerKaomojiData;
 
-        [Header("Homeの設定")]
-        [SerializeField] StatusRaderChartUIController statusRaderChartUICtrl;
+        [SerializeField] BaseStatusView baseStatusView;
+        [SerializeField] StatusRaderChartView statusRaderChartView;
 
         GameObject playerInstance;
         ICamera cam;
@@ -89,7 +89,10 @@ namespace Player
                 playerInstance.GetComponentInChildren<IKaomojiSetUp>().SetUp(playerKaomojiData);
                 if (ApiProvider.Get<ISceneChange>().CurrentScene != SceneName.Battle)
                 {
-                    statusRaderChartUICtrl?.UpdateRadarChart(playerInstance.GetComponent<PlayerStatsCalculator>());
+                    // プレイヤーのステータスをUIに反映
+                    PlayerStatsCalculator playerStatsCalculator = playerInstance.GetComponent<PlayerStatsCalculator>();
+                    baseStatusView?.SetPlayerStatus(playerStatsCalculator);
+                    statusRaderChartView?.SetPlayerStatus(playerStatsCalculator);
                     playerInstance.SetActive(false);
                     return;
                 }
