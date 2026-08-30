@@ -63,8 +63,24 @@ namespace Enemy
             IKaomojiSetUp kaomojiSetUp = enemy.GetComponentInChildren<IKaomojiSetUp>();
             int enemyExp = enemyExpFactory.CreateEnemyEXP(kaomojiData);
 
-            stamina.OnEnemyDeathEvent += () => OnEnemyDeath(enemy, enemyExp);
-            kaomojiSetUp.SetUp(kaomojiData, enemyExp);
+            if (stamina != null)
+            {
+                stamina.OnEnemyDeathEvent += () => OnEnemyDeath(enemy, enemyExp);
+            }
+            else
+            {
+                Debug.LogError($"<color=red>IEnemyStamina component is missing on spawned enemy '{enemy.name}'. The script might be detached from the prefab! Please check Enemy.prefab in the inspector.</color>");
+            }
+
+            if (kaomojiSetUp != null)
+            {
+                kaomojiSetUp.SetUp(kaomojiData, enemyExp);
+            }
+            else
+            {
+                Debug.LogError($"<color=red>IKaomojiSetUp component is missing on spawned enemy '{enemy.name}' or its children!</color>");
+            }
+
             spawnedEnemies.Add(enemy);
             cam.AddTargetToGroup(enemy.transform);
         }

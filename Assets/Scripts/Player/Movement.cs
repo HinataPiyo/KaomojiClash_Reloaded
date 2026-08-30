@@ -45,6 +45,8 @@ namespace Player
             // press.IsInProgress() はボタンが押されている間 true になる
             bool isPressedNow = press.IsInProgress();
 
+            Debug.Log($"<color=cyan>Movement Update: isPressedNow={isPressedNow}, isPressed={isPressed}, isDragging={isDragging}</color>");
+
             // 押した瞬間
             if (isPressedNow && !isPressed)
             {

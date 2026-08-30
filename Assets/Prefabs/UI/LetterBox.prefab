@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5056196133485560148}
   - component: {fileID: 5279113050814176574}
   - component: {fileID: 1540279503763786005}
+  - component: {fileID: 3824815923701711046}
   m_Layer: 5
   m_Name: LetterBox
   m_TagString: Untagged
@@ -139,6 +140,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.LetterBoxAnimation
   anim: {fileID: 5279113050814176574}
+--- !u!225 &3824815923701711046
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299026636673026971}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1467625085766972197
 GameObject:
   m_ObjectHideFlags: 0

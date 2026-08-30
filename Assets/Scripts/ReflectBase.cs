@@ -1,7 +1,5 @@
 using UnityEngine;
 using Wall;
-
-
 public abstract class ReflectBase : MonoBehaviour
 {
     protected Rigidbody2D rb;

@@ -184,10 +184,15 @@ namespace Wave
                         break;
                     case BattleState.ArenaObjectSelecting:
                         yield return wait_TimeAfterWaveCompleted;
-                        
+
+                        // プレイヤーをWallの中心に移動させる
+                        playerSpawn.MovementPlayerToWallCenter(stage.GetCurrentWall().GetWallTransform().position);
+
                         // プレイヤーのレベルアップ回数分、ArenaObjectを選択する
                         yield return arenaObjectSelect.ArenaObjectSelectRoutine(playerExpHandler.LevelUpCount);
                         stage.GetCurrentWall().InactivateWall();      // Wallを非表示
+
+                        playerSpawn.SetInvincible(false);    // プレイヤーの無敵状態を解除
 
                         ChangeBattleState(BattleState.WaveCompleted);
                         break;

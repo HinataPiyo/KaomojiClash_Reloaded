@@ -2,14 +2,17 @@ namespace Player
 {
     using UnityEngine;
     using UI;
-    
+
     public interface IPlayerSpawn
     {
         void SpawnPlayer();
         void MovementPlayerToEnemy(Vector2 enemyPosition);
+        void MovementPlayerToWallCenter(Vector2 center);
         GameObject PlayerInstance { get; }
         bool IsPlayerAlive { get; }
         bool IsMoveToEnemy { get; }
+
+        void SetInvincible(bool value);
     }
 
     public class PlayerSpawn : MonoBehaviour, IPlayerSpawn
@@ -23,7 +26,9 @@ namespace Player
 
         static readonly float encountDistance = 2f; // プレイヤーと敵のエンカウント距離
         Vector2 nextWaveEnemyPosition;
+        Vector2 wallCenterPosition;
         public bool IsMoveToEnemy { get; private set; } = false;
+        public bool IsMoveToWallCenter { get; private set; } = false;
 
         // PlayerObject自体を返す
         public GameObject PlayerInstance => playerInstance;
@@ -65,6 +70,16 @@ namespace Player
                     IsMoveToEnemy = false;
                 }
             }
+
+            if(IsMoveToWallCenter)
+            {
+                if(playerInstance == null) return;
+                playerInstance.transform.position = Vector2.MoveTowards(playerInstance.transform.position, wallCenterPosition, Time.deltaTime * 15f);
+                if (Vector2.Distance(playerInstance.transform.position, wallCenterPosition) <= 0.1f)
+                {
+                    IsMoveToWallCenter = false;
+                }
+            }
         }
 
         /// <summary>
@@ -75,6 +90,30 @@ namespace Player
         {
             nextWaveEnemyPosition = enemyPosition;
             IsMoveToEnemy = true;
+        }
+
+        public void MovementPlayerToWallCenter(Vector2 center)
+        {
+            wallCenterPosition = center;
+            IsMoveToWallCenter = true;
+            SetInvincible(true);
+        }
+
+        /// <summary>
+        /// プレイヤーの無敵状態を切り替える
+        /// </summary>
+        public void SetInvincible(bool value)
+        {
+            if(playerInstance == null) return;
+            var invincible = playerInstance.GetComponent<Base.IInvincible>();
+            if (invincible != null)
+            {
+                invincible.ChangeInvincible(value);
+            }
+            else
+            {
+                Debug.LogError($"<color=red>IInvincible component is missing on {playerInstance.name} (playerInstance). If you renamed 'Sutamina' to 'Stamina', the script might be detached from the prefab! Please check Player.prefab in the inspector.</color>");
+            }
         }
 
         // PlayerObjectを生成する
