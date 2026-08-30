@@ -29,9 +29,9 @@ public class KaomojiData : ScriptableObject
         };
     }
 
-    public void SetSymbolDataByType(SymbolType type, SymbolData data)
+    public void SetSymbolDataByType(SymbolData data)
     {
-        switch (type)
+        switch (data.SymbolType)
         {
             case SymbolType.Mouth:
                 symbol_Mouth = data;
@@ -49,7 +49,7 @@ public class KaomojiData : ScriptableObject
                 symbol_RightHand = data;
                 break;
             default:
-                throw new System.ArgumentException($"Invalid SymbolType: {type}");
+                throw new System.ArgumentException($"Invalid SymbolType: {data.SymbolType}");
         }
     }
 
@@ -86,5 +86,28 @@ public class KaomojiData : ScriptableObject
         }
 
         return skillsWithLevels;
+    }
+
+    public (float, float) GetStatusValue(StatusType type)
+    {
+        SymbolMouthData mouthData = symbol_Mouth as SymbolMouthData;
+        if(mouthData == null) return (0f, 0f); // symbol_MouthがSymbolMouthDataでない場合は(0, 0)を返す
+        switch (type)
+        {
+            case StatusType.Speed:
+                return (mouthData.CoreStats.Speed, CoreStats.Max_Speed);
+            case StatusType.Power:
+                return (mouthData.CoreStats.Power, CoreStats.Max_Power);
+            case StatusType.Stamina:
+                return (mouthData.CoreStats.Stamina, CoreStats.Max_Stamina);
+            case StatusType.Guard:
+                return (mouthData.CoreStats.Guard, CoreStats.Max_Guard);
+            case StatusType.CriticalDamage:
+                return (0f, 1f); // 仮の値
+            case StatusType.CriticalRate:
+                return (0f, 1f); // 仮の値
+            default:
+                throw new System.ArgumentException($"Invalid StatusType: {type}");
+        }
     }
 }

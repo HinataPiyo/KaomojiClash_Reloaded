@@ -1,6 +1,7 @@
 namespace Enemy
 {
     using System.Collections.Generic;
+    using UI;
     using UnityEngine;
     using Wave;
 
@@ -13,6 +14,7 @@ namespace Enemy
 
     public class EnemySpawn : MonoBehaviour, IEnemySpawn
     {
+        [SerializeField] EnemyCoreStatsConfig enemyCoreStatsConfig;
         [SerializeField] GameObject enemyPrefab;
 
         List<GameObject> spawnedEnemies = new List<GameObject>();
@@ -21,6 +23,8 @@ namespace Enemy
         IStage stage;
         ICamera cam;
         IEnemyExpFactory enemyExpFactory;
+        IAudioManager audioManager;
+        IResultUIHandler resultUIHandler;
 
         /// <summary>
         /// 敵が全滅しているかどうかを判定する
@@ -38,6 +42,8 @@ namespace Enemy
             stage = ApiProvider.Get<IStage>();
             cam = ApiProvider.Get<ICamera>();
             enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
+            audioManager = ApiProvider.Get<IAudioManager>();
+            resultUIHandler = ApiProvider.Get<IResultUIHandler>();
         }
 
         void OnEnemyDeath(GameObject enemy, int exp = 0)
@@ -46,6 +52,9 @@ namespace Enemy
             cam.RemoveTargetFromGroup(enemy.transform);
             cam.SetCameraState(CameraState.EnemyDeath);
             enemyExpFactory.AddWaveEXPPool(exp);
+            resultUIHandler.AddEnemyKillCount();
+            resultUIHandler.AddGetMoney(enemyCoreStatsConfig.DropMoney);
+            audioManager.PlaySE(SEAudioName.KO);
         }
 
         /// <summary>
@@ -60,8 +69,24 @@ namespace Enemy
             IKaomojiSetUp kaomojiSetUp = enemy.GetComponentInChildren<IKaomojiSetUp>();
             int enemyExp = enemyExpFactory.CreateEnemyEXP(kaomojiData);
 
-            stamina.OnEnemyDeathEvent += () => OnEnemyDeath(enemy, enemyExp);
-            kaomojiSetUp.SetUp(kaomojiData, enemyExp);
+            if (stamina != null)
+            {
+                stamina.OnEnemyDeathEvent += () => OnEnemyDeath(enemy, enemyExp);
+            }
+            else
+            {
+                Debug.LogError($"<color=red>IEnemyStamina component is missing on spawned enemy '{enemy.name}'. The script might be detached from the prefab! Please check Enemy.prefab in the inspector.</color>");
+            }
+
+            if (kaomojiSetUp != null)
+            {
+                kaomojiSetUp.SetUp(kaomojiData, enemyExp);
+            }
+            else
+            {
+                Debug.LogError($"<color=red>IKaomojiSetUp component is missing on spawned enemy '{enemy.name}' or its children!</color>");
+            }
+
             spawnedEnemies.Add(enemy);
             cam.AddTargetToGroup(enemy.transform);
         }
@@ -122,7 +147,7 @@ namespace Enemy
                 }
                 
                 // 取得したSymbolDataをKaomojiDataにセットする
-                data.SetSymbolDataByType(type, symbolData);
+                data.SetSymbolDataByType(symbolData);
             }
 
             Debug.Log($"Created enemy KaomojiData: {data}");

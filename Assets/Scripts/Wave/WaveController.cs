@@ -3,6 +3,7 @@ namespace Wave
     using System.Collections;
     using Enemy;
     using Player;
+    using UI;
     using UnityEngine;
 
     public interface IWave
@@ -33,29 +34,48 @@ namespace Wave
     {
         [SerializeField] WaveConfig waveConfig;
 
+        public static event System.Action OnWaitingForNextWave;
+        public static event System.Action OnWaveInProgress;
+        public static event System.Action OnWaveFailed;
+
         IEnemySpawn enemySpawn;
         IEnemyExpFactory enemyExpFactory;
         IPlayerSpawn playerSpawn;
         IExpHandler playerExpHandler;
         IArenaObjectSelect arenaObjectSelect;
+        IStartWaveAnimationUI waveStartAnimationUI;
         IStage stage;
         ICamera cam;
+        IAudioManager audioManager;
+        ILetterBox letterBox;
 
         BattleState battleState = BattleState.WaitingForNextWave;
 
         int waveCount = 0;
         int releaseStep = 1;
-        WaitForSeconds wait_EncountToStartBattle;
+        WaitForSeconds wait_EncountAnimationTime;
+        WaitForSeconds wait_StartWaveAnimationTime;
         WaitForSeconds wait_TimeAfterWaveCompleted;
         WaitForSeconds wait_TimeAfterWaveFailed;
         WaitUntil wait_UntilAllEnemiesDestructed;
         WaitUntil wait_MovePlayerToEnemy;
 
+        Coroutine waveLoopingCoroutine;
+
         public bool IsStopCharacter { get; private set; } = true;
         public int ReleaseStep => releaseStep;
         public int GetWaveCount() => waveCount;
         public BattleState CurrentBattleState => battleState;
-        public void ChangeBattleState(BattleState newState) => battleState = newState;
+        public void ChangeBattleState(BattleState newState) 
+        {
+            battleState = newState;
+            if (waveLoopingCoroutine != null)
+            {
+                StopCoroutine(waveLoopingCoroutine);
+            }
+
+            waveLoopingCoroutine = StartCoroutine(WaveLooping());
+        }
 
         public int EnemySpawnCount()
         {
@@ -78,7 +98,8 @@ namespace Wave
         {
             ApiProvider.Register<IWave>(this);
             ApiProvider.Register<IBattleState>(this);
-            wait_EncountToStartBattle = new WaitForSeconds(waveConfig.EncountToStartBattle);
+            wait_EncountAnimationTime = new WaitForSeconds(waveConfig.EncountAnimationTime);
+            wait_StartWaveAnimationTime = new WaitForSeconds(waveConfig.StartWaveAnimationTime);
             wait_TimeAfterWaveCompleted = new WaitForSeconds(waveConfig.TimeAfterWaveCompleted);
             wait_TimeAfterWaveFailed = new WaitForSeconds(waveConfig.TimeAfterWaveFailed);
         }
@@ -92,10 +113,14 @@ namespace Wave
             stage = ApiProvider.Get<IStage>();
             cam = ApiProvider.Get<ICamera>();
             enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
+            waveStartAnimationUI = ApiProvider.Get<IStartWaveAnimationUI>();
+            audioManager = ApiProvider.Get<IAudioManager>();
+            letterBox = ApiProvider.Get<ILetterBox>();
 
             wait_UntilAllEnemiesDestructed = new WaitUntil(() => enemySpawn.IsTotalDestructed());
             wait_MovePlayerToEnemy = new WaitUntil(() => !playerSpawn.IsMoveToEnemy);
-            StartCoroutine(WaveLooping());
+            
+            ChangeBattleState(BattleState.WaitingForNextWave);
         }
 
         /// <summary>
@@ -107,11 +132,16 @@ namespace Wave
 
             while (true)
             {
+                yield return null;
                 switch (battleState)
                 {
                     case BattleState.WaitingForNextWave:
                         IsStopCharacter = true;      // プレイヤーの入力を禁止
                         waveCount++;
+
+                        audioManager.PlayBGM(BGMName.Battle_Moving);
+
+                        OnWaitingForNextWave?.Invoke();
 
                         cam.SetCameraState(CameraState.PlayerMoving);
                         Vector2 spawnPosition = stage.EncountPosition(waveCount);
@@ -123,7 +153,10 @@ namespace Wave
                         yield return wait_MovePlayerToEnemy;        // プレイヤーが敵の位置に移動するのを待つ
 
                         stage.CheckCreateWall(spawnPosition);      // Wallを生成する
-                        
+
+                        audioManager.StopBGM();
+                        audioManager.PlaySE(SEAudioName.Contact);
+
                         // プレイヤーが敵にエンカウントしたらStateを変える
                         ChangeBattleState(BattleState.WaveInProgress);
                         break;
@@ -131,9 +164,14 @@ namespace Wave
                         // 敵をランダムな位置に複数体生成する
                         int spawnCount = EnemySpawnCount();
                         enemySpawn.OtherSpawnEnemy(spawnCount);
+                        OnWaveInProgress?.Invoke();
 
-                        yield return wait_EncountToStartBattle;     // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
+                        yield return wait_EncountAnimationTime;      // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
 
+                        waveStartAnimationUI.ShowStartWaveAnimation();    // Wave開始のアニメーションを表示
+                        yield return wait_StartWaveAnimationTime;     // Wave開始のアニメーションを表示する時間
+
+                        audioManager.PlayBGM(BGMName.Battle_Fighting);
                         cam.SetCameraState(CameraState.Battle);
                         IsStopCharacter = false;                    // プレイヤーの入力を許可
 
@@ -161,15 +199,23 @@ namespace Wave
                         ChangeBattleState(BattleState.WaitingForNextWave);
                         break;
                     case BattleState.ArenaObjectSelecting:
+                        yield return wait_TimeAfterWaveCompleted;
+
+                        // プレイヤーをWallの中心に移動させる
+                        playerSpawn.MovementPlayerToWallCenter(stage.GetCurrentWall().GetWallTransform().position);
+
                         // プレイヤーのレベルアップ回数分、ArenaObjectを選択する
                         yield return arenaObjectSelect.ArenaObjectSelectRoutine(playerExpHandler.LevelUpCount);
                         stage.GetCurrentWall().InactivateWall();      // Wallを非表示
 
+                        playerSpawn.SetInvincible(false);    // プレイヤーの無敵状態を解除
+
                         ChangeBattleState(BattleState.WaveCompleted);
                         break;
                     case BattleState.WaveFailed:
-                        // Wave失敗後の処理
+                        letterBox.ShowLetterBox();
                         yield return wait_TimeAfterWaveFailed;
+                        OnWaveFailed?.Invoke();
                         yield break;
                 }
             }

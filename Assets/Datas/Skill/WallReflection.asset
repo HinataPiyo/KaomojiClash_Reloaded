@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd057d1b43fabd4080847161b4d6301, type: 3}
   m_Name: WallReflection
   m_EditorClassIdentifier: Assembly-CSharp::WallReflection
-  skillName: "\u58C1\u53CD\u5C04"
+  skillName: WallReflrection
   reflectionPower:
-  - 2
   - 1.4
   - 1.6
+  - 2

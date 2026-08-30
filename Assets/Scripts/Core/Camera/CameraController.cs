@@ -21,7 +21,7 @@ public partial class CameraController : MonoBehaviour, ICamera
     [SerializeField] CinemachineCamera cam_PlayerMoving;
     [SerializeField] CinemachineTargetGroup targetGroup;
     static readonly float PlayerMovingOrthoSize = 7f;
-    static readonly float EncountOrthoSize = 4f;
+    static readonly float EncountOrthoSize = 3f;
     static readonly float BattleOrthoSize = 5f;
     static readonly float ReflectOrthoSize = 4.5f;
     static readonly float EnemyDeathOrthoSize = 3f;

@@ -110,10 +110,10 @@ CapsuleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -146,8 +146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cee4b0543c3a38b4abad4a28d56bec65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.Movement
-  default_Speed: 5
-  max_DraggingDistance: 3
 --- !u!114 &5460188073533403749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,7 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.Reflect
   speedThreshold: 1
-  power: 5
+  reflectEffectPrefab: {fileID: 5053206923923617459, guid: 7935b7d9d80fa3f418b73b94e136ff73, type: 3}
 --- !u!114 &3116838989438123047
 MonoBehaviour:
   m_ObjectHideFlags: 0

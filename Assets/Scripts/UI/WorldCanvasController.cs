@@ -2,10 +2,17 @@ namespace UI
 {
    using UnityEngine;
 
-    public interface IWorldUI
+    public interface IDamageWorldUI
     {
         void SetPlayerToEnemyDamageText(Vector2 position, float damage);
         void SetEnemyToPlayerDamageText(Vector2 position, float damage);
+
+        void ShowClashObjectUI(Vector2 position);
+    }
+
+    public interface IWaveStartWorldUI
+    {
+        void ShowContactObjectUI(Vector2 position);
     }
 
     public interface IPlayerHereArrow
@@ -13,17 +20,20 @@ namespace UI
         void UpdatePlayerHereArrowPosition(Vector2 position);
     }
 
-    public class WorldCanvasController : MonoBehaviour, IWorldUI, IPlayerHereArrow
+    public class WorldCanvasController : MonoBehaviour, IDamageWorldUI, IPlayerHereArrow, IWaveStartWorldUI
     {
         [SerializeField] ApplyDamageText playerToEnemyDamageText;
         [SerializeField] ApplyDamageText enemyToPlayerDamageText;
         [SerializeField] PlayerStaminaUI playerStaminaUI;
         [SerializeField] Transform playerHereArrow;
+        [SerializeField] GameObject contactObjectUI;
+        [SerializeField] GameObject clashObjectUI;
 
         void Awake()
         {
-            ApiProvider.Register<IWorldUI>(this);
+            ApiProvider.Register<IDamageWorldUI>(this);
             ApiProvider.Register<IPlayerHereArrow>(this);
+            ApiProvider.Register<IWaveStartWorldUI>(this);
         }
 
         public void SetPlayerToEnemyDamageText(Vector2 position, float damage)
@@ -42,6 +52,15 @@ namespace UI
         {
             playerHereArrow.position = position;
         }
-    }
 
+        public void ShowContactObjectUI(Vector2 position)
+        {
+            Instantiate(contactObjectUI, position, Quaternion.identity, transform);
+        }
+
+        public void ShowClashObjectUI(Vector2 position)
+        {
+            Instantiate(clashObjectUI, position, Quaternion.identity, transform);
+        }
+    }
 }

@@ -7,6 +7,7 @@ public interface IArenaObjectSelect
 {
     void CreateArenaObjects(ArenaObjectData data);
     IEnumerator ArenaObjectSelectRoutine(int playerLevelUpCount);
+    List<ArenaObjectController.ArenaObjectSetData> GetArenaObjectSetDatas();
     void EndSelectArenaObject(ArenaObjectData data);
     void SetEditDone(bool done);
 }
@@ -22,6 +23,7 @@ public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
     IStage stage;
     IArenaObjectSelectUI arenaObjectSelectUI;
     IArenaObjectEditModeUI arenaObjectEditModeUI;
+    IResultUIHandler resultUIHandler;
 
     [System.Serializable]
     public class ArenaObjectSetData
@@ -38,6 +40,8 @@ public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
         }
     }
 
+    public List<ArenaObjectSetData> GetArenaObjectSetDatas() => arenaObjectSetDatas;
+
     void Awake()
     {
         ApiProvider.Register<IArenaObjectSelect>(this);
@@ -48,6 +52,7 @@ public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
         stage = ApiProvider.Get<IStage>();
         arenaObjectSelectUI = ApiProvider.Get<IArenaObjectSelectUI>();
         arenaObjectEditModeUI = ApiProvider.Get<IArenaObjectEditModeUI>();
+        resultUIHandler = ApiProvider.Get<IResultUIHandler>();
     }
 
     /// <summary>

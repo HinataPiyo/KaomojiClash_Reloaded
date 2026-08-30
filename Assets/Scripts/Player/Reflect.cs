@@ -6,11 +6,13 @@ namespace Player
     public class Reflect : ReflectBase
     {
         PlayerStatsCalculator statsCalc;
+        IAudioManager audioManager;
 
         protected override void Awake()
         {
             base.Awake();
             statsCalc = GetComponent<PlayerStatsCalculator>();
+            audioManager = ApiProvider.Get<IAudioManager>();
         }
         
         protected override void OnCollisionEnter2D(Collision2D col)
@@ -33,6 +35,7 @@ namespace Player
                 {
                     IAttackable attackable = col.collider.GetComponent<IAttackable>();
                     attackable?.TakeDamage(statsCalc.ApplyDamageCalculation());
+                    audioManager.PlayReflectSE();
                     Debug.Log($"<color=blue>Player</color>が<color=red>Enemy</color>にダメージを与えました");
                 }
             }

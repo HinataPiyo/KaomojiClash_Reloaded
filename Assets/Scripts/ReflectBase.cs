@@ -1,7 +1,5 @@
 using UnityEngine;
 using Wall;
-
-
 public abstract class ReflectBase : MonoBehaviour
 {
     protected Rigidbody2D rb;
@@ -10,6 +8,7 @@ public abstract class ReflectBase : MonoBehaviour
     ICamera cam;
     const float REFRECT_SPEED_BORDER = 1.5f;        // 反射可能な速度の閾値
     [SerializeField] protected float speedThreshold = 0.92f;        // ダメージを与えるための速度の閾値（相手より自分のほうが速い場合のみダメージを与える）
+    [SerializeField] GameObject reflectEffectPrefab;
 
     protected virtual void Awake()
     {
@@ -42,6 +41,7 @@ public abstract class ReflectBase : MonoBehaviour
         Vector2 dir = reflected.normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         Quaternion rot = Quaternion.Euler(0f, 0f, angle);
+        ReflectEffect(transform.position, rot);
 
         hitStop.HitStopEffect();
         cam.SetCameraState(CameraState.Reflect);
@@ -64,5 +64,13 @@ public abstract class ReflectBase : MonoBehaviour
         // 壁の中心に向かって反射する
         IWall wall = stage.GetCurrentWall();
         rb.AddForce(((Vector2)wall.GetWallTransform().position - (Vector2)transform.position).normalized * reflectionPower, ForceMode2D.Impulse);
+    }
+
+    protected void ReflectEffect(Vector2 position, Quaternion rotation)
+    {
+        if (reflectEffectPrefab != null)
+        {
+            Instantiate(reflectEffectPrefab, position, rotation);
+        }
     }
 }

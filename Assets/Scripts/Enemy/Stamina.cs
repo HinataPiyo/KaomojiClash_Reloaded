@@ -7,7 +7,7 @@ namespace Enemy
         public event System.Action OnEnemyDeathEvent;
     }
     
-    public class Stamina : StaminaBase, IEnemyStamina
+    public class Stamina : StaminaBase, IEnemyStamina, IInitializeStats
     {
         public event System.Action OnEnemyDeathEvent;
 
@@ -19,10 +19,14 @@ namespace Enemy
             statsCalc = GetComponent<EnemyStatsCalculator>();
         }
 
+        public void InitializeStats()
+        {
+            currentStamina = statsCalc.GetStamina();
+        }
+
         protected override void Start()
         {
             base.Start();
-            currentStamina = statsCalc.GetStamina();
         }
 
         public override void TakeDamage(float amount)
@@ -39,6 +43,7 @@ namespace Enemy
         public override void Die()
         {
             Destroy(gameObject);
+            worldUI.ShowClashObjectUI(transform.position);
             OnEnemyDeathEvent?.Invoke();
         }
     }

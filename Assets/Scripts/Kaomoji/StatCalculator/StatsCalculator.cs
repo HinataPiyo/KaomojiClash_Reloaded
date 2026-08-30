@@ -13,11 +13,24 @@ public abstract class StatsCalculator : MonoBehaviour, IStatsCalculator
 {
     protected IKaomojiStats stats;
     protected CoreStats coreStats;
+    protected CriticalStats criticalStats;
 
     public void SetUp(IKaomojiStats kaomojiStats)
     {
         stats = kaomojiStats;
-        coreStats = stats.TryGetCoreStats();
+        coreStats = KaomojiSetUp.TryGetCoreStats(stats.Data);
+        criticalStats = KaomojiSetUp.TryGetCriticalStats(stats.Data);
+
+        if(coreStats == null)
+        {
+            Debug.LogWarning("CoreStats is null. Please check the KaomojiData setup.");
+        }
+    }
+
+    public void SetUp(KaomojiData kaomojiData)
+    {
+        coreStats = KaomojiSetUp.TryGetCoreStats(kaomojiData);
+        criticalStats = KaomojiSetUp.TryGetCriticalStats(kaomojiData);
 
         if(coreStats == null)
         {
@@ -28,7 +41,10 @@ public abstract class StatsCalculator : MonoBehaviour, IStatsCalculator
     public abstract float GetStamina();
     public abstract float GetSpeed();
     public abstract float GetPower();
-    public abstract float GetDefense();
+    public abstract float GetGuard();
+
+    public abstract float GetCriticalDamage();
+    public abstract float GetCriticalRate();
 
     public abstract float ApplyDamageCalculation();
 
