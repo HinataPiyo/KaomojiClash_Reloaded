@@ -43,6 +43,7 @@ namespace Enemy
         public override void Die()
         {
             Destroy(gameObject);
+            worldUI.ShowClashObjectUI(transform.position);
             OnEnemyDeathEvent?.Invoke();
         }
     }

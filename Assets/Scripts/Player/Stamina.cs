@@ -48,6 +48,7 @@ namespace Player
         {
             Destroy(gameObject);
             cam.SetCameraState(CameraState.PlayerDeath);
+            worldUI.ShowClashObjectUI(transform.position);
             hitStop.PlayerDeathHitStopEffect();
         }
     }

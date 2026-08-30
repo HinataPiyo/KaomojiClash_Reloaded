@@ -21,6 +21,7 @@ namespace Enemy
         IStage stage;
         ICamera cam;
         IEnemyExpFactory enemyExpFactory;
+        IAudioManager audioManager;
 
         /// <summary>
         /// 敵が全滅しているかどうかを判定する
@@ -38,6 +39,7 @@ namespace Enemy
             stage = ApiProvider.Get<IStage>();
             cam = ApiProvider.Get<ICamera>();
             enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
+            audioManager = ApiProvider.Get<IAudioManager>();
         }
 
         void OnEnemyDeath(GameObject enemy, int exp = 0)
@@ -46,6 +48,7 @@ namespace Enemy
             cam.RemoveTargetFromGroup(enemy.transform);
             cam.SetCameraState(CameraState.EnemyDeath);
             enemyExpFactory.AddWaveEXPPool(exp);
+            audioManager.PlaySE(SEAudioName.KO);
         }
 
         /// <summary>

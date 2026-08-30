@@ -30,6 +30,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: d8ea9b624d181fe4ea904f910c0c502e, type: 3}
   - name: 4
     clip: {fileID: 8300000, guid: 78354c7d026e10b469640701f507dbf8, type: 3}
+  - name: 5
+    clip: {fileID: 8300000, guid: 0d02a014a878d914a873a58752f15116, type: 3}
   reflectClips:
   - name: 0
     clip: {fileID: 8300000, guid: 17b339ccaa8a3074e8eda6cbbe3be1f3, type: 3}

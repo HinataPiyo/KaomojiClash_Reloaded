@@ -3951,6 +3951,7 @@ MonoBehaviour:
   playerStaminaUI: {fileID: 1947674782}
   playerHereArrow: {fileID: 1319999084}
   contactObjectUI: {fileID: 5807485332029659025, guid: 680084d42dc032b43bef732c73277fbb, type: 3}
+  clashObjectUI: {fileID: 7864013070479386715, guid: 736008bc647678343815724cfced1727, type: 3}
 --- !u!1 &1937082004
 GameObject:
   m_ObjectHideFlags: 0

@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy.Reflect
   speedThreshold: 0.92
+  reflectEffectPrefab: {fileID: 5053206923923617459, guid: 7935b7d9d80fa3f418b73b94e136ff73, type: 3}
 --- !u!114 &6805199749487719660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,11 +141,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32898ddcd74c767439d79329c50caa49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy.Movement
-  default_Speed: 3
-  idleTime: 1
-  max_DraggingDistance: 3
-  draggingIdleTime: 1
-  beforeLaunchIdleDuration: 0.1
 --- !u!114 &334498339806427939
 MonoBehaviour:
   m_ObjectHideFlags: 0

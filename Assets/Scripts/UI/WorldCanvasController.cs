@@ -6,6 +6,8 @@ namespace UI
     {
         void SetPlayerToEnemyDamageText(Vector2 position, float damage);
         void SetEnemyToPlayerDamageText(Vector2 position, float damage);
+
+        void ShowClashObjectUI(Vector2 position);
     }
 
     public interface IWaveStartWorldUI
@@ -25,6 +27,7 @@ namespace UI
         [SerializeField] PlayerStaminaUI playerStaminaUI;
         [SerializeField] Transform playerHereArrow;
         [SerializeField] GameObject contactObjectUI;
+        [SerializeField] GameObject clashObjectUI;
 
         void Awake()
         {
@@ -53,6 +56,11 @@ namespace UI
         public void ShowContactObjectUI(Vector2 position)
         {
             Instantiate(contactObjectUI, position, Quaternion.identity, transform);
+        }
+
+        public void ShowClashObjectUI(Vector2 position)
+        {
+            Instantiate(clashObjectUI, position, Quaternion.identity, transform);
         }
     }
 }

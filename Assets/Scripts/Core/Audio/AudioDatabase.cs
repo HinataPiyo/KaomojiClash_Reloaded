@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public enum SEAudioName 
-{ None = -1, ButtonClick_00, Cancel_00, Contact, Ready, Fight }
+{ None = -1, ButtonClick_00, Cancel_00, Contact, Ready, Fight, KO }
 
 public enum BGMName
 { None = -1, Home, Battle_Fighting, Battle_Moving, }
