@@ -13,15 +13,19 @@ namespace UI
 
         public static System.Action<SkillData, int> OnSkillDescriptionUpdated;
 
+        public static System.Action OnSkillDescriptionCleared;
+
         void Awake()
         {
             Clear();
             OnSkillDescriptionUpdated += SetSkillDescription;
+            OnSkillDescriptionCleared += Clear;
         }
 
         void OnDestroy()
         {
             OnSkillDescriptionUpdated -= SetSkillDescription;
+            OnSkillDescriptionCleared -= Clear;
         }
 
         /// <summary>

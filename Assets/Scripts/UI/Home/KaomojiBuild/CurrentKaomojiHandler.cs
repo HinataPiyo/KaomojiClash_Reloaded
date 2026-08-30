@@ -33,7 +33,6 @@ namespace UI
         {
             playerData.SetSymbolDataByType(symbolData);
             UpdateStatusViews();
-            SkillNameListHandler.OnSkillNameListUpdated?.Invoke(playerData.GetAllSkillsWithLevels());
 
             ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
         }
@@ -49,6 +48,7 @@ namespace UI
             baseStatusView.SetPlayerStatus(statsCalc);
 
             SkillNameListHandler.OnSkillNameListUpdated?.Invoke(playerData.GetAllSkillsWithLevels());
+            SkillDescriptionHandler.OnSkillDescriptionCleared?.Invoke();
         }
     }
 }
