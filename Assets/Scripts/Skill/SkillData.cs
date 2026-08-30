@@ -6,8 +6,10 @@ public abstract class SkillData : ScriptableObject
 {
     [SerializeField] string skillName;
 
+    public string SkillName => skillName;
+
     public abstract int MaxLevel();
-    public abstract string[] GetDescription(int level);
+    public abstract string GetDescription(int level);
 
     public static List<SkillWithLevel> GetAllSkillsWithLevelsFromKaomojiData(KaomojiData data)
     {

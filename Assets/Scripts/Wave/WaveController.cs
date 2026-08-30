@@ -148,9 +148,9 @@ namespace Wave
                         // 敵をランダムな位置に複数体生成する
                         int spawnCount = EnemySpawnCount();
                         enemySpawn.OtherSpawnEnemy(spawnCount);
+                        OnWaveInProgress?.Invoke();
 
                         yield return wait_EncountAnimationTime;      // プレイヤーと敵が接触してから戦闘が開始するまでの待機時間
-                        OnWaveInProgress?.Invoke();
 
                         waveStartAnimationUI.ShowStartWaveAnimation();    // Wave開始のアニメーションを表示
                         yield return wait_StartWaveAnimationTime;     // Wave開始のアニメーションを表示する時間
@@ -183,6 +183,8 @@ namespace Wave
                         ChangeBattleState(BattleState.WaitingForNextWave);
                         break;
                     case BattleState.ArenaObjectSelecting:
+                        yield return wait_TimeAfterWaveCompleted;
+                        
                         // プレイヤーのレベルアップ回数分、ArenaObjectを選択する
                         yield return arenaObjectSelect.ArenaObjectSelectRoutine(playerExpHandler.LevelUpCount);
                         stage.GetCurrentWall().InactivateWall();      // Wallを非表示

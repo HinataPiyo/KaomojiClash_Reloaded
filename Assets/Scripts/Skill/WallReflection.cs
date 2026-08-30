@@ -4,7 +4,6 @@ public interface IWallReflection
 {
     int MaxLevel();
     float GetReflectionPower(int level);
-    string[] GetDescription(int level);
 }
 
 [CreateAssetMenu(fileName = "WallReflection", menuName = "KaomojiClash_Reloaded/Skill/WallReflection")]
@@ -24,13 +23,8 @@ public class WallReflection : SkillData, IWallReflection
         return reflectionPower[level - 1];
     }
 
-    public override string[] GetDescription(int level)
+    public override string GetDescription(int level)
     {
-        string[] descriptions = new string[MaxLevel()];
-        for (int i = 0; i < MaxLevel(); i++)
-        {
-            descriptions[i] = $"現在のスピードの{GetReflectionPower(i + 1) * 100}%の力で壁を反射する。";
-        }
-        return descriptions;
+        return $"Reflection Power: {GetReflectionPower(level) * 100}%";
     }
 }

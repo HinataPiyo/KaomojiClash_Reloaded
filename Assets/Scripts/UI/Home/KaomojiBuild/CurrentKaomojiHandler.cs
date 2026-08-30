@@ -25,20 +25,30 @@ namespace UI
             OnCurrentKaomojiUpdated -= UpdateCurrentKaomoji;
         }
 
+        /// <summary>
+        /// 現在の顔文字を更新します。
+        /// </summary>
+        /// <param name="symbolData">更新する顔文字のデータ</param>
         public void UpdateCurrentKaomoji(SymbolData symbolData)
         {
             playerData.SetSymbolDataByType(symbolData);
             UpdateStatusViews();
+            SkillNameListHandler.OnSkillNameListUpdated?.Invoke(playerData.GetAllSkillsWithLevels());
 
             ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
         }
 
+        /// <summary>
+        /// 現在の顔文字とステータスビューを更新します。
+        /// </summary>
         void UpdateStatusViews()
         {
             currentKaomojiText.text = KaomojiSetUp.GetKaomojiCoupling(playerData);
             statsCalc.SetUp(playerData);
             statusRaderChartView.SetPlayerStatus(statsCalc);
             baseStatusView.SetPlayerStatus(statsCalc);
+
+            SkillNameListHandler.OnSkillNameListUpdated?.Invoke(playerData.GetAllSkillsWithLevels());
         }
     }
 }

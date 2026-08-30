@@ -2,6 +2,7 @@ namespace Player
 {
     using Base;
     using UI;
+    using UnityEngine;
 
     public class Stamina : StaminaBase, IInitializeStats
     {
@@ -36,7 +37,7 @@ namespace Player
         {
             currentStamina -= amount;
             worldUI.SetEnemyToPlayerDamageText(transform.position, amount);
-            playerStaminaUI.UpdateStaminaUI(currentStamina, statsCalc.GetStamina());
+            playerStaminaUI.UpdateStaminaUI(currentStamina, Mathf.CeilToInt(statsCalc.GetStamina()));
             if (currentStamina <= 0)
             {
                 currentStamina = 0;
