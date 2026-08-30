@@ -45,11 +45,8 @@ namespace Player
 
         void Start()
         {
-            if(ApiProvider.Get<ISceneChange>().CurrentScene == SceneName.Battle)
-            {
-                cam = ApiProvider.Get<ICamera>();
-                waveStartWorldUI = ApiProvider.Get<IWaveStartWorldUI>();
-            }
+            cam = ApiProvider.Get<ICamera>();
+            waveStartWorldUI = ApiProvider.Get<IWaveStartWorldUI>();
 
             // ゲーム開始時にプレイヤーを生成
             SpawnPlayer();

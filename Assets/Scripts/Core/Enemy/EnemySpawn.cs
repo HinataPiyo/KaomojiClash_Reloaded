@@ -1,6 +1,7 @@
 namespace Enemy
 {
     using System.Collections.Generic;
+    using UI;
     using UnityEngine;
     using Wave;
 
@@ -13,6 +14,7 @@ namespace Enemy
 
     public class EnemySpawn : MonoBehaviour, IEnemySpawn
     {
+        [SerializeField] EnemyCoreStatsConfig enemyCoreStatsConfig;
         [SerializeField] GameObject enemyPrefab;
 
         List<GameObject> spawnedEnemies = new List<GameObject>();
@@ -22,6 +24,7 @@ namespace Enemy
         ICamera cam;
         IEnemyExpFactory enemyExpFactory;
         IAudioManager audioManager;
+        IResultUIHandler resultUIHandler;
 
         /// <summary>
         /// 敵が全滅しているかどうかを判定する
@@ -40,6 +43,7 @@ namespace Enemy
             cam = ApiProvider.Get<ICamera>();
             enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
             audioManager = ApiProvider.Get<IAudioManager>();
+            resultUIHandler = ApiProvider.Get<IResultUIHandler>();
         }
 
         void OnEnemyDeath(GameObject enemy, int exp = 0)
@@ -48,6 +52,8 @@ namespace Enemy
             cam.RemoveTargetFromGroup(enemy.transform);
             cam.SetCameraState(CameraState.EnemyDeath);
             enemyExpFactory.AddWaveEXPPool(exp);
+            resultUIHandler.AddEnemyKillCount();
+            resultUIHandler.AddGetMoney(enemyCoreStatsConfig.DropMoney);
             audioManager.PlaySE(SEAudioName.KO);
         }
 

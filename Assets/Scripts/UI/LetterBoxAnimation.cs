@@ -4,6 +4,7 @@ namespace UI
 
     public interface ILetterBox
     {
+        void ShowLetterBox();
         void Open();
         void Close();
         void AllOpen();
@@ -13,6 +14,7 @@ namespace UI
     {
         [SerializeField] Animator anim;
 
+        public const string ShowTrigger = "Show";
         public const string OpenTrigger = "Open";
         public const string CloseTrigger = "Close";
         public const string AllOpenTrigger = "AllOpen";
@@ -25,6 +27,11 @@ namespace UI
         void OnDestroy()
         {
             ApiProvider.Unregister<ILetterBox>();
+        }
+
+        public void ShowLetterBox()
+        {
+            anim.SetTrigger(ShowTrigger);
         }
 
         public void Open()

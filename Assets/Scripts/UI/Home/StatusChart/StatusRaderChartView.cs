@@ -65,8 +65,6 @@ namespace UI
                         break;
                 }
 
-                Debug.Log($"StatusType: {statusType}, Value: {value}, MaxValue: {maxValue}");
-
                 radarStatuses[i] = new RadarStatus
                 {
                     type = statusType,

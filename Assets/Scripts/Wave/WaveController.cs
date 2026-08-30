@@ -36,6 +36,7 @@ namespace Wave
 
         public static event System.Action OnWaitingForNextWave;
         public static event System.Action OnWaveInProgress;
+        public static event System.Action OnWaveFailed;
 
         IEnemySpawn enemySpawn;
         IEnemyExpFactory enemyExpFactory;
@@ -46,6 +47,7 @@ namespace Wave
         IStage stage;
         ICamera cam;
         IAudioManager audioManager;
+        ILetterBox letterBox;
 
         BattleState battleState = BattleState.WaitingForNextWave;
 
@@ -58,11 +60,22 @@ namespace Wave
         WaitUntil wait_UntilAllEnemiesDestructed;
         WaitUntil wait_MovePlayerToEnemy;
 
+        Coroutine waveLoopingCoroutine;
+
         public bool IsStopCharacter { get; private set; } = true;
         public int ReleaseStep => releaseStep;
         public int GetWaveCount() => waveCount;
         public BattleState CurrentBattleState => battleState;
-        public void ChangeBattleState(BattleState newState) => battleState = newState;
+        public void ChangeBattleState(BattleState newState) 
+        {
+            battleState = newState;
+            if (waveLoopingCoroutine != null)
+            {
+                StopCoroutine(waveLoopingCoroutine);
+            }
+
+            waveLoopingCoroutine = StartCoroutine(WaveLooping());
+        }
 
         public int EnemySpawnCount()
         {
@@ -102,10 +115,12 @@ namespace Wave
             enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
             waveStartAnimationUI = ApiProvider.Get<IStartWaveAnimationUI>();
             audioManager = ApiProvider.Get<IAudioManager>();
+            letterBox = ApiProvider.Get<ILetterBox>();
 
             wait_UntilAllEnemiesDestructed = new WaitUntil(() => enemySpawn.IsTotalDestructed());
             wait_MovePlayerToEnemy = new WaitUntil(() => !playerSpawn.IsMoveToEnemy);
-            StartCoroutine(WaveLooping());
+            
+            ChangeBattleState(BattleState.WaitingForNextWave);
         }
 
         /// <summary>
@@ -117,6 +132,7 @@ namespace Wave
 
             while (true)
             {
+                yield return null;
                 switch (battleState)
                 {
                     case BattleState.WaitingForNextWave:
@@ -197,8 +213,9 @@ namespace Wave
                         ChangeBattleState(BattleState.WaveCompleted);
                         break;
                     case BattleState.WaveFailed:
-                        // Wave失敗後の処理
+                        letterBox.ShowLetterBox();
                         yield return wait_TimeAfterWaveFailed;
+                        OnWaveFailed?.Invoke();
                         yield break;
                 }
             }
