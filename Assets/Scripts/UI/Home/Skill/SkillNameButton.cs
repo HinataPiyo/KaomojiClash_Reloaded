@@ -48,14 +48,8 @@ namespace UI
 
             for (int i = 0; i < skillLevelIcons.Length; i++)
             {
-                if (i < CurrentLevel)
-                {
-                    skillLevelIcons[i].color = Color.red;
-                }
-                else
-                {
-                    skillLevelIcons[i].color = Color.gray;
-                }
+                skillLevelIcons[i].gameObject.SetActive(i < skillData.MaxLevel());
+                skillLevelIcons[i].color = i < CurrentLevel ? Color.red : Color.gray;
             }
         }
     }

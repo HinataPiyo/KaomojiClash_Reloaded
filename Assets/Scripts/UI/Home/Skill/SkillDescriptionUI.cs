@@ -23,7 +23,7 @@ namespace UI
                 canvasGroup.alpha = 0.5f; // 半透明にする
             }
 
-            SetSkill(skillData, currentLevel);
+            SetSkill(skillData, currentIndex + 1);
             string description = skillData.GetDescription(currentIndex + 1); // レベルは1から始まるため、currentIndexに1を加える
             skillDescriptionText.text = description;
         }
