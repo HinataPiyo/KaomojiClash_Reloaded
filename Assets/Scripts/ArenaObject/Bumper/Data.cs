@@ -1,6 +1,5 @@
 namespace ArenaObject.Bumper
 {
-    using System;
     using UnityEngine;
     
     [CreateAssetMenu(fileName = "Bumper", menuName = "KaomojiClash_Reloaded/ArenaObject/Bumper")]
@@ -17,7 +16,7 @@ namespace ArenaObject.Bumper
 
         public override string GetDescription(int level)
         {
-            return $"Bumper Level {level}: Reflection Power = {GetReflectionPower(level) * 100f:0}%";
+            return $"Reflection Power:{GetReflectionPower(level) * 100f:0}%";
         }
     }
 }

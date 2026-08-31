@@ -27,7 +27,8 @@ namespace Wave
         WaveInProgress,
         ArenaObjectSelecting,
         WaveCompleted,
-        WaveFailed
+        WaveFailed,
+        TimeUp,
     }
 
     public class WaveController : MonoBehaviour, IWave, IBattleState
@@ -37,6 +38,7 @@ namespace Wave
         public static event System.Action OnWaitingForNextWave;
         public static event System.Action OnWaveInProgress;
         public static event System.Action OnWaveFailed;
+        public static event System.Action OnWaveTimeUp;
 
         IEnemySpawn enemySpawn;
         IEnemyExpFactory enemyExpFactory;
@@ -186,6 +188,11 @@ namespace Wave
                             ChangeBattleState(BattleState.ArenaObjectSelecting);
                             break;      // ArenaObjectの選択処理に移行するため、ここでループを抜ける
                         }
+                        else if(arenaObjectSelect.GetArenaObjectSetDatas().Count > 0)
+                        {
+                            ChangeBattleState(BattleState.ArenaObjectSelecting);
+                            break;      // ArenaObjectの選択処理に移行するため、ここでループを抜ける
+                        }
                         
                         ChangeBattleState(BattleState.WaveCompleted);
                         stage.GetCurrentWall().InactivateWall();      // Wallを非表示
@@ -196,10 +203,13 @@ namespace Wave
                         yield return wait_TimeAfterWaveCompleted;
                         playerExpHandler.ResetLevelUpCount();    // Wave完了後にレベルアップ回数をリセット
                         enemyExpFactory.ResetWaveEXPPool();      // Wave完了後にEXPプールをリセット
+
                         ChangeBattleState(BattleState.WaitingForNextWave);
                         break;
                     case BattleState.ArenaObjectSelecting:
                         yield return wait_TimeAfterWaveCompleted;
+
+                        audioManager.PlayBGM(BGMName.ArenaObjectEdit);
 
                         // プレイヤーをWallの中心に移動させる
                         playerSpawn.MovementPlayerToWallCenter(stage.GetCurrentWall().GetWallTransform().position);
@@ -215,7 +225,14 @@ namespace Wave
                     case BattleState.WaveFailed:
                         letterBox.ShowLetterBox();
                         yield return wait_TimeAfterWaveFailed;
+                        audioManager.PlayBGM(BGMName.Result);
                         OnWaveFailed?.Invoke();
+                        yield break;
+                    case BattleState.TimeUp:
+                        letterBox.ShowLetterBox();
+                        yield return wait_TimeAfterWaveFailed;
+                        audioManager.PlayBGM(BGMName.Result);
+                        OnWaveTimeUp?.Invoke();
                         yield break;
                 }
             }

@@ -58,6 +58,7 @@ namespace UI
 
             Wave.WaveController.OnWaitingForNextWave += AddWaveCount;
             Wave.WaveController.OnWaveFailed += ShowResult;
+            Wave.WaveController.OnWaveTimeUp += ShowResult;
 
             canvas.enabled = false;
         }
@@ -71,6 +72,7 @@ namespace UI
         {
             Wave.WaveController.OnWaitingForNextWave -= AddWaveCount;
             Wave.WaveController.OnWaveFailed -= ShowResult;
+            Wave.WaveController.OnWaveTimeUp -= ShowResult;
         }
 
         public void ShowResult()

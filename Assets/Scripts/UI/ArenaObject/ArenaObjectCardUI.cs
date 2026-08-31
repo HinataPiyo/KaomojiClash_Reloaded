@@ -8,6 +8,7 @@ namespace UI
     {
         [SerializeField] TextMeshProUGUI level;
         [SerializeField] TextMeshProUGUI description;
+        [SerializeField] TextMeshProUGUI objectName;
         [SerializeField] Image icon;
         [SerializeField] GameObject newMark;
         Button button;
@@ -30,6 +31,7 @@ namespace UI
         {
             this.data = data;
             this.level.text = $"Level {level}";
+            this.objectName.text = data.ObjectName;
             description.text = data.GetDescription(level);
             icon.sprite = data.Icon;
             newMark.SetActive(isNew);
