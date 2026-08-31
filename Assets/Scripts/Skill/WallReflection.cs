@@ -25,6 +25,6 @@ public class WallReflection : SkillData, IWallReflection
 
     public override string GetDescription(int level)
     {
-        return $"Reflection Power: {GetReflectionPower(level) * 100}%";
+        return $"Wall Reflection Power: {GetReflectionPower(level) * 100}%";
     }
 }
