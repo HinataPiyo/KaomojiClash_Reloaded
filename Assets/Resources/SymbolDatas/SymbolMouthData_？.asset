@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a015e84cfdf48d24197271dc3f90ba29, type: 3}
-  m_Name: "SymbolMouthData_\u03C9"
+  m_Name: "SymbolMouthData_\uFF1F"
   m_EditorClassIdentifier: Assembly-CSharp::SymbolMouthData
   symbolType: 0
-  symbolName: "\u30AA\u30E1\u30AC"
-  symbol: 969
+  symbolName: "\u30AF\u30A8\u30B9\u30C1\u30E7\u30F3"
+  symbol: 63
   skillData:
   - {fileID: 11400000, guid: 7c38b2708aaabc544b1aa29f114ac221, type: 2}
   coreStats:
-    Stamina: 1.02
-    Power: 1.25
-    Speed: 1.05
-    Guard: 1.15
+    Stamina: 1.15
+    Power: 1.08
+    Speed: 1.126
+    Guard: 1.05
