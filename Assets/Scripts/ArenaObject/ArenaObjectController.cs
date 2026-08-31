@@ -18,7 +18,6 @@ public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
     [SerializeField] List<ArenaObjectSetData> arenaObjectSetDatas = new List<ArenaObjectSetData>();
     bool isEndSelectArenaObject = false;
     bool isEditDone = false;        // ArenaObjectの編集が完了したかどうかを示すフラグ
-    bool isNewSpawned = false;      // 新しく配置するオブジェクトが生成されたかどうか
 
     IStage stage;
     IArenaObjectSelectUI arenaObjectSelectUI;
@@ -64,7 +63,6 @@ public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
         {
             isEndSelectArenaObject = false;
             isEditDone = false;
-            isNewSpawned = false;
             ShowArenaObjectSelectUI();
 
             // ここでDataが選択されるまで待つ処理を入れる
@@ -80,8 +78,7 @@ public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
         {
             isEndSelectArenaObject = false;
             isEditDone = false;
-            isNewSpawned = false;
-            
+
             arenaObjectEditModeUI.Show();
 
             // ArenaObjectの編集が完了するまで待つ
@@ -152,13 +149,11 @@ public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
         {
             // 既に存在するArenaObjectのLogicがある場合はそのレベルを上げる
             existingSetData.Logic.IncrimentLevel();
-            isNewSpawned = false;
         }
         else
         {
             // 新しく生成する
             CreateArenaObjects(data);
-            isNewSpawned = true;
         }
 
         arenaObjectSelectUI.Hide();

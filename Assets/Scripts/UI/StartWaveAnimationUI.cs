@@ -11,9 +11,13 @@ namespace UI
     public class StartWaveAnimationUI : MonoBehaviour, IStartWaveAnimationUI
     {
 
-        void Start()
+        void Awake()
         {
             ApiProvider.Register<IStartWaveAnimationUI>(this);
+        }
+
+        void Start()
+        {
             HideStartWaveAnimation();
         }
         public void ShowStartWaveAnimation()

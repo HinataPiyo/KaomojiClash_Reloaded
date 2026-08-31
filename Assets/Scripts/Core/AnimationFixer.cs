@@ -1,3 +1,5 @@
+
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -201,3 +203,4 @@ namespace Test_AnimationMissing
         }
     }
 }
+#endif
