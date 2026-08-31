@@ -188,6 +188,11 @@ namespace Wave
                             ChangeBattleState(BattleState.ArenaObjectSelecting);
                             break;      // ArenaObjectの選択処理に移行するため、ここでループを抜ける
                         }
+                        else if(arenaObjectSelect.GetArenaObjectSetDatas().Count > 0)
+                        {
+                            ChangeBattleState(BattleState.ArenaObjectSelecting);
+                            break;      // ArenaObjectの選択処理に移行するため、ここでループを抜ける
+                        }
                         
                         ChangeBattleState(BattleState.WaveCompleted);
                         stage.GetCurrentWall().InactivateWall();      // Wallを非表示
@@ -198,6 +203,7 @@ namespace Wave
                         yield return wait_TimeAfterWaveCompleted;
                         playerExpHandler.ResetLevelUpCount();    // Wave完了後にレベルアップ回数をリセット
                         enemyExpFactory.ResetWaveEXPPool();      // Wave完了後にEXPプールをリセット
+
                         ChangeBattleState(BattleState.WaitingForNextWave);
                         break;
                     case BattleState.ArenaObjectSelecting:

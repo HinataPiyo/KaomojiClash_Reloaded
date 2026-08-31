@@ -70,18 +70,22 @@ public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
             // ここでDataが選択されるまで待つ処理を入れる
             yield return new WaitUntil(() => isEndSelectArenaObject);
 
-            if (isNewSpawned)
-            {
-                arenaObjectEditModeUI.Show();
+            arenaObjectEditModeUI.Show();
 
-                // ArenaObjectの編集が完了するまで待つ
-                yield return new WaitUntil(() => isEditDone);
-            }
-            else
-            {
-                // レベルアップの場合は配置変更が不要なので、編集完了とみなす
-                isEditDone = true;
-            }
+            // ArenaObjectの編集が完了するまで待つ
+            yield return new WaitUntil(() => isEditDone);
+        }
+
+        if(playerLevelUpCount == 0)
+        {
+            isEndSelectArenaObject = false;
+            isEditDone = false;
+            isNewSpawned = false;
+            
+            arenaObjectEditModeUI.Show();
+
+            // ArenaObjectの編集が完了するまで待つ
+            yield return new WaitUntil(() => isEditDone);
         }
 
         yield return null;
