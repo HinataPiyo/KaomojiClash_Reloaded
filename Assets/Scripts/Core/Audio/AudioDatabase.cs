@@ -4,7 +4,7 @@ public enum SEAudioName
 { None = -1, ButtonClick_00, Cancel_00, Contact, Ready, Fight, KO }
 
 public enum BGMName
-{ None = -1, Home, Battle_Fighting, Battle_Moving, }
+{ None = -1, Home, Battle_Fighting, Battle_Moving, ArenaObjectEdit, Result }
 
 public enum ReflectName
 { None = -1, Reflect_00, Reflect_01, Reflect_02 }
