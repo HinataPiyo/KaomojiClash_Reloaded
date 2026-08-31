@@ -1,10 +1,29 @@
 namespace Enemy
 {
     using UnityEngine;
+
+    public interface IRandomOperationTime
+    {
+        float RandomIdleTimeModifier { get; }
+        float RandomDraggingIdleTimeModifier { get; }
+        float RandomBeforeLaunchIdleDurationModifier { get; }
+        void SetRandomOperationTimeModifiers();
+    }
     
-    public class EnemyStatsCalculator : StatsCalculator
+    public class EnemyStatsCalculator : StatsCalculator, IRandomOperationTime
     {
         [SerializeField] EnemyCoreStatsConfig statsConfig;
+
+        public float RandomIdleTimeModifier { get; private set; } = 1f;
+        public float RandomDraggingIdleTimeModifier { get; private set; } = 1f;
+        public float RandomBeforeLaunchIdleDurationModifier { get; private set; } = 1f;
+
+        public void SetRandomOperationTimeModifiers()
+        {
+            RandomIdleTimeModifier = statsConfig.GetRandomModifiedIdleTime();
+            RandomDraggingIdleTimeModifier = statsConfig.GetRandomModifiedDraggingIdleTime();
+            RandomBeforeLaunchIdleDurationModifier = statsConfig.GetRandomModifiedBeforeLaunchIdleDuration();
+        }
 
         public override float GetStamina()
         {
@@ -52,17 +71,17 @@ namespace Enemy
 
         public float GetIdleTime()
         {
-            return statsConfig.IdleTime;
+            return statsConfig.IdleTime * RandomIdleTimeModifier;
         }
 
         public float GetDraggingIdleTime()
         {
-            return statsConfig.DraggingIdleTime;
+            return statsConfig.DraggingIdleTime * RandomDraggingIdleTimeModifier;
         }
 
         public float GetBeforeLaunchIdleDuration()
         {
-            return statsConfig.BeforeLaunchIdleDuration;
+            return statsConfig.BeforeLaunchIdleDuration * RandomBeforeLaunchIdleDurationModifier;
         }
 
         public override float LaunchForce()
