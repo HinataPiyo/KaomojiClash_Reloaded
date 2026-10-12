@@ -14,16 +14,14 @@ public class SymbolMouthData : SymbolData
 public class CoreStats
 {
     public const float Max_Stamina = 1.5f;
-    public const float Min_Stamina = 1f;
     public const float Max_Power = 1.5f;
-    public const float Min_Power = 1f;
     public const float Max_Speed = 1.5f;
-    public const float Min_Speed = 1f;
     public const float Max_Guard = 1.5f;
-    public const float Min_Guard = 1f;
 
-    [Range(Min_Stamina, Max_Stamina)] public float Stamina;
-    [Range(Min_Power, Max_Power)] public float Power;
-    [Range(Min_Speed, Max_Speed)] public float Speed;
-    [Range(Min_Guard, Max_Guard)] public float Guard;
+    // 初期値は最小値
+    // 強化は全てのパラメーターをランダムに増減させ決める
+    [Range(0, Max_Stamina)] public float Stamina = 0f;
+    [Range(0, Max_Power)] public float Power = 0f;
+    [Range(0, Max_Speed)] public float Speed = 0f;
+    [Range(0, Max_Guard)] public float Guard = 0f;
 }

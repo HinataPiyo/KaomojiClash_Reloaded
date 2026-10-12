@@ -26,12 +26,12 @@ namespace Player
 
         public override float GetStamina()
         {
-            return GetBaseStamina() * coreStats.Stamina;
+            return GetBaseStamina() * (1 + coreStats.Stamina);
         }
 
         public (float, float) GetStamina(float maxCoreStamina)
         {
-            return (GetBaseStamina() * coreStats.Stamina, GetBaseStamina() * maxCoreStamina);
+            return (coreStats.Stamina, maxCoreStamina);
         }
 
 #endregion
@@ -45,12 +45,12 @@ namespace Player
 
         public override float GetPower()
         {
-            return GetBasePower() * coreStats.Power * combo.ComboDamageRate;
+            return GetBasePower() * (1 + coreStats.Power) * combo.ComboDamageRate;
         }
 
         public (float, float) GetPower(float maxCorePower)
         {
-            return (GetBasePower() * coreStats.Power, GetBasePower() * maxCorePower);
+            return (coreStats.Power, maxCorePower);
         }
 
 #endregion
@@ -64,12 +64,12 @@ namespace Player
 
         public override float GetSpeed()
         {
-            return GetBaseSpeed() * coreStats.Speed;
+            return GetBaseSpeed() * (1 + coreStats.Speed);
         }
 
         public (float, float) GetSpeed(float maxCoreSpeed)
         {
-            return (GetBaseSpeed() * coreStats.Speed, GetBaseSpeed() * maxCoreSpeed);
+            return (coreStats.Speed, maxCoreSpeed);
         }
 
 #endregion
@@ -83,12 +83,12 @@ namespace Player
 
         public override float GetGuard()
         {
-            return GetBaseGuard() * coreStats.Guard;
+            return GetBaseGuard() * (1 + coreStats.Guard);
         }
 
         public (float, float) GetGuard(float maxCoreGuard)
         {
-            return (GetBaseGuard() * coreStats.Guard, GetBaseGuard() * maxCoreGuard);
+            return (coreStats.Guard, maxCoreGuard);
         }
 
 #endregion
@@ -98,26 +98,35 @@ namespace Player
 
         public override float GetCriticalDamage()
         {
-            if(criticalStats == null) return statsConfig.Default_CriticalDamage;
-            return statsConfig.Default_CriticalDamage + criticalStats.CriticalDamage;
+            if(criticalStats == null || criticalStats.Length == 0) return CriticalStats.Min_CriticalDamage;
+            
+            if(criticalStats.Length == 1) return criticalStats[0].CriticalDamage;
+            else if(criticalStats.Length  == 2) return criticalStats[0].CriticalDamage + criticalStats[1].CriticalDamage;
+            return CriticalStats.Min_CriticalDamage;
         }
 
         public (float, float) GetCriticalDamage(float maxCoreCriticalDamage)
         {
-            if(criticalStats == null) return (0, statsConfig.Default_CriticalDamage);
-            return (statsConfig.Default_CriticalDamage + criticalStats.CriticalDamage, statsConfig.Default_CriticalDamage + maxCoreCriticalDamage);
+            if(criticalStats == null || criticalStats.Length == 0) return (CriticalStats.Min_CriticalDamage, CriticalStats.Min_CriticalDamage);
+            if(criticalStats.Length == 1) return (criticalStats[0].CriticalDamage, maxCoreCriticalDamage);
+            else if(criticalStats.Length == 2) return (criticalStats[0].CriticalDamage + criticalStats[1].CriticalDamage, maxCoreCriticalDamage);
+            return (CriticalStats.Min_CriticalDamage, maxCoreCriticalDamage);
         }
 
         public override float GetCriticalRate()
         {
-            if(criticalStats == null) return statsConfig.Default_CriticalRate;
-            return statsConfig.Default_CriticalRate + criticalStats.CriticalRate;
+            if(criticalStats == null || criticalStats.Length == 0) return CriticalStats.Min_CriticalRate;
+            if(criticalStats.Length == 1) return criticalStats[0].CriticalRate;
+            else if(criticalStats.Length == 2) return criticalStats[0].CriticalRate + criticalStats[1].CriticalRate;
+            return CriticalStats.Min_CriticalRate;
         }
 
         public (float, float) GetCriticalRate(float maxCoreCriticalRate)
         {
-            if(criticalStats == null) return (0, statsConfig.Default_CriticalRate);
-            return (statsConfig.Default_CriticalRate + criticalStats.CriticalRate, statsConfig.Default_CriticalRate + maxCoreCriticalRate);
+            if(criticalStats == null || criticalStats.Length == 0) return (CriticalStats.Min_CriticalRate, CriticalStats.Min_CriticalRate);
+            if(criticalStats.Length == 1) return (criticalStats[0].CriticalRate, maxCoreCriticalRate);
+            else if(criticalStats.Length == 2) return (criticalStats[0].CriticalRate + criticalStats[1].CriticalRate, maxCoreCriticalRate);
+            return (CriticalStats.Min_CriticalRate, maxCoreCriticalRate);
         }
 
 #endregion

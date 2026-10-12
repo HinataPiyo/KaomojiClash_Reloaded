@@ -125,16 +125,22 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
     /// <summary>
     /// KaomojiDataのRightEyeTypeに関連するCriticalStatsを取得する。
     /// </summary>
-    public static CriticalStats TryGetCriticalStats(KaomojiData data)
+    public static CriticalStats[] TryGetCriticalStats(KaomojiData data)
     {
-        if (data == null) return null;
+        if (data == null) return new CriticalStats[0];
+        List<CriticalStats> criticalStatsList = new List<CriticalStats>();
+        SymbolData right_EyeData = data.GetSymbolDataByType(SymbolType.RightEye);
+        SymbolData left_EyeData = data.GetSymbolDataByType(SymbolType.LeftEye);
 
-        SymbolData eyeData = data.GetSymbolDataByType(SymbolType.RightEye);
-        if (eyeData is SymbolEyeData symbolEyeData)
+        if (right_EyeData is SymbolEyeData symbolRightEyeData)
         {
-            return symbolEyeData.CriticalStats;
+            criticalStatsList.Add(symbolRightEyeData.CriticalStats);
+        }
+        if (left_EyeData is SymbolEyeData symbolLeftEyeData)
+        {
+            criticalStatsList.Add(symbolLeftEyeData.CriticalStats);
         }
 
-        return null;
+        return criticalStatsList.ToArray();
     }
 }

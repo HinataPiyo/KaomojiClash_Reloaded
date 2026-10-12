@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a672525f0d4b52b48a76ad5ef3d0b511, type: 3}
+  m_Name: Symbol_LeftEyeData_T
+  m_EditorClassIdentifier: Assembly-CSharp::SymbolEyeData
+  symbolType: 1
+  symbol: 84
+  skillData: []
+  criticalStats:
+    CriticalDamage: 0
+    CriticalRate: 0

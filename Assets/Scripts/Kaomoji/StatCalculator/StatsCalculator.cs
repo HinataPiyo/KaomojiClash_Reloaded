@@ -13,7 +13,7 @@ public abstract class StatsCalculator : MonoBehaviour, IStatsCalculator
 {
     protected IKaomojiStats stats;
     protected CoreStats coreStats;
-    protected CriticalStats criticalStats;
+    protected CriticalStats[] criticalStats;
 
     public void SetUp(IKaomojiStats kaomojiStats)
     {

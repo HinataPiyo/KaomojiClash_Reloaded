@@ -27,32 +27,38 @@ namespace Enemy
 
         public override float GetStamina()
         {
-            return statsConfig.Default_Stamina * coreStats.Stamina;
+            return statsConfig.Default_Stamina * (1 + coreStats.Stamina);
         }
 
         public override float GetSpeed()
         {
-            return statsConfig.Default_Speed * coreStats.Speed;
+            return statsConfig.Default_Speed * (1 + coreStats.Speed);
         }
 
         public override float GetPower()
         {
-            return statsConfig.Default_Power * coreStats.Power;
+            return statsConfig.Default_Power * (1 + coreStats.Power);
         }
 
         public override float GetGuard()
         {
-            return statsConfig.Default_Guard * coreStats.Guard;
+            return statsConfig.Default_Guard * (1 + coreStats.Guard);
         }
 
         public override float GetCriticalDamage()
         {
-            return statsConfig.Default_CriticalDamage * criticalStats.CriticalDamage;
+            if(criticalStats == null || criticalStats.Length == 0) return CriticalStats.Min_CriticalDamage;
+            if(criticalStats.Length == 1) return criticalStats[0].CriticalDamage;
+            else if(criticalStats.Length == 2) return criticalStats[0].CriticalDamage + criticalStats[1].CriticalDamage;
+            return CriticalStats.Min_CriticalDamage;
         }
         
         public override float GetCriticalRate()
         {
-            return statsConfig.Default_CriticalRate * criticalStats.CriticalRate;
+            if(criticalStats == null || criticalStats.Length == 0) return CriticalStats.Min_CriticalRate;
+            if(criticalStats.Length == 1) return criticalStats[0].CriticalRate;
+            else if(criticalStats.Length == 2) return criticalStats[0].CriticalRate + criticalStats[1].CriticalRate;
+            return CriticalStats.Min_CriticalRate;
         }
 
         // -- 攻撃関連 --
