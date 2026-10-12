@@ -16,5 +16,5 @@ MonoBehaviour:
   symbol: 94
   skillData: []
   criticalStats:
-    CriticalDamage: 0
-    CriticalRate: 0
+    CriticalDamage: 0.3
+    CriticalRate: 0.284

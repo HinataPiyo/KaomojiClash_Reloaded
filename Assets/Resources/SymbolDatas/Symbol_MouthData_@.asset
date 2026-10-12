@@ -17,7 +17,7 @@ MonoBehaviour:
   skillData:
   - {fileID: 11400000, guid: 7c38b2708aaabc544b1aa29f114ac221, type: 2}
   coreStats:
-    Stamina: 0
-    Power: 0
-    Speed: 0
-    Guard: 0
+    Stamina: 0.24
+    Power: 0.942
+    Speed: 0.485
+    Guard: 0.245
