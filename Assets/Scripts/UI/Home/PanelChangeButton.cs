@@ -4,7 +4,7 @@ namespace UI
     using UnityEngine.UI;
 
     public enum PanelName
-    { Home, KaomojiBuild, CoreStats_Upgrade }
+    { Home, KaomojiBuild, CoreStats_Upgrade, Skill_Set }
 
     public enum NextOrBack
     { Next, Back }
