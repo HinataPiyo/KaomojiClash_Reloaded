@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 983031080300487029}
+  - component: {fileID: 3576649784983314498}
   m_Layer: 5
   m_Name: Skill Slot UI
   m_TagString: Untagged
@@ -37,6 +38,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 500, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3576649784983314498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223881099342844261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79eb1cf97c81e6a47a3f15a8645b13b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.SkillSlotHandler
+  activeSlot: {fileID: 8119049859112650141}
+  lockedSlot: {fileID: 308971007883074629}
 --- !u!1 &308971007883074629
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,16 +9,15 @@ namespace UI
         [SerializeField] TextMeshProUGUI skillName;
         Button button;
 
-        protected override void Awake()
+        void Awake()
         {
-            base.Awake();
             button = GetComponent<Button>();
             button?.onClick.AddListener(() => ButtonOnClick());
         }
 
         void ButtonOnClick()
         {
-            SkillDescriptionHandler.OnSkillDescriptionUpdated?.Invoke(SkillData, CurrentLevel);
+            SkillDescriptionHandler.OnSkillDescriptionUpdated?.Invoke(SkillData, CurrentCost);
             ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
         }
 
@@ -32,24 +31,18 @@ namespace UI
     public class SkillUIElement : MonoBehaviour
     {
         public SkillData SkillData { get; private set; }
-        public int CurrentLevel { get; private set; }
-        [SerializeField] Transform skillLevelIconParent;
+        public int CurrentCost { get; private set; }
         Image[] skillLevelIcons;
-
-        protected virtual void Awake()
-        {
-            skillLevelIcons = skillLevelIconParent.GetComponentsInChildren<Image>();
-        }
 
         public virtual void SetSkill(SkillData skillData, int currentLevel)
         {
             SkillData = skillData;
-            CurrentLevel = currentLevel;
+            CurrentCost = currentLevel;
 
             for (int i = 0; i < skillLevelIcons.Length; i++)
             {
                 skillLevelIcons[i].gameObject.SetActive(i < skillData.MaxLevel());
-                skillLevelIcons[i].color = i < CurrentLevel ? Color.red : Color.gray;
+                skillLevelIcons[i].color = i < CurrentCost ? Color.red : Color.gray;
             }
         }
     }

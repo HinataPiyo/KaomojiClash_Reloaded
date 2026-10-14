@@ -106,17 +106,17 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
     }
 
     /// <summary>
-    /// KaomojiDataのMouthTypeに関連するCoreStatsを取得する。
-    /// もしMouthTypeが存在しない場合、またはCoreStatsが定義されていない場合はnullを返す。
+    /// KaomojiDataのHandTypeに関連するCoreStatsを取得する。
+    /// もしHandTypeが存在しない場合、またはCoreStatsが定義されていない場合はnullを返す。
     /// </summary>
     public static CoreStats TryGetCoreStats(KaomojiData data)
     {
         if (data == null) return null;
 
-        SymbolData mouthData = data.GetSymbolDataByType(SymbolType.Mouth);
-        if (mouthData is SymbolMouthData symbolMouthData)
+        SymbolData handData = data.GetSymbolDataByType(SymbolType.LeftHand);
+        if (handData is SymbolHandData symbolHandData)
         {
-            return symbolMouthData.CoreStats;
+            return symbolHandData.CoreStats;
         }
 
         return null;

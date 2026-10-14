@@ -90,18 +90,18 @@ public class KaomojiData : ScriptableObject
 
     public (float, float) GetStatusValue(StatusType type)
     {
-        SymbolMouthData mouthData = symbol_Mouth as SymbolMouthData;
-        if(mouthData == null) return (0f, 0f); // symbol_MouthがSymbolMouthDataでない場合は(0, 0)を返す
+        SymbolHandData handData = symbol_LeftHand as SymbolHandData;
+        if(handData == null) return (0f, 0f); // symbol_LeftHandがSymbolHandDataでない場合は(0, 0)を返す
         switch (type)
         {
             case StatusType.Speed:
-                return (mouthData.CoreStats.Speed, CoreStats.Max_Speed);
+                return (handData.CoreStats.Speed, CoreStats.Max_Speed);
             case StatusType.Power:
-                return (mouthData.CoreStats.Power, CoreStats.Max_Power);
+                return (handData.CoreStats.Power, CoreStats.Max_Power);
             case StatusType.Stamina:
-                return (mouthData.CoreStats.Stamina, CoreStats.Max_Stamina);
+                return (handData.CoreStats.Stamina, CoreStats.Max_Stamina);
             case StatusType.Guard:
-                return (mouthData.CoreStats.Guard, CoreStats.Max_Guard);
+                return (handData.CoreStats.Guard, CoreStats.Max_Guard);
             case StatusType.CriticalDamage:
                 return (0f, 1f); // 仮の値
             case StatusType.CriticalRate:
