@@ -7,6 +7,7 @@ namespace UI
     public class SkillNameButton : SkillUIElement
     {
         Button button;
+        public event System.Action<SkillData> OnSkillButtonClicked;
 
         void Awake()
         {
@@ -16,8 +17,8 @@ namespace UI
 
         void ButtonOnClick()
         {
-            
             ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
+            OnSkillButtonClicked?.Invoke(SkillData);
         }
     }
 

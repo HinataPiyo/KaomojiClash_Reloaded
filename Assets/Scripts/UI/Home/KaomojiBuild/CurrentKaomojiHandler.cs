@@ -51,7 +51,6 @@ namespace UI
             statusRaderChartView.SetPlayerStatus(statsCalc);
             baseStatusView.SetPlayerStatus(statsCalc);
 
-            SkillNameListHandler.OnSkillNameListUpdated?.Invoke();
             SkillDescriptionHandler.OnSkillDescriptionCleared?.Invoke();
         }
     }

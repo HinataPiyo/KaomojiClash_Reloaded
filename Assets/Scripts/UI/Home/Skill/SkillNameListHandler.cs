@@ -1,6 +1,5 @@
 namespace UI
 {
-    using System.Collections.Generic;
     using UnityEngine;
     
     public class SkillNameListHandler : MonoBehaviour
@@ -8,30 +7,42 @@ namespace UI
         [SerializeField] SkillNameButton skillNameButtonPrefab;
         [SerializeField] Transform skillNameButtonParent;
 
-        public static System.Action OnSkillNameListUpdated;
+        [SerializeField] SymbolListHandler symbolListHandler;
+        [SerializeField] SkillDescriptionHandler skillDescriptionHandler;
+
+        // テスト
+        [SerializeField] WallReflection testSkillData;
 
         void Awake()
         {
             Clear();
 
-            OnSkillNameListUpdated += SetSkillNameList;
+            symbolListHandler.OnSelectedSymbolChanged += SetSkillNameList;
+            if(!GlobalVariables.HasSkills.Contains(testSkillData))
+                GlobalVariables.HasSkills.Add(testSkillData);
         }
 
         void OnDestroy()
         {
-            OnSkillNameListUpdated -= SetSkillNameList;
+            symbolListHandler.OnSelectedSymbolChanged -= SetSkillNameList;
         }
 
         /// <summary>
         /// 付与されているスキルの名前リストを表示する
         /// </summary>
-        public void SetSkillNameList()
+        public void SetSkillNameList(SymbolData symbolData)
         {
             Clear();
 
             foreach (var skillData in GlobalVariables.HasSkills)
             {
                 SkillNameButton button = Instantiate(skillNameButtonPrefab, skillNameButtonParent);
+                button.OnSkillButtonClicked += (skillData) => 
+                {
+                    // ここにスキルボタンがクリックされたときの処理を記述
+                    skillDescriptionHandler.SetSkillDescription(skillData);
+                };
+
                 button.SetSkill(skillData);
             }
         }

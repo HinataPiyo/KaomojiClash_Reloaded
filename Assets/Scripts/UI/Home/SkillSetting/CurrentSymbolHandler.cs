@@ -10,6 +10,7 @@ namespace UI
     {
         [SerializeField] TextMeshProUGUI currentSymbolText;
         [SerializeField] SymbolListHandler symbolListHandler;
+        [SerializeField] SkillNameListHandler skillNameListHandler;
         [SerializeField] SkillSlotsController skillSlotsCTRL;
 
         void Awake()
