@@ -14,6 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SymbolMouthData
   symbolType: 1
   symbol: 969
-  skillDatas:
-  - {fileID: 11400000, guid: 7c38b2708aaabc544b1aa29f114ac221, type: 2}
+  skillDatas: []
   skillSlot_UnlockedCount: 1

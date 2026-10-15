@@ -56,6 +56,8 @@ MonoBehaviour:
   settingSlot: {fileID: 1521216951977341392}
   skillName: {fileID: 1308305124521037981}
   skillCost: {fileID: 2918032781936811031}
+  defaultSlotColor: {r: 0, g: 0, b: 0, a: 0}
+  selectedSlotColor: {r: 0.8784314, g: 0.41960785, b: 0.41960785, a: 1}
 --- !u!1 &308971007883074629
 GameObject:
   m_ObjectHideFlags: 0

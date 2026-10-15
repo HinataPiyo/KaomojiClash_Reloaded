@@ -10,6 +10,7 @@ namespace UI
 
         // スキル変更処理に必要な項目
         public SkillSlotHandler SelectedSlot { get; private set; }
+        public bool HasSelectedSlot => SelectedSlot != null;
         public void ClearSelectedSlot() => SelectedSlot = null;
 
         // スロットを解放するためのスロット数ごとの必要金額
@@ -25,12 +26,17 @@ namespace UI
                 int requiredAmount = requireAmount[i];
                 skillSlots[i].Initialize(requiredAmount,
                 (s) => {
+                    if(HasSelectedSlot)     // 既に選択されているスロットがある場合は選択を解除する
+                        SelectedSlot.DeselectSlot();
                     // スロットをアンロックするか確認する
                     confirmationPanel.Show(ConfirmationMessage, () => OnClickConfirmationYes(s));
                 }, 
                 (s) => {
                     // スロットの追加ボタンがクリックされたときの処理
+                    if(HasSelectedSlot)     // 既に選択されているスロットがある場合は選択を解除する
+                        SelectedSlot.DeselectSlot();
                     SelectedSlot = s;
+                    s.SelectedSlot();
                 });
             }
         }
