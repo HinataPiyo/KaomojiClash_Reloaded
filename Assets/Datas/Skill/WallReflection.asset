@@ -13,7 +13,5 @@ MonoBehaviour:
   m_Name: WallReflection
   m_EditorClassIdentifier: Assembly-CSharp::WallReflection
   skillName: WallReflrection
-  reflectionPower:
-  - 1.4
-  - 1.6
-  - 2
+  cost: 1
+  reflectionPower: 1.5

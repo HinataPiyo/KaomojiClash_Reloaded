@@ -7,8 +7,15 @@ namespace UI
 
     public class SkillSlotHandler : MonoBehaviour
     {
-        [SerializeField] GameObject activeSlot;
+        [SerializeField] GameObject addSlot;
         [SerializeField] GameObject lockedSlot;
+        [SerializeField] GameObject settingSlot;
+
+        [Header("Skill Info")]
+        [SerializeField] TextMeshProUGUI skillName;
+        [SerializeField] TextMeshProUGUI skillCost;
+        
+        SkillData skillData;
         float requireAmount;        // スロットをアンロックするために必要な金額
 
         /// <summary>
@@ -17,7 +24,7 @@ namespace UI
         /// <param name="amount">スロットをアンロックするために必要な金額</param>
         public void Initialize(float amount)
         {
-            UnlockSlot();
+            LockSlot();
             SetRequireAmount(amount);
 
             lockedSlot.GetComponentInChildren<TextMeshProUGUI>().text = "-";
@@ -46,7 +53,7 @@ namespace UI
 
         public void LockSlot()
         {
-            activeSlot.SetActive(false);
+            addSlot.SetActive(false);
             lockedSlot.SetActive(true);
 
             lockedSlot.GetComponentInChildren<TextMeshProUGUI>().text = 
@@ -58,13 +65,20 @@ namespace UI
 
         public void UnlockSlot()
         {
-            activeSlot.SetActive(true);
+            addSlot.SetActive(true);
             lockedSlot.SetActive(false);
+            settingSlot.SetActive(false);
         }
 
         public void SetSkillData(SkillData skillData)
         {
-            
+            this.skillData = skillData;
+            skillName.text = skillData.SkillName;
+            skillCost.text = skillData.Cost.ToString();
+
+            addSlot.SetActive(false);
+            lockedSlot.SetActive(false);
+            settingSlot.SetActive(true);
         }
     }
 }
