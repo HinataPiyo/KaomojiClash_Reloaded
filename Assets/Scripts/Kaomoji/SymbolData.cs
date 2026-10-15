@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public enum SymbolType { Mouth, LeftEye, RightEye, LeftHand, RightHand, MAX }
+[System.Flags]
+public enum SymbolType { Mouth = 1 << 0, LeftEye = 1 << 1, RightEye = 1 << 2, LeftHand = 1 << 3, RightHand = 1 << 4 }
 public enum StatusType { Stamina, Power, Speed, Guard, CriticalDamage, CriticalRate }
 
 [CreateAssetMenu(fileName = "SymbolData", menuName = "KaomojiClash_Reloaded/SymbolData")]

@@ -11,17 +11,13 @@ namespace UI
     {
         [SerializeField] GameObject button_Prefab;
         [SerializeField] Transform buttonParent_Transform;
+        [SerializeField] SymbolType defaultSymbolType;
 
         public static event System.Action<SymbolType> OnSymbolTypeChanged;
 
-        void Awake()
-        {
-            CreateSymbolTypeButtons();
-        }
-
         void Start()
         {
-            CreateSymbolTypeButton(SymbolType.Mouth); // 初期状態としてMouthを選択
+            CreateSymbolTypeButtons(); // 初期状態としてボタンを生成
             OnSymbolTypeChanged += (type) => ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
         }
 
@@ -37,9 +33,10 @@ namespace UI
 
             foreach (SymbolType type in System.Enum.GetValues(typeof(SymbolType)))
             {
-                if (type == SymbolType.MAX) continue; // MAXは除外
-
-                CreateSymbolTypeButton(type);
+                if((type & defaultSymbolType) != 0)
+                {
+                    CreateSymbolTypeButton(type);
+                }
             }
         }
 
@@ -51,6 +48,7 @@ namespace UI
 
             text.text = type.ToString();
             button.onClick.AddListener(() => OnSymbolTypeChanged?.Invoke(type));
+            Debug.Log($"Created button for SymbolType: {type}");
         }
     }
 }
