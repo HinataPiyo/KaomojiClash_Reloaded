@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a672525f0d4b52b48a76ad5ef3d0b511, type: 3}
   m_Name: Symbol_RightEyeData_T
   m_EditorClassIdentifier: Assembly-CSharp::SymbolEyeData
-  symbolType: 2
+  symbolType: 4
   symbol: 84
   skillData: []
   criticalStats:

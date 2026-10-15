@@ -12,12 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a015e84cfdf48d24197271dc3f90ba29, type: 3}
   m_Name: "Symbol_MouthData_\u0437"
   m_EditorClassIdentifier: Assembly-CSharp::SymbolMouthData
-  symbolType: 0
+  symbolType: 1
   symbol: 1079
   skillData:
   - {fileID: 11400000, guid: 7c38b2708aaabc544b1aa29f114ac221, type: 2}
-  coreStats:
-    Stamina: 0
-    Power: 0
-    Speed: 0
-    Guard: 0
+  skillDatas: []
+  skillSlot_UnlockedCount: 0

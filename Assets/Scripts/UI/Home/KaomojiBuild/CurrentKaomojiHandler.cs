@@ -12,17 +12,21 @@ namespace UI
         [SerializeField] StatusRaderChartView statusRaderChartView;
         [SerializeField] BaseStatusView baseStatusView;
 
+        [SerializeField] SymbolListHandler symbolListHandler;
+
         public static System.Action<SymbolData> OnCurrentKaomojiUpdated;
 
         void Start()
         {
             OnCurrentKaomojiUpdated += UpdateCurrentKaomoji;
+            symbolListHandler.OnSelectedSymbolChanged += UpdateCurrentKaomoji;
             UpdateStatusViews();
         }
 
         void OnDestroy()
         {
             OnCurrentKaomojiUpdated -= UpdateCurrentKaomoji;
+            symbolListHandler.OnSelectedSymbolChanged -= UpdateCurrentKaomoji;
         }
 
         /// <summary>

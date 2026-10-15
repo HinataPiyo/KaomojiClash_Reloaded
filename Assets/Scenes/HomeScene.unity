@@ -2800,7 +2800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8842970272848174099, guid: 6688bcf00bba5d34fa44a3b034289099, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3678120
+      value: 3805920
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4995,7 +4995,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6455757121611619735, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3674930
+      value: 3802485
       objectReference: {fileID: 0}
     - target: {fileID: 7004216925467232253, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_Pivot.x
@@ -5808,6 +5808,10 @@ PrefabInstance:
       propertyPath: baseStatusView
       value: 
       objectReference: {fileID: 796998162}
+    - target: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: symbolListHandler
+      value: 
+      objectReference: {fileID: 2062093776}
     - target: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
       propertyPath: statusRaderChartView
       value: 
@@ -12532,7 +12536,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8842970272848174099, guid: 6688bcf00bba5d34fa44a3b034289099, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3678120
+      value: 3805920
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13203,7 +13207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6455757121611619735, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3674585
+      value: 3802025
       objectReference: {fileID: 0}
     - target: {fileID: 7004216925467232253, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_Pivot.x
@@ -13492,6 +13496,7 @@ GameObject:
   - component: {fileID: 25443293162940215}
   - component: {fileID: 465649219280152339}
   - component: {fileID: 3330295651255326893}
+  - component: {fileID: 8820584675998573146}
   m_Layer: 5
   m_Name: Select Symbol Box
   m_TagString: Untagged
@@ -13499,6 +13504,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8820584675998573146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820584675998573145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f752d06ea33dcb45a0f354fc33126af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.CurrentSymbolHandler
+  currentSymbolText: {fileID: 266249359215527372}
+  symbolListHandler: {fileID: 868185466}
+  skillSlotsCTRL: {fileID: 1783833724}
 --- !u!1 &8820584677430225587
 GameObject:
   m_ObjectHideFlags: 0

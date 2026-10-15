@@ -3,20 +3,29 @@ namespace UI
     using System.Collections.Generic;
     using UnityEngine;
     
+    [RequireComponent(typeof(SymbolTypeChangeHandler))]
     public class SymbolListHandler : MonoBehaviour
     {
         [SerializeField] SymbolIconButton icon_Prefab;
         [SerializeField] Transform content_Transform;
+        SymbolTypeChangeHandler typeChangeHandler;
+        public event System.Action<SymbolData> OnSelectedSymbolChanged;
 
         void Awake()
         {
-            SymbolTypeChangeHandler.OnSymbolTypeChanged += CreateSymbolList;
-            CreateSymbolList(SymbolType.Mouth); // 初期状態としてMouthを選択
+            typeChangeHandler = GetComponent<SymbolTypeChangeHandler>();
+            typeChangeHandler.OnSymbolTypeChanged += CreateSymbolList;
+        }
+
+        void Start()
+        {
+            // イベントの登録が終わってから初期化を行う
+            CreateSymbolList(typeChangeHandler.FirstSymbolType());
         }
 
         void OnDestroy()
         {
-            SymbolTypeChangeHandler.OnSymbolTypeChanged -= CreateSymbolList;
+            typeChangeHandler.OnSymbolTypeChanged -= CreateSymbolList;
         }
 
         /// <summary>
@@ -35,8 +44,13 @@ namespace UI
             foreach (SymbolData symbolData in symbolDataList)
             {
                 SymbolIconButton icon = Instantiate(icon_Prefab, content_Transform);
-                icon.Initialize(symbolData);
+                icon.Initialize(symbolData, HandleSymbolSelected);
             }
+        }
+
+        void HandleSymbolSelected(SymbolData symbolData)
+        {
+            OnSelectedSymbolChanged?.Invoke(symbolData);
         }
     }
 }

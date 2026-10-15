@@ -1,5 +1,6 @@
 namespace UI
 {
+    using System;
     using TMPro;
     using UnityEngine;
     using UnityEngine.UI;
@@ -13,12 +14,28 @@ namespace UI
         [SerializeField] Transform buttonParent_Transform;
         [SerializeField] SymbolType defaultSymbolType;
 
-        public static event System.Action<SymbolType> OnSymbolTypeChanged;
+        public event Action<SymbolType> OnSymbolTypeChanged;
 
         void Start()
         {
             CreateSymbolTypeButtons(); // 初期状態としてボタンを生成
             OnSymbolTypeChanged += (type) => ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
+        }
+
+        /// <summary>
+        /// デフォルトの記号タイプに基づいて、最初の有効な記号タイプを取得します。
+        /// </summary>
+        /// <returns>最初の有効な記号タイプ</returns>
+        public SymbolType FirstSymbolType()
+        {
+            foreach (SymbolType type in Enum.GetValues(typeof(SymbolType)))
+            {
+                if((type & defaultSymbolType) != 0)
+                {
+                    return type;
+                }
+            }
+            return default;
         }
 
         /// <summary>
@@ -31,7 +48,7 @@ namespace UI
                 Destroy(child.gameObject);
             }
 
-            foreach (SymbolType type in System.Enum.GetValues(typeof(SymbolType)))
+            foreach (SymbolType type in Enum.GetValues(typeof(SymbolType)))
             {
                 if((type & defaultSymbolType) != 0)
                 {
