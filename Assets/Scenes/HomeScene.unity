@@ -2800,7 +2800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8842970272848174099, guid: 6688bcf00bba5d34fa44a3b034289099, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3977280
+      value: 4003560
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4995,7 +4995,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6455757121611619735, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3973110
+      value: 3999145
       objectReference: {fileID: 0}
     - target: {fileID: 7004216925467232253, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_Pivot.x
@@ -8869,6 +8869,7 @@ MonoBehaviour:
   skillNameButtonParent: {fileID: 341872303}
   symbolListHandler: {fileID: 868185466}
   skillDescriptionHandler: {fileID: 1758073785}
+  skillSlotsCTRL: {fileID: 1783833724}
   testSkillData: {fileID: 11400000, guid: 7c38b2708aaabc544b1aa29f114ac221, type: 2}
 --- !u!1 &1664206396
 GameObject:
@@ -12539,7 +12540,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8842970272848174099, guid: 6688bcf00bba5d34fa44a3b034289099, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3977280
+      value: 4003560
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13210,7 +13211,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6455757121611619735, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3972305
+      value: 3998225
       objectReference: {fileID: 0}
     - target: {fileID: 7004216925467232253, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_Pivot.x

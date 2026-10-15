@@ -9,6 +9,7 @@ namespace UI
 
         [SerializeField] SymbolListHandler symbolListHandler;
         [SerializeField] SkillDescriptionHandler skillDescriptionHandler;
+        [SerializeField] SkillSlotsController skillSlotsCTRL;
 
         // テスト
         [SerializeField] WallReflection testSkillData;
@@ -41,6 +42,14 @@ namespace UI
                 {
                     // ここにスキルボタンがクリックされたときの処理を記述
                     skillDescriptionHandler.SetSkillDescription(skillData);
+
+                    // *スロットの中にスキルを追加しようとしていたら
+                    if(skillSlotsCTRL.SelectedSlot != null)
+                    {
+                        // 選択したスロットにスキルを設定する
+                        skillSlotsCTRL.SelectedSlot.SetSkillData(skillData);
+                        skillSlotsCTRL.ClearSelectedSlot();     // 選択されていない状態に戻す
+                    }
                 };
 
                 button.SetSkill(skillData);

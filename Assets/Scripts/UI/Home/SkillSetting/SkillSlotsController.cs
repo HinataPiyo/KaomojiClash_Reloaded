@@ -8,6 +8,10 @@ namespace UI
         [SerializeField] ConfirmationPanel confirmationPanel;
         SkillSlotHandler[] skillSlots;
 
+        // スキル変更処理に必要な項目
+        public SkillSlotHandler SelectedSlot { get; private set; }
+        public void ClearSelectedSlot() => SelectedSlot = null;
+
         // スロットを解放するためのスロット数ごとの必要金額
         static readonly int[] requireAmount = { 100, 1000, 2500, 5000, 10000 };
         static readonly string ConfirmationMessage = "Do you want to unlock this skill slot?";
@@ -19,9 +23,14 @@ namespace UI
             for (int i = 0; i < skillSlots.Length; i++)
             {
                 int requiredAmount = requireAmount[i];
-                skillSlots[i].Initialize(requiredAmount, (s) => {
+                skillSlots[i].Initialize(requiredAmount,
+                (s) => {
                     // スロットをアンロックするか確認する
                     confirmationPanel.Show(ConfirmationMessage, () => OnClickConfirmationYes(s));
+                }, 
+                (s) => {
+                    // スロットの追加ボタンがクリックされたときの処理
+                    SelectedSlot = s;
                 });
             }
         }

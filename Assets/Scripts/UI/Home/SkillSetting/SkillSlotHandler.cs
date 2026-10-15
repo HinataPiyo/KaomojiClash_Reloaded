@@ -25,7 +25,7 @@ namespace UI
         /// スロットを初期化する
         /// </summary>
         /// <param name="amount">スロットをアンロックするために必要な金額</param>
-        public void Initialize(float amount, System.Action<SkillSlotHandler> onClickLockedSlot)
+        public void Initialize(float amount, System.Action<SkillSlotHandler> onClickLockedSlot, System.Action<SkillSlotHandler> onClickAddSlot)
         {
             LockSlot();
             SetRequireAmount(amount);
@@ -34,6 +34,7 @@ namespace UI
 
             //* 確認画面を表示する(自身のスロットを渡しControllerで状態を変更させる)
             lockedSlot.onClick.AddListener(() => onClickLockedSlot?.Invoke(this));
+            addSlot.onClick.AddListener(() => onClickAddSlot?.Invoke(this));
         }
 
         void ChangeSlotState(SkillSlotState newState)
