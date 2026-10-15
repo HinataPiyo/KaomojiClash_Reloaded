@@ -410,8 +410,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95766b116a8cad24b8f4820d5c59adef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.SkillNameButton
-  skillLevelIconParent: {fileID: 0}
   skillName: {fileID: 8611151069773960643}
+  skillCost: {fileID: 3342404061961619614}
 --- !u!1 &8839558474455451611
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,12 +5,11 @@ using UnityEngine;
 public interface IKaomojiSetUp
 {
     void SetUp(KaomojiData data, int exp = 0);
-    List<SkillWithLevel> SkillsWithLevels { get; }
 }
 
 public interface IKaomojiStats
 {
-    bool TryGetSkill<T>(out T skill, out int level) where T : class;
+    bool TryGetSkill<T>(out T skill) where T : class;
     public KaomojiData Data { get; }
 }
 
@@ -29,12 +28,9 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
 
     int hasExp = 0;
 
-    public List<SkillWithLevel> SkillsWithLevels { get; private set; } = new List<SkillWithLevel>();
-
     public void SetUp(KaomojiData data, int exp = 0)
     {
         string kaomoji = GetKaomojiCoupling(data);
-        SkillsWithLevels = SkillData.GetAllSkillsWithLevelsFromKaomojiData(data);
         kaomojiBody.text = kaomoji;
         Data = data;
         hasExp = exp;
@@ -90,18 +86,16 @@ public class KaomojiSetUp : MonoBehaviour, IKaomojiSetUp, IKaomojiStats
     /// <summary>
     /// 指定された特定のスキルクラス型、またはインターフェース (T) を持つ最初のスキル情報を、安全かつキャスト不要な参照として取得します。
     /// </summary>
-    public bool TryGetSkill<T>(out T skill, out int level) where T : class
+    public bool TryGetSkill<T>(out T skill) where T : class
     {
-        var found = SkillsWithLevels.Find(s => s.Skill is T);
+        var found = GlobalVariables.HasSkills.Find(s => s is T);
         if (found != null)
         {
-            skill = found.Skill as T;
-            level = found.Level;
+            skill = found as T;
             return true;
         }
 
         skill = null;
-        level = 0;
         return false;
     }
 

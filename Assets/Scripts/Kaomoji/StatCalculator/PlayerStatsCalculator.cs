@@ -161,8 +161,8 @@ namespace Player
         // プレイヤーの壁反射力は、速度と壁反射スキルのレベルに基づいて計算される。
         public float GetWallReflectionPower()
         {
-            stats.TryGetSkill(out IWallReflection wallReflection, out int level);
-            return GetSpeed() * wallReflection?.GetReflectionPower(level) ?? 0f;
+            stats.TryGetSkill(out IWallReflection wallReflection);
+            return GetSpeed() * wallReflection?.GetReflectionPower() ?? 0f;
         }
     }
 }

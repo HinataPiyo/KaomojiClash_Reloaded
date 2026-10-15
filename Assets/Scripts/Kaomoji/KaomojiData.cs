@@ -53,40 +53,6 @@ public class KaomojiData : ScriptableObject
         }
     }
 
-    /// <summary>
-    /// すべてのSymbolDataからスキルとそのレベルを取得する
-    /// </summary>
-    public Dictionary<SkillData, int> GetAllSkillsWithLevels()
-    {
-        var skillsWithLevels = new Dictionary<SkillData, int>();
-
-        // すべてのSymbolTypeをループして、対応するSymbolDataからスキルを取得
-        foreach (SymbolType type in System.Enum.GetValues(typeof(SymbolType)))
-        {
-            if (type == SymbolType.MAX) continue;       // MAXは無視する
-
-            SymbolData symbolData = GetSymbolDataByType(type);      // 対応するSymbolDataを取得
-            if (symbolData != null)
-            {
-                // SymbolDataからスキルを取得し、Dictionaryに追加
-                foreach (var skill in symbolData.SkillData)
-                {
-                    // すでにDictionaryに存在する場合はスキルレベルを更新しない
-                    if (!skillsWithLevels.ContainsKey(skill))
-                    {
-                        skillsWithLevels[skill] = 1;        // 初期レベルを1に設定
-                    }
-                    // すでに存在する場合はレベルをインクリメント(ただし、MaxLevelを超えないようにする)
-                    else if (skillsWithLevels[skill] < skill.MaxLevel())
-                    {
-                        skillsWithLevels[skill]++;          // すでに存在する場合はレベルをインクリメント
-                    }
-                }
-            }
-        }
-
-        return skillsWithLevels;
-    }
 
     public (float, float) GetStatusValue(StatusType type)
     {

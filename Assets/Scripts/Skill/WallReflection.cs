@@ -2,29 +2,21 @@ using UnityEngine;
 
 public interface IWallReflection
 {
-    int MaxLevel();
-    float GetReflectionPower(int level);
+    float GetReflectionPower();
 }
 
 [CreateAssetMenu(fileName = "WallReflection", menuName = "KaomojiClash_Reloaded/Skill/WallReflection")]
 public class WallReflection : SkillData, IWallReflection
 {
-    [SerializeField] float[] reflectionPower;
+    [SerializeField] float reflectionPower = 1.5f;
 
-    public override int MaxLevel() => reflectionPower.Length;
-    public float GetReflectionPower(int level)
+    public float GetReflectionPower()
     {
-        if (level < 1 || level > MaxLevel())
-        {
-            Debug.LogWarning($"Invalid level: {level}. Level must be between 1 and {MaxLevel()}.");
-            return 0f;
-        }
-
-        return reflectionPower[level - 1];
+        return reflectionPower;
     }
 
-    public override string GetDescription(int level)
+    public override string GetDescription()
     {
-        return $"Wall Reflection Power: {GetReflectionPower(level) * 100}%";
+        return $"Wall Reflection ";
     }
 }

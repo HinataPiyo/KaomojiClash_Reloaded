@@ -8,7 +8,7 @@ namespace UI
         [SerializeField] SkillNameButton skillNameButtonPrefab;
         [SerializeField] Transform skillNameButtonParent;
 
-        public static System.Action<Dictionary<SkillData, int>> OnSkillNameListUpdated;
+        public static System.Action OnSkillNameListUpdated;
 
         void Awake()
         {
@@ -25,14 +25,14 @@ namespace UI
         /// <summary>
         /// 付与されているスキルの名前リストを表示する
         /// </summary>
-        public void SetSkillNameList(Dictionary<SkillData, int> allSkillsWithLevels)
+        public void SetSkillNameList()
         {
             Clear();
 
-            foreach (var skillWithLevel in allSkillsWithLevels)
+            foreach (var skillData in GlobalVariables.HasSkills)
             {
                 SkillNameButton button = Instantiate(skillNameButtonPrefab, skillNameButtonParent);
-                button.SetSkill(skillWithLevel.Key, skillWithLevel.Value);
+                button.SetSkill(skillData);
             }
         }
 
