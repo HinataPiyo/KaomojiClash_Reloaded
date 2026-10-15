@@ -51,9 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79eb1cf97c81e6a47a3f15a8645b13b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.SkillSlotHandler
-  addSlot: {fileID: 8119049859112650141}
-  lockedSlot: {fileID: 308971007883074629}
-  settingSlot: {fileID: 5543653793596517750}
+  addSlot: {fileID: 4237835978501617743}
+  lockedSlot: {fileID: 7088118593634238468}
+  settingSlot: {fileID: 1521216951977341392}
   skillName: {fileID: 1308305124521037981}
   skillCost: {fileID: 2918032781936811031}
 --- !u!1 &308971007883074629

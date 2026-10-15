@@ -5,45 +5,55 @@ namespace UI
     using UnityEngine.UI;
     using Player;
 
+    public enum SkillSlotState { Locked, Unlocked, Set }
     public class SkillSlotHandler : MonoBehaviour
     {
-        [SerializeField] GameObject addSlot;
-        [SerializeField] GameObject lockedSlot;
-        [SerializeField] GameObject settingSlot;
+        [SerializeField] Button addSlot;
+        [SerializeField] Button lockedSlot;
+        [SerializeField] Button settingSlot;
 
         [Header("Skill Info")]
         [SerializeField] TextMeshProUGUI skillName;
         [SerializeField] TextMeshProUGUI skillCost;
-        
+    
+
+        SkillSlotState slotState;
         SkillData skillData;
-        float requireAmount;        // スロットをアンロックするために必要な金額
+        public float RequireAmount { get; private set; }        // スロットをアンロックするために必要な金額
 
         /// <summary>
         /// スロットを初期化する
         /// </summary>
         /// <param name="amount">スロットをアンロックするために必要な金額</param>
-        public void Initialize(float amount)
+        public void Initialize(float amount, System.Action<SkillSlotHandler> onClickLockedSlot)
         {
             LockSlot();
             SetRequireAmount(amount);
 
             lockedSlot.GetComponentInChildren<TextMeshProUGUI>().text = "-";
-            lockedSlot.GetComponentInChildren<Button>().interactable = false;
+
+            //* 確認画面を表示する(自身のスロットを渡しControllerで状態を変更させる)
+            lockedSlot.onClick.AddListener(() => onClickLockedSlot?.Invoke(this));
+        }
+
+        void ChangeSlotState(SkillSlotState newState)
+        {
+            slotState = newState;
         }
 
         void SetRequireAmount(float amount)
         {
-            requireAmount = amount;
+            RequireAmount = amount;
         }
 
         /// <summary>
         /// スロットのアンロック条件を現在の所持金と比較する
         /// </summary>
         /// <param name="currentGold">現在の所持金</param>
-        public bool Comparison(float currentGold)
+        public bool Comparison()
         {
             // 現在の所持金が必要金額以上かどうかを比較する
-            if (currentGold >= requireAmount)
+            if (Funds.CurrentGold >= RequireAmount)
             {
                 return true;
             }
@@ -53,21 +63,24 @@ namespace UI
 
         public void LockSlot()
         {
-            addSlot.SetActive(false);
-            lockedSlot.SetActive(true);
+            addSlot.gameObject.SetActive(false);
+            lockedSlot.gameObject.SetActive(true);
 
             lockedSlot.GetComponentInChildren<TextMeshProUGUI>().text = 
-                "Required amount : " + requireAmount.ToString("#,###");
+                "Required amount : " + RequireAmount.ToString("#,###");
 
-            bool isComplete = Funds.CurrentGold >= requireAmount;
-            lockedSlot.GetComponentInChildren<Button>().interactable = isComplete;
+            lockedSlot.interactable = Comparison();
+
+            ChangeSlotState(SkillSlotState.Locked);
         }
 
         public void UnlockSlot()
         {
-            addSlot.SetActive(true);
-            lockedSlot.SetActive(false);
-            settingSlot.SetActive(false);
+            addSlot.gameObject.SetActive(true);
+            lockedSlot.gameObject.SetActive(false);
+            settingSlot.gameObject.SetActive(false);
+
+            ChangeSlotState(SkillSlotState.Unlocked);
         }
 
         public void SetSkillData(SkillData skillData)
@@ -76,9 +89,11 @@ namespace UI
             skillName.text = skillData.SkillName;
             skillCost.text = skillData.Cost.ToString();
 
-            addSlot.SetActive(false);
-            lockedSlot.SetActive(false);
-            settingSlot.SetActive(true);
+            addSlot.gameObject.SetActive(false);
+            lockedSlot.gameObject.SetActive(false);
+            settingSlot.gameObject.SetActive(true);
+
+            ChangeSlotState(SkillSlotState.Set);
         }
     }
 }

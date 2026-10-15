@@ -13,15 +13,16 @@ namespace UI
         [SerializeField] Button yes;
         [SerializeField] Button no;
 
-        public void Initialize(System.Action onYes, System.Action onNo)
+        public void Initialize()
         {
             message.text = "";
-            yes.onClick.AddListener(() => onYes?.Invoke());
-            no.onClick.AddListener(() => onNo?.Invoke());
+            no.onClick.AddListener(() => { Hide(); });
         }
 
-        public void Show(string messageText)
+        public void Show(string messageText, System.Action onYes)
         {
+            yes.onClick.RemoveAllListeners();
+            yes.onClick.AddListener(() => { onYes?.Invoke(); });
             message.text = messageText;
             gameObject.SetActive(true);
         }

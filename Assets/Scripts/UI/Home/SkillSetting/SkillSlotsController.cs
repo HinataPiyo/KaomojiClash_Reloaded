@@ -19,12 +19,26 @@ namespace UI
             for (int i = 0; i < skillSlots.Length; i++)
             {
                 int requiredAmount = requireAmount[i];
-                skillSlots[i].Initialize(requiredAmount);
+                skillSlots[i].Initialize(requiredAmount, (s) => {
+                    // スロットをアンロックするか確認する
+                    confirmationPanel.Show(ConfirmationMessage, () => OnClickConfirmationYes(s));
+                });
             }
         }
 
         /// <summary>
-        /// 記号データを選択した際に実行すいるメソッド
+        /// 確認画面で「はい」を選択した際に実行されるメソッド
+        /// </summary>
+        /// <param name="requiredAmount">アンロックするスロットに必要な金額</param>
+        void OnClickConfirmationYes(SkillSlotHandler slot)
+        {
+            confirmationPanel.Hide();
+            Player.Funds.SpendGold(slot.RequireAmount);
+            slot.UnlockSlot();
+        }
+
+        /// <summary>
+        /// 記号データを選択した際に実行されるメソッド
         /// SkillSlotsListを更新する
         /// </summary>
         /// <param name="data">設定する記号データ</param>
