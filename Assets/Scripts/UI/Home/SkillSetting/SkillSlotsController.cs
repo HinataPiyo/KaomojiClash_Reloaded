@@ -6,6 +6,8 @@ namespace UI
     {
         [SerializeField] Transform skillSlotsParent;
         [SerializeField] ConfirmationPanel confirmationPanel;
+        [SerializeField] CurrentSymbolHandler currentSymbolHandler;
+        [SerializeField] SymbolListHandler symbolListHandler;
         SkillSlotHandler[] skillSlots;
 
         // スキル変更処理に必要な項目
@@ -24,7 +26,9 @@ namespace UI
             for (int i = 0; i < skillSlots.Length; i++)
             {
                 int requiredAmount = requireAmount[i];
-                skillSlots[i].Initialize(requiredAmount,
+                int slotIndex = i;
+
+                skillSlots[i].Initialize(slotIndex, requiredAmount,
                 (s) => {
                     if(HasSelectedSlot)     // 既に選択されているスロットがある場合は選択を解除する
                         SelectedSlot.DeselectSlot();
@@ -35,10 +39,18 @@ namespace UI
                     // スロットの追加ボタンがクリックされたときの処理
                     if(HasSelectedSlot)     // 既に選択されているスロットがある場合は選択を解除する
                         SelectedSlot.DeselectSlot();
+                    
                     SelectedSlot = s;
                     s.SelectedSlot();
                 });
             }
+
+            symbolListHandler.OnSelectedSymbolChanged += SetSymbolData;
+        }
+        
+        void OnDestroy()
+        {
+            symbolListHandler.OnSelectedSymbolChanged -= SetSymbolData;
         }
 
         /// <summary>
@@ -50,6 +62,7 @@ namespace UI
             confirmationPanel.Hide();
             Player.Funds.SpendGold(slot.RequireAmount);
             slot.UnlockSlot();
+            currentSymbolHandler.CurrentSymbolData.UnlockNextSkillSlot();       // 次のスキルスロットをアンロックする
         }
 
         /// <summary>
@@ -57,17 +70,32 @@ namespace UI
         /// SkillSlotsListを更新する
         /// </summary>
         /// <param name="data">設定する記号データ</param>
-        public void SetSymbolData(SymbolMouthData data)
+        public void SetSymbolData(SymbolData data)
         {
+            if (HasSelectedSlot)
+            {
+                SelectedSlot.DeselectSlot();
+                ClearSelectedSlot();
+            }
+
+            SymbolMouthData symbolMouthData = data as SymbolMouthData;
+            if (symbolMouthData == null)
+            {
+                for (int i = 0; i < skillSlots.Length; i++)
+                    skillSlots[i].LockSlot();
+
+                return;
+            }
+
             for (int i = 0; i < skillSlots.Length; i++)
             {
                 // 現在アンロックしてるスロットを確認
-                if (i < data.SkillSlot_Unlocked)
+                if (i < symbolMouthData.SkillSlot_Unlocked)
                 {
                     // スキルデータが存在する場合は設定し、存在しない場合はスロットをアンロックする
-                    if (i < data.SkillDatas.Count)
+                    if (i < symbolMouthData.SkillDatas.Count)
                     {
-                        skillSlots[i].SetSkillData(data.SkillDatas[i]);
+                        skillSlots[i].SetSkillData(symbolMouthData.SkillDatas[i]);
                         continue;
                     }
 

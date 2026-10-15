@@ -13,6 +13,8 @@ namespace UI
         [SerializeField] SkillNameListHandler skillNameListHandler;
         [SerializeField] SkillSlotsController skillSlotsCTRL;
 
+        public SymbolMouthData CurrentSymbolData { get; private set; }
+
         void Awake()
         {
             symbolListHandler.OnSelectedSymbolChanged += OnCurrentSymbolChanged;
@@ -31,12 +33,17 @@ namespace UI
         void OnCurrentSymbolChanged(SymbolData symbolData)
         {
             // 現在の記号が変更されたときの処理をここに記述
+            CurrentSymbolData = symbolData as SymbolMouthData;
             currentSymbolText.text = symbolData.Symbol.ToString();
-
-            SymbolMouthData mouthData = symbolData as SymbolMouthData;
-            if (mouthData != null) skillSlotsCTRL.SetSymbolData(mouthData);
+            skillSlotsCTRL.SetSymbolData(symbolData);
 
             Debug.Log("Current symbol changed to: " + symbolData.Symbol.ToString());
+        }
+
+        public void AddOrUpdateSkillData(int slotIndex, SkillData addSkill)
+        {
+            // 指定されたスロットのスキルデータを更新(既にスキルが入っている場合は上書きされる)
+            CurrentSymbolData.AddSkillData(slotIndex, addSkill);
         }
     }
 }

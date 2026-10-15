@@ -10,6 +10,7 @@ namespace UI
         [SerializeField] SymbolListHandler symbolListHandler;
         [SerializeField] SkillDescriptionHandler skillDescriptionHandler;
         [SerializeField] SkillSlotsController skillSlotsCTRL;
+        [SerializeField] CurrentSymbolHandler currentSymbolHandler;
 
         // テスト
         [SerializeField] WallReflection testSkillData;
@@ -48,6 +49,7 @@ namespace UI
                     {
                         // 選択したスロットにスキルを設定する
                         skillSlotsCTRL.SelectedSlot.SetSkillData(skillData);
+                        currentSymbolHandler.AddOrUpdateSkillData(skillSlotsCTRL.SelectedSlot.SlotIndex, skillData);
                         skillSlotsCTRL.ClearSelectedSlot();     // 選択されていない状態に戻す
                     }
                 };

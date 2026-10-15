@@ -44,13 +44,8 @@ namespace UI
             foreach (SymbolData symbolData in symbolDataList)
             {
                 SymbolIconButton icon = Instantiate(icon_Prefab, content_Transform);
-                icon.Initialize(symbolData, HandleSymbolSelected);
+                icon.Initialize(symbolData, OnSelectedSymbolChanged);
             }
-        }
-
-        void HandleSymbolSelected(SymbolData symbolData)
-        {
-            OnSelectedSymbolChanged?.Invoke(symbolData);
         }
     }
 }

@@ -2800,7 +2800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8842970272848174099, guid: 6688bcf00bba5d34fa44a3b034289099, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 4003560
+      value: 4074120
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4995,7 +4995,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6455757121611619735, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3999145
+      value: 4069215
       objectReference: {fileID: 0}
     - target: {fileID: 7004216925467232253, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_Pivot.x
@@ -8870,6 +8870,7 @@ MonoBehaviour:
   symbolListHandler: {fileID: 868185466}
   skillDescriptionHandler: {fileID: 1758073785}
   skillSlotsCTRL: {fileID: 1783833724}
+  currentSymbolHandler: {fileID: 8820584675998573146}
   testSkillData: {fileID: 11400000, guid: 7c38b2708aaabc544b1aa29f114ac221, type: 2}
 --- !u!1 &1664206396
 GameObject:
@@ -9528,6 +9529,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI.SkillSlotsController
   skillSlotsParent: {fileID: 1844609713}
   confirmationPanel: {fileID: 1787425945}
+  currentSymbolHandler: {fileID: 8820584675998573146}
+  symbolListHandler: {fileID: 868185466}
 --- !u!224 &1787425942 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7951249486964226138, guid: 90cccce8cc6ad45488320a3155653163, type: 3}
@@ -12540,7 +12543,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8842970272848174099, guid: 6688bcf00bba5d34fa44a3b034289099, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 4003560
+      value: 4074120
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13211,7 +13214,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6455757121611619735, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3998225
+      value: 4068065
       objectReference: {fileID: 0}
     - target: {fileID: 7004216925467232253, guid: 72e8e231dbf13ab40b5e827661907d46, type: 3}
       propertyPath: m_Pivot.x
@@ -13522,7 +13525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI.CurrentSymbolHandler
   currentSymbolText: {fileID: 266249359215527372}
   symbolListHandler: {fileID: 868185466}
-  skillNameListHandler: {fileID: 0}
+  skillNameListHandler: {fileID: 1632352850}
   skillSlotsCTRL: {fileID: 1783833724}
 --- !u!1 &8820584677430225587
 GameObject:
