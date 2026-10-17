@@ -6,51 +6,39 @@ namespace UI
 
     public class SkillNameButton : SkillUIElement
     {
-        [SerializeField] TextMeshProUGUI skillName;
         Button button;
+        public event System.Action<SkillData> OnSkillButtonClicked;
 
-        protected override void Awake()
+        void Awake()
         {
-            base.Awake();
             button = GetComponent<Button>();
             button?.onClick.AddListener(() => ButtonOnClick());
         }
 
-        void ButtonOnClick()
+        public void Interactable(bool interactable)
         {
-            SkillDescriptionHandler.OnSkillDescriptionUpdated?.Invoke(SkillData, CurrentLevel);
-            ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
+            button.interactable = interactable;
         }
 
-        public override void SetSkill(SkillData skillData, int currentLevel)
+        void ButtonOnClick()
         {
-            base.SetSkill(skillData, currentLevel);
-            skillName.text = skillData.SkillName;
+            ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
+            OnSkillButtonClicked?.Invoke(SkillData);
         }
     }
 
     public class SkillUIElement : MonoBehaviour
     {
+        [SerializeField] protected TextMeshProUGUI skillName;
+        [SerializeField] protected TextMeshProUGUI skillCost;
         public SkillData SkillData { get; private set; }
-        public int CurrentLevel { get; private set; }
-        [SerializeField] Transform skillLevelIconParent;
-        Image[] skillLevelIcons;
 
-        protected virtual void Awake()
-        {
-            skillLevelIcons = skillLevelIconParent.GetComponentsInChildren<Image>();
-        }
-
-        public virtual void SetSkill(SkillData skillData, int currentLevel)
+        public virtual void SetSkill(SkillData skillData)
         {
             SkillData = skillData;
-            CurrentLevel = currentLevel;
 
-            for (int i = 0; i < skillLevelIcons.Length; i++)
-            {
-                skillLevelIcons[i].gameObject.SetActive(i < skillData.MaxLevel());
-                skillLevelIcons[i].color = i < CurrentLevel ? Color.red : Color.gray;
-            }
+            skillName.text = skillData.SkillName;
+            skillCost.text = skillData.Cost.ToString();
         }
     }
 }

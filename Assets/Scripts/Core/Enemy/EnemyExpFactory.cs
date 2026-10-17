@@ -34,7 +34,6 @@ namespace Enemy
             int equipPartCount = 0;
             foreach (SymbolType type in System.Enum.GetValues(typeof(SymbolType)))
             {
-                if (type == SymbolType.MAX) continue;       // MAXは無視する
                 if (data.GetSymbolDataByType(type) != null) equipPartCount++;
             }
 

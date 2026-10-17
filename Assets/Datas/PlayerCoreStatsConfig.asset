@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerCoreStatsConfig
   Default_Stamina: 10
   Default_Speed: 5
-  Default_Power: 6
+  Default_Power: 1
   Default_Guard: 1
   Default_CriticalDamage: 1
   Default_CriticalRate: 0

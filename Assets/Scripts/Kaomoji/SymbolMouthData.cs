@@ -1,29 +1,37 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SymbolMouthData", menuName = "KaomojiClash_Reloaded/SymbolData/SymbolMouthData")]
 public class SymbolMouthData : SymbolData
 {
     [Header("MouthTypeのステータス")]
-    // ステータスはレベルアップ時の伸びしろを示す。
-    [SerializeField] CoreStats coreStats;
+    [SerializeField] List<SkillData> skillDatas = new List<SkillData>();
+    [SerializeField] int skillSlot_UnlockedCount;
+    public static readonly int Max_SkillSlot_UnlockedCount = 5;
 
-    public CoreStats CoreStats => coreStats;
-}
+    public List<SkillData> SkillDatas => skillDatas;
+    public int SkillSlot_Unlocked => skillSlot_UnlockedCount;
 
-[System.Serializable]
-public class CoreStats
-{
-    public const float Max_Stamina = 1.5f;
-    public const float Min_Stamina = 1f;
-    public const float Max_Power = 1.5f;
-    public const float Min_Power = 1f;
-    public const float Max_Speed = 1.5f;
-    public const float Min_Speed = 1f;
-    public const float Max_Guard = 1.5f;
-    public const float Min_Guard = 1f;
+    public void UnlockNextSkillSlot()
+    {
+        if (skillSlot_UnlockedCount < Max_SkillSlot_UnlockedCount)
+            skillSlot_UnlockedCount++;
+    }
 
-    [Range(Min_Stamina, Max_Stamina)] public float Stamina;
-    [Range(Min_Power, Max_Power)] public float Power;
-    [Range(Min_Speed, Max_Speed)] public float Speed;
-    [Range(Min_Guard, Max_Guard)] public float Guard;
+    /// <summary>
+    /// 指定したスロットにスキルデータを追加または更新する
+    /// </summary>
+    /// <param name="slotIndex">追加または更新するスロットのインデックス</param>
+    /// <param name="skillData">追加または更新するスキルデータ</param>
+    public void AddSkillData(int slotIndex, SkillData skillData)
+    {
+        if (slotIndex < 0 || slotIndex >= Max_SkillSlot_UnlockedCount)
+            return;
+
+        if (slotIndex < skillDatas.Count)
+            skillDatas[slotIndex] = skillData;
+        else
+            skillDatas.Add(skillData);
+    }
 }

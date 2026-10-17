@@ -12,17 +12,21 @@ namespace UI
         [SerializeField] StatusRaderChartView statusRaderChartView;
         [SerializeField] BaseStatusView baseStatusView;
 
+        [SerializeField] SymbolListHandler symbolListHandler;
+
         public static System.Action<SymbolData> OnCurrentKaomojiUpdated;
 
         void Start()
         {
             OnCurrentKaomojiUpdated += UpdateCurrentKaomoji;
+            symbolListHandler.OnSelectedSymbolChanged += UpdateCurrentKaomoji;
             UpdateStatusViews();
         }
 
         void OnDestroy()
         {
             OnCurrentKaomojiUpdated -= UpdateCurrentKaomoji;
+            symbolListHandler.OnSelectedSymbolChanged -= UpdateCurrentKaomoji;
         }
 
         /// <summary>
@@ -47,7 +51,6 @@ namespace UI
             statusRaderChartView.SetPlayerStatus(statsCalc);
             baseStatusView.SetPlayerStatus(statsCalc);
 
-            SkillNameListHandler.OnSkillNameListUpdated?.Invoke(playerData.GetAllSkillsWithLevels());
             SkillDescriptionHandler.OnSkillDescriptionCleared?.Invoke();
         }
     }

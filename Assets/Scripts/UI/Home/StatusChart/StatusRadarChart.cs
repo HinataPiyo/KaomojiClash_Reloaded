@@ -64,6 +64,7 @@ public class StatusRadarChart : Graphic
         SetVerticesDirty();
     }
 
+#if UNITY_EDITOR
     protected override void OnValidate()
     {
         base.OnValidate();
@@ -74,6 +75,7 @@ public class StatusRadarChart : Graphic
         EnsureValueArray();
         SetVerticesDirty();
     }
+#endif
 
     /// <summary>
     /// ステータス値を設定します。

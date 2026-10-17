@@ -67,7 +67,9 @@ namespace Enemy
             IEnemyStamina stamina = enemy.GetComponent<IEnemyStamina>();
             KaomojiData kaomojiData = CreateEnemyKaomojiData();
             IKaomojiSetUp kaomojiSetUp = enemy.GetComponentInChildren<IKaomojiSetUp>();
+            IRandomOperationTime randomOperationTime = enemy.GetComponent<IRandomOperationTime>();
             int enemyExp = enemyExpFactory.CreateEnemyEXP(kaomojiData);
+            randomOperationTime.SetRandomOperationTimeModifiers();
 
             if (stamina != null)
             {

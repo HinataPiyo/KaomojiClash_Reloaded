@@ -204,8 +204,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: (@)
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a414be283dc19b748ba6c3b38dc02c6f, type: 2}
+  m_sharedMaterial: {fileID: -9181345379447689757, guid: a414be283dc19b748ba6c3b38dc02c6f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -229,7 +229,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 37.95
   m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -366,3 +366,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI.CurrentKaomojiHandler
   currentKaomojiText: {fileID: 266249358520323932}
   playerData: {fileID: 11400000, guid: dd3cefebf63082049a6fa8635a45586e, type: 2}
+  statsCalc: {fileID: 0}
+  statusRaderChartView: {fileID: 0}
+  baseStatusView: {fileID: 0}

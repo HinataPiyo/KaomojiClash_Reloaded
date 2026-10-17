@@ -1,5 +1,6 @@
 namespace UI
 {
+    using TMPro;
     using UnityEngine;
     
     /// <summary>
@@ -8,10 +9,9 @@ namespace UI
     /// </summary>
     public class SkillDescriptionHandler : MonoBehaviour
     {
-        [SerializeField] SkillDescriptionUI skillDescriptionUI;
-        [SerializeField] Transform skillDescriptionParent;
+        [SerializeField] TextMeshProUGUI skillDescriptionText;
 
-        public static System.Action<SkillData, int> OnSkillDescriptionUpdated;
+        public static System.Action<SkillData> OnSkillDescriptionUpdated;
 
         public static System.Action OnSkillDescriptionCleared;
 
@@ -31,23 +31,15 @@ namespace UI
         /// <summary>
         /// 指定されたスキルデータと現在のレベルに基づいて、スキルの説明をUIに設定します。
         /// </summary>
-        public void SetSkillDescription(SkillData skillData, int currentLevel)
+        public void SetSkillDescription(SkillData skillData)
         {
             Clear();
-            
-            for(int i = 0; i < skillData.MaxLevel(); i++)
-            {
-                SkillDescriptionUI ui = Instantiate(skillDescriptionUI, skillDescriptionParent);
-                ui.SetSkillDescription(skillData, currentLevel, i);
-            }
+            skillDescriptionText.text = skillData.GetDescription();
         }
 
         void Clear()
         {
-            foreach (Transform child in skillDescriptionParent)
-            {
-                Destroy(child.gameObject);
-            }
+            skillDescriptionText.text = string.Empty;
         }
     }
 }

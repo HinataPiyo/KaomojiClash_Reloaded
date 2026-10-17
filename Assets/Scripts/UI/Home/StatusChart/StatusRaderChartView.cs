@@ -30,38 +30,34 @@ namespace UI
                 float value = 0f;
                 float maxValue = 0f;
                 float minValue = 0f;
+                
 
+                //* テキストには%表示する
                 switch (statusType)
                 {
                     case StatusType.Speed:
                         (value, maxValue) = calc.GetSpeed(CoreStats.Max_Speed);
-                        minValue = CoreStats.Min_Speed;
-                        statusLabels[i].text = $"Speed:{value}";
+                        statusLabels[i].text = $"Speed: " + value.ToString("P0");
                         break;
                     case StatusType.Power:
                         (value, maxValue) = calc.GetPower(CoreStats.Max_Power);
-                        minValue = CoreStats.Min_Power;
-                        statusLabels[i].text = $"Power:{value}";
+                        statusLabels[i].text = $"Power: " + value.ToString("P0");
                         break;
                     case StatusType.Stamina:
                         (value, maxValue) = calc.GetStamina(CoreStats.Max_Stamina);
-                        minValue = CoreStats.Min_Stamina;
-                        statusLabels[i].text = $"Stamina:{value}";
+                        statusLabels[i].text = $"Stamina: " + value.ToString("P0");
                         break;
                     case StatusType.Guard:
                         (value, maxValue) = calc.GetGuard(CoreStats.Max_Guard);
-                        minValue = CoreStats.Min_Guard;
-                        statusLabels[i].text = $"Guard:{value}";
+                        statusLabels[i].text = $"Guard: " + value.ToString("P0");
                         break;
                     case StatusType.CriticalDamage:
-                        (value, maxValue) = calc.GetCriticalDamage(CriticalStats.Max_CriticalDamage);
-                        minValue = CriticalStats.Min_CriticalDamage;
-                        statusLabels[i].text = $"Critical\nDamage:{value}";
+                        (value, maxValue) = calc.GetCriticalDamage(CriticalStats.Max_CriticalDamage * 2);
+                        statusLabels[i].text = $"Critical Damage: " + value.ToString("P0");
                         break;
                     case StatusType.CriticalRate:
-                        (value, maxValue) = calc.GetCriticalRate(CriticalStats.Max_CriticalRate);
-                        minValue = CriticalStats.Min_CriticalRate;
-                        statusLabels[i].text = $"Critical\nRate:{value}";
+                        (value, maxValue) = calc.GetCriticalRate(CriticalStats.Max_CriticalRate * 2);
+                        statusLabels[i].text = $"Critical Rate: " + value.ToString("P0");
                         break;
                 }
 
