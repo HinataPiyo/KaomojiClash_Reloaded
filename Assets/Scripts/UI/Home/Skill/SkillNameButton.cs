@@ -15,6 +15,11 @@ namespace UI
             button?.onClick.AddListener(() => ButtonOnClick());
         }
 
+        public void Interactable(bool interactable)
+        {
+            button.interactable = interactable;
+        }
+
         void ButtonOnClick()
         {
             ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);

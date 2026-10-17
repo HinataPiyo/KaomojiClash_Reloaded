@@ -23,6 +23,9 @@ namespace UI
     
         public float RequireAmount { get; private set; }        // スロットをアンロックするために必要な金額
         public int SlotIndex { get; private set; }
+        public bool IsUnlocked { get; private set; }
+        public bool IsByCostLocked { get; private set; }      // スロットがコストによってロックされているかどうか
+        public SkillData SkillData { get; private set; }
 
         /// <summary>
         /// スロットを初期化する
@@ -75,14 +78,17 @@ namespace UI
         {
             addSlot.GetComponent<Image>().color = defaultAddSlotColor;
             settingSlot.GetComponent<Image>().color = defaultSettingSlotColor;
+            addSlot.interactable = !IsByCostLocked;
         }
 
         public void LockSlot()
         {
+            IsUnlocked = false;
+            ResetByCostLock();
+            SkillData = null;
             addSlot.gameObject.SetActive(false);
             lockedSlot.gameObject.SetActive(true);
             settingSlot.gameObject.SetActive(false);
-
             lockedSlot.GetComponentInChildren<TextMeshProUGUI>().text = 
                 "Required amount : " + RequireAmount.ToString("#,###");
 
@@ -91,13 +97,29 @@ namespace UI
 
         public void UnlockSlot()
         {
+            IsUnlocked = true;
+            ResetByCostLock();
+            SkillData = null;
             addSlot.gameObject.SetActive(true);
             lockedSlot.gameObject.SetActive(false);
             settingSlot.gameObject.SetActive(false);
         }
 
+        public void ResetByCostLock()
+        {
+            IsByCostLocked = false;
+            addSlot.interactable = true;
+        }
+
+        public void ByCostLockSlot()
+        {
+            IsByCostLocked = true;
+            addSlot.interactable = false;
+        }
+
         public void SetSkillData(SkillData skillData)
         {
+            SkillData = skillData;
             DeselectSlot();
             skillName.text = skillData.SkillName;
             skillCost.text = skillData.Cost.ToString();

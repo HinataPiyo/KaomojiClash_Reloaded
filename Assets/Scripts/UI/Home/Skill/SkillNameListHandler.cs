@@ -1,5 +1,6 @@
 namespace UI
 {
+    using System.Collections.Generic;
     using UnityEngine;
     
     public class SkillNameListHandler : MonoBehaviour
@@ -15,11 +16,16 @@ namespace UI
         // テスト
         [SerializeField] WallReflection testSkillData;
 
+        List<SkillNameButton> skillNameButtons = new List<SkillNameButton>();
+
         void Awake()
         {
+            SkillNameButton[] existingButtons = skillNameButtonParent.GetComponentsInChildren<SkillNameButton>();
+            skillNameButtons.AddRange(existingButtons);
             Clear();
 
             symbolListHandler.OnSelectedSymbolChanged += SetSkillNameList;
+            skillSlotsCTRL.OnSlotStateChanged += CanInteractWithCost;
             if(!GlobalVariables.HasSkills.Contains(testSkillData))
                 GlobalVariables.HasSkills.Add(testSkillData);
         }
@@ -27,6 +33,7 @@ namespace UI
         void OnDestroy()
         {
             symbolListHandler.OnSelectedSymbolChanged -= SetSkillNameList;
+            skillSlotsCTRL.OnSlotStateChanged -= CanInteractWithCost;
         }
 
         /// <summary>
@@ -39,6 +46,7 @@ namespace UI
             foreach (var skillData in GlobalVariables.HasSkills)
             {
                 SkillNameButton button = Instantiate(skillNameButtonPrefab, skillNameButtonParent);
+                skillNameButtons.Add(button);
                 button.OnSkillButtonClicked += (skillData) => 
                 {
                     // ここにスキルボタンがクリックされたときの処理を記述
@@ -51,19 +59,39 @@ namespace UI
                         skillSlotsCTRL.SelectedSlot.SetSkillData(skillData);
                         currentSymbolHandler.AddOrUpdateSkillData(skillSlotsCTRL.SelectedSlot.SlotIndex, skillData);
                         skillSlotsCTRL.ClearSelectedSlot();     // 選択されていない状態に戻す
+                        skillSlotsCTRL.SlotUsageByCost(currentSymbolHandler.CurrentSymbolData);
                     }
                 };
 
                 button.SetSkill(skillData);
             }
+
+            CanInteractWithCost();
+        }
+
+        /// <summary>
+        /// スキルのコストに応じてボタンの操作可否を更新する
+        /// </summary>
+        void CanInteractWithCost()
+        {
+            foreach (var button in skillNameButtons)
+            {
+                if (button == null || button.SkillData == null)
+                    continue;
+
+                // スキルのコストに応じてボタンの操作可否を設定する
+                button.Interactable(skillSlotsCTRL.CanPlaceSkill(button.SkillData));
+            }
         }
 
         void Clear()
         {
-            foreach (Transform child in skillNameButtonParent)
+            foreach (var button in skillNameButtons)
             {
-                Destroy(child.gameObject);
+                Destroy(button.gameObject);
             }
+
+            skillNameButtons.Clear();
         }
     }
 }
