@@ -13,10 +13,15 @@ namespace UI
         [SerializeField] Button yes;
         [SerializeField] Button no;
 
-        public void Initialize()
+        void Awake()
         {
-            message.text = "";
+            Initialize();
+        }
+
+        void Initialize()
+        {
             no.onClick.AddListener(() => { Hide(); });
+            Hide();
         }
 
         public void Show(string messageText, System.Action onYes)
