@@ -61,7 +61,7 @@ namespace Map
 
         void Start()
         {
-            playerSpawn = ApiProvider.Get<IPlayerSpawn>();
+            playerSpawn = Player.PlayerSpawn.Instance;
 
             if (createOnStart)
             {

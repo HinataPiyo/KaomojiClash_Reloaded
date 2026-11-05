@@ -11,14 +11,13 @@ namespace UI
         public bool IsShowing { get; }
     }
 
-    public class RemainingTimeUI : MonoBehaviour, IRemainingTimeUI
+    public class RemainingTimeUI : SceneSingleton<RemainingTimeUI>, IRemainingTimeUI
     {
         [SerializeField] TextMeshProUGUI remainingTimeText;
         [SerializeField] Slider remainingTimeSlider;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IRemainingTimeUI>(this);
         }
 
         public void UpdateRemainingTime(float remainingTime)

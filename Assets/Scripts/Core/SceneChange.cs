@@ -11,9 +11,8 @@ public interface ISceneChange
 }
 
 public enum SceneName { Title, Home, Battle }
-public class SceneChange : MonoBehaviour, ISceneChange
+public class SceneChange : SceneSingleton<SceneChange>, ISceneChange
 {
-    static SceneChange I;
     SceneName beforeScene;
     static readonly Dictionary<SceneName, string> sceneNameToString = new Dictionary<SceneName, string>
     {
@@ -23,17 +22,11 @@ public class SceneChange : MonoBehaviour, ISceneChange
     };
     public SceneName CurrentScene { get; private set; }
 
-    void Awake()
+    protected override bool PersistAcrossScenes => true;
+
+    protected override void OnSingletonAwake()
     {
-        if(I != null && I != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        
-        I = this;
         DontDestroyOnLoad(gameObject);
-        ApiProvider.Register<ISceneChange>(this);
 
         CurrentScene = SceneManager.GetActiveScene().name switch
         {
@@ -53,10 +46,10 @@ public class SceneChange : MonoBehaviour, ISceneChange
     IEnumerator LoadSceneAsync(SceneName sceneName)
     {
         beforeScene = CurrentScene;
-        ApiProvider.Get<ILetterBox>().Close();
+        UI.LetterBoxAnimation.Instance.Close();
         yield return new WaitForSeconds(1.0f);
 
-        ApiProvider.Get<IAudioManager>().PlayBGM(sceneName switch
+        AudioManager.Instance.PlayBGM(sceneName switch
         {
             SceneName.Title => BGMName.None,
             SceneName.Home => BGMName.Home,
@@ -81,11 +74,11 @@ public class SceneChange : MonoBehaviour, ISceneChange
     {
         if(CurrentScene == SceneName.Battle)
         {
-            ApiProvider.Get<ILetterBox>().AllOpen();
+            UI.LetterBoxAnimation.Instance.AllOpen();
         }
         else
         {
-            ApiProvider.Get<ILetterBox>().Open();
+            UI.LetterBoxAnimation.Instance.Open();
         }
     }
 }

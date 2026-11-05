@@ -11,6 +11,6 @@ public class TitleManager : MonoBehaviour
         yield return new WaitUntil(() => symboltask.IsCompleted && arenaTask.IsCompleted);
 
         Debug.Log("SymbolData and ArenaObjectData loaded successfully!");
-        ApiProvider.Get<ISceneChange>().ChangeScene(SceneName.Home);
+        SceneChange.Instance.ChangeScene(SceneName.Home);
     }
 }

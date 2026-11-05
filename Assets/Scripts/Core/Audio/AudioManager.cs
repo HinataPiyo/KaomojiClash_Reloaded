@@ -8,28 +8,15 @@ public interface IAudioManager
     void StopBGM();
 }
 
-public class AudioManager : MonoBehaviour, IAudioManager
+public class AudioManager : SceneSingleton<AudioManager>, IAudioManager
 {
-    AudioManager I;
-
     [SerializeField] AudioDatabase audioDatabase;
     [SerializeField] AudioSource bgmSource;
     [SerializeField] AudioSource seSource;
 
-    void Awake()
-    {
-        if(I == null)
-        {
-            I = this;
-            DontDestroyOnLoad(gameObject);
-            ApiProvider.Register<IAudioManager>(this);
-            return;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    protected override bool PersistAcrossScenes => true;
+
+    protected override void OnSingletonAwake() => DontDestroyOnLoad(gameObject);
 
     public void PlaySE(SEAudioName name)
     {

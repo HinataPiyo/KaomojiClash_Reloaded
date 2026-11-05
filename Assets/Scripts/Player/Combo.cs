@@ -12,7 +12,7 @@ namespace Player
 
     // プレイヤーが敵に被ダメージを受けずに攻撃し続けることができたらステータス全体が上昇する。
     // 主に、攻撃力と速度が上昇する。    
-    public class Combo : MonoBehaviour, ICombo
+    public class Combo : SceneSingleton<Combo>, ICombo
     {
         static readonly float ComboDuration = 3f;           // コンボが途切れるまでの時間
         static readonly float ComboMaxDamageRate = 1.5f;    // コンボ中の最大攻撃力倍率
@@ -35,14 +35,13 @@ namespace Player
             comboUI.SetCombo(comboCount, ComboSpeedRate, ComboDamageRate);
         }
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<ICombo>(this);
         }
 
         void Start()
         {
-            comboUI = ApiProvider.Get<IComboUI>();
+            comboUI = UI.ComboUI.Instance;
         }
 
         void Update()

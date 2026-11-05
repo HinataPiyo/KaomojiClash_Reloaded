@@ -12,7 +12,7 @@ namespace Player
         void ResetLevelUpCount();
     }
     
-    public class ExpHandler : MonoBehaviour, IExpHandler
+    public class ExpHandler : SceneSingleton<ExpHandler>, IExpHandler
     {
         static readonly int DefaultLevelUpBorder = 100;
         public int HasPlayerEXP { get; private set; } = 0;
@@ -25,14 +25,13 @@ namespace Player
         
         IPlayerEXPUI playerEXPUI;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IExpHandler>(this);
         }
 
         void Start()
         {
-            playerEXPUI = ApiProvider.Get<IPlayerEXPUI>();
+            playerEXPUI = UI.PlayerEXPUI.Instance;
             AddPlayerEXP(0); // 初期化時にUIを更新
         }
 

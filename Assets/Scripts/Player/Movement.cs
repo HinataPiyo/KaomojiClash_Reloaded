@@ -32,9 +32,9 @@ namespace Player
 
         void Start()
         {
-            wave = ApiProvider.Get<IWave>();
+            wave = Wave.WaveController.Instance;
             moveDirectionArrow.SetVisible(false);
-            playerHereArrow = ApiProvider.Get<UI.IPlayerHereArrow>();
+            playerHereArrow = UI.WorldCanvasController.Instance;
         }
 
         void Update()

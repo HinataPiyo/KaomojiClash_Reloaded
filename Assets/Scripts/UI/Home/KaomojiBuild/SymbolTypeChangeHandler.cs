@@ -19,7 +19,7 @@ namespace UI
         void Start()
         {
             CreateSymbolTypeButtons(); // 初期状態としてボタンを生成
-            OnSymbolTypeChanged += (type) => ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
+            OnSymbolTypeChanged += (type) => AudioManager.Instance.PlaySE(SEAudioName.ButtonClick_00);
         }
 
         /// <summary>

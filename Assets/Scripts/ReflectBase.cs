@@ -17,9 +17,9 @@ public abstract class ReflectBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        stage = ApiProvider.Get<IStage>();
-        hitStop = ApiProvider.Get<IHitStop>();
-        cam = ApiProvider.Get<ICamera>();
+        stage = StageController.Instance;
+        hitStop = HitStop.Instance;
+        cam = CameraController.Instance;
     }
 
     protected abstract void OnCollisionEnter2D(Collision2D col);

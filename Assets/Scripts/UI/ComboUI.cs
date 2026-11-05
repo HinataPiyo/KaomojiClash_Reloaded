@@ -9,7 +9,7 @@ namespace UI
         void SetCombo(int combo, float speedUpRate, float powerUpRate);
     }
 
-    public class ComboUI : MonoBehaviour, IComboUI
+    public class ComboUI : SceneSingleton<ComboUI>, IComboUI
     {
         [SerializeField] Image comboImage;      // Filledを使用
         [SerializeField] TextMeshProUGUI comboText;
@@ -17,9 +17,8 @@ namespace UI
         [SerializeField] TextMeshProUGUI powerUpText;
         Animator anim;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IComboUI>(this);
             anim = GetComponentInChildren<Animator>();
             gameObject.SetActive(false);
         }

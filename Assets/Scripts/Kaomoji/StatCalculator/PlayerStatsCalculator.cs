@@ -9,9 +9,9 @@ namespace Player
 
         void Start()
         {
-            if(ApiProvider.Get<ISceneChange>().CurrentScene == SceneName.Battle)
+            if(SceneChange.Instance.CurrentScene == SceneName.Battle)
             {
-                combo = ApiProvider.Get<ICombo>();
+                combo = Player.Combo.Instance;
             }
         }
 

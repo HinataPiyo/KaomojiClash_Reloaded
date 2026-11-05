@@ -10,7 +10,7 @@ namespace UI
         void Hide();
     }
 
-    public class ArenaObjectSelectUI : MonoBehaviour, IArenaObjectSelectUI
+    public class ArenaObjectSelectUI : SceneSingleton<ArenaObjectSelectUI>, IArenaObjectSelectUI
     {
         [SerializeField] Transform card_container;    
         ArenaObjectCardUI[] cards;
@@ -28,9 +28,8 @@ namespace UI
         }
 
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IArenaObjectSelectUI>(this);
             cards = card_container.GetComponentsInChildren<ArenaObjectCardUI>();
 
             Hide();

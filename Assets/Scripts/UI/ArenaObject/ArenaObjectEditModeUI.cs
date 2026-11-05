@@ -10,21 +10,20 @@ interface IArenaObjectEditModeUI
 /// <summary>
 /// ここではEditModeが終了したときに押下するButtonの処理を行う
 /// </summary>
-public class ArenaObjectEditModeUI : MonoBehaviour, IArenaObjectEditModeUI
+public class ArenaObjectEditModeUI : SceneSingleton<ArenaObjectEditModeUI>, IArenaObjectEditModeUI
 {
     [SerializeField] Button doneButton;
 
     IArenaObjectSelect arenaObjectSelect;
 
-    void Awake()
+    protected override void OnSingletonAwake()
     {
-        ApiProvider.Register<IArenaObjectEditModeUI>(this);
         doneButton.onClick.AddListener(OnDoneButtonClick);
     }
 
     void Start()
     {
-        arenaObjectSelect = ApiProvider.Get<IArenaObjectSelect>();
+        arenaObjectSelect = ArenaObjectController.Instance;
         Hide();
     }
 

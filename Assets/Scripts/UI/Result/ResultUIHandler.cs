@@ -22,7 +22,7 @@ namespace UI
         void ShowResult();
     }
 
-    public class ResultUIHandler : MonoBehaviour, IResultUIHandler
+    public class ResultUIHandler : SceneSingleton<ResultUIHandler>, IResultUIHandler
     {
         [SerializeField] TextMeshProUGUI waveCountText;
         [SerializeField] TextMeshProUGUI killCountText;
@@ -42,18 +42,16 @@ namespace UI
         public void AddWaveCount() => resultData.waveCount++;
         public void AddGetMoney(int money) => resultData.getMoney += money;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IResultUIHandler>(this);
-
             retryButton.onClick.AddListener(() =>
             {
-                ApiProvider.Get<ISceneChange>().ChangeScene(SceneName.Battle);
+                SceneChange.Instance.ChangeScene(SceneName.Battle);
             });
 
             homeButton.onClick.AddListener(() =>
             {
-                ApiProvider.Get<ISceneChange>().ChangeScene(SceneName.Home);
+                SceneChange.Instance.ChangeScene(SceneName.Home);
             });
 
             Wave.WaveController.OnWaitingForNextWave += AddWaveCount;
@@ -65,10 +63,10 @@ namespace UI
 
         void Start()
         {
-            arenaObjectSelect = ApiProvider.Get<IArenaObjectSelect>();
+            arenaObjectSelect = ArenaObjectController.Instance;
         }
 
-        void OnDestroy()
+        protected override void OnSingletonDestroy()
         {
             Wave.WaveController.OnWaitingForNextWave -= AddWaveCount;
             Wave.WaveController.OnWaveFailed -= ShowResult;

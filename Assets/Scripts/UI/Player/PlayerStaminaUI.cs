@@ -9,7 +9,7 @@ namespace UI
         void UpdateStaminaUI(float currentStamina, float maxStamina);
     }
 
-    public class PlayerStaminaUI : MonoBehaviour, IPlayerStaminaUI
+    public class PlayerStaminaUI : SceneSingleton<PlayerStaminaUI>, IPlayerStaminaUI
     {
         [SerializeField] Slider staminaSlider;
         [SerializeField] Slider takeDamageSlider;
@@ -24,9 +24,8 @@ namespace UI
         float delayTimer = 0f;
         bool isInitialized = false;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IPlayerStaminaUI>(this);
         }
 
         void Update()
