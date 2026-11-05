@@ -8,7 +8,7 @@ public interface IStage
     public IWall GetCurrentWall();
 }
 
-public class StageController : MonoBehaviour, IStage
+public class StageController : SceneSingleton<StageController>, IStage
 {
     [SerializeField] float encountInterval = 5f;        // 敵の出現位置の間隔
     [SerializeField] WallController wall_Prefab;
@@ -17,9 +17,8 @@ public class StageController : MonoBehaviour, IStage
 
     public IWall GetCurrentWall() => currentWall;
 
-    void Awake()
+    protected override void OnSingletonAwake()
     {
-        ApiProvider.Register<IStage>(this);
     }
 
     /// <summary>

@@ -12,7 +12,7 @@ namespace Enemy
         {
             base.Awake();
             statsCalc = GetComponent<EnemyStatsCalculator>();
-            audioManager = ApiProvider.Get<IAudioManager>();
+            audioManager = AudioManager.Instance;
         }
 
         protected override void OnCollisionEnter2D(Collision2D col)

@@ -20,7 +20,7 @@ namespace UI
         void UpdatePlayerHereArrowPosition(Vector2 position);
     }
 
-    public class WorldCanvasController : MonoBehaviour, IDamageWorldUI, IPlayerHereArrow, IWaveStartWorldUI
+    public class WorldCanvasController : SceneSingleton<WorldCanvasController>, IDamageWorldUI, IPlayerHereArrow, IWaveStartWorldUI
     {
         [SerializeField] ApplyDamageText playerToEnemyDamageText;
         [SerializeField] ApplyDamageText enemyToPlayerDamageText;
@@ -29,11 +29,8 @@ namespace UI
         [SerializeField] GameObject contactObjectUI;
         [SerializeField] GameObject clashObjectUI;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IDamageWorldUI>(this);
-            ApiProvider.Register<IPlayerHereArrow>(this);
-            ApiProvider.Register<IWaveStartWorldUI>(this);
         }
 
         public void SetPlayerToEnemyDamageText(Vector2 position, float damage)

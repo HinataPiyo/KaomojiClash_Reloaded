@@ -8,12 +8,11 @@ namespace UI
         void HideStartWaveAnimation();
     }
 
-    public class StartWaveAnimationUI : MonoBehaviour, IStartWaveAnimationUI
+    public class StartWaveAnimationUI : SceneSingleton<StartWaveAnimationUI>, IStartWaveAnimationUI
     {
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IStartWaveAnimationUI>(this);
         }
 
         void Start()
@@ -32,12 +31,12 @@ namespace UI
 
         public void StartReadySE()
         {
-            ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.Ready);
+            AudioManager.Instance.PlaySE(SEAudioName.Ready);
         }
 
         public void StartFightSE()
         {
-            ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.Fight);
+            AudioManager.Instance.PlaySE(SEAudioName.Fight);
         }
     }
 }

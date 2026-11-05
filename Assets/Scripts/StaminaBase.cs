@@ -43,7 +43,7 @@ namespace Base
 
         protected virtual void Start()
         {
-            worldUI = ApiProvider.Get<IDamageWorldUI>();
+            worldUI = UI.WorldCanvasController.Instance;
         }
 
         /// <summary>

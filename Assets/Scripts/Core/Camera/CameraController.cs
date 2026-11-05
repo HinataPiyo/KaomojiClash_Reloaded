@@ -15,7 +15,7 @@ public interface ICamera
 public enum CameraState
 { PlayerMoving, Encount, Battle, Reflect, PlayerDeath, EnemyDeath }
 
-public partial class CameraController : MonoBehaviour, ICamera
+public partial class CameraController : SceneSingleton<CameraController>, ICamera
 {
     [SerializeField] CinemachineCamera cam_TargetGroup;
     [SerializeField] CinemachineCamera cam_PlayerMoving;
@@ -38,7 +38,7 @@ public partial class CameraController : MonoBehaviour, ICamera
     enum CameraType
     { TargetGroup, PlayerMoving }
 
-    void Awake()
+    protected override void OnSingletonAwake()
     {
         InitializeCamera();
         InitializeShake();
@@ -46,7 +46,6 @@ public partial class CameraController : MonoBehaviour, ICamera
 
     void InitializeCamera()
     {
-        ApiProvider.Register<ICamera>(this);
     }
 
     public void SetCameraTarget(Transform target)

@@ -12,7 +12,7 @@ public interface IArenaObjectSelect
     void SetEditDone(bool done);
 }
 
-public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
+public class ArenaObjectController : SceneSingleton<ArenaObjectController>, IArenaObjectSelect
 {
     const int MAX_ARENAOBJECT_SELECTION_COUNT = 3;
     [SerializeField] List<ArenaObjectSetData> arenaObjectSetDatas = new List<ArenaObjectSetData>();
@@ -41,17 +41,16 @@ public class ArenaObjectController : MonoBehaviour, IArenaObjectSelect
 
     public List<ArenaObjectSetData> GetArenaObjectSetDatas() => arenaObjectSetDatas;
 
-    void Awake()
+    protected override void OnSingletonAwake()
     {
-        ApiProvider.Register<IArenaObjectSelect>(this);
     }
 
     void Start()
     {
-        stage = ApiProvider.Get<IStage>();
-        arenaObjectSelectUI = ApiProvider.Get<IArenaObjectSelectUI>();
-        arenaObjectEditModeUI = ApiProvider.Get<IArenaObjectEditModeUI>();
-        resultUIHandler = ApiProvider.Get<IResultUIHandler>();
+        stage = StageController.Instance;
+        arenaObjectSelectUI = UI.ArenaObjectSelectUI.Instance;
+        arenaObjectEditModeUI = ArenaObjectEditModeUI.Instance;
+        resultUIHandler = UI.ResultUIHandler.Instance;
     }
 
     /// <summary>

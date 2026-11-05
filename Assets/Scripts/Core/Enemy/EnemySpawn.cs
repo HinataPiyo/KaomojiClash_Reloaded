@@ -12,7 +12,7 @@ namespace Enemy
         bool IsTotalDestructed();
     }
 
-    public class EnemySpawn : MonoBehaviour, IEnemySpawn
+    public class EnemySpawn : SceneSingleton<EnemySpawn>, IEnemySpawn
     {
         [SerializeField] EnemyCoreStatsConfig enemyCoreStatsConfig;
         [SerializeField] GameObject enemyPrefab;
@@ -31,19 +31,18 @@ namespace Enemy
         /// </summary>
         public bool IsTotalDestructed() => spawnedEnemies.Count == 0;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IEnemySpawn>(this);
         }
 
         void Start()
         {
-            wave = ApiProvider.Get<IWave>();
-            stage = ApiProvider.Get<IStage>();
-            cam = ApiProvider.Get<ICamera>();
-            enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
-            audioManager = ApiProvider.Get<IAudioManager>();
-            resultUIHandler = ApiProvider.Get<IResultUIHandler>();
+            wave = Wave.WaveController.Instance;
+            stage = StageController.Instance;
+            cam = CameraController.Instance;
+            enemyExpFactory = EnemyExpFactory.Instance;
+            audioManager = AudioManager.Instance;
+            resultUIHandler = UI.ResultUIHandler.Instance;
         }
 
         void OnEnemyDeath(GameObject enemy, int exp = 0)

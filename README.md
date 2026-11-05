@@ -57,6 +57,10 @@
 
 ## 技術構成
 
+### サービスの取得と寿命
+
+一意なサービスは [`SceneSingleton<T>`](Assets/Scripts/Core/SceneSingleton.cs) に統一し、`SomeService.Instance` から取得します。`AudioManager` と `SceneChange` は同じ仕組みを使いつつ、シーンをまたいで保持します。設計理由と今後の追加基準は[Singleton設計ドキュメント](Docs/Service-Lifetime-Design.md)を参照してください。
+
 | 項目 | 確認できた内容 |
 | --- | --- |
 | Unity | 6000.3.20f1（[`ProjectVersion.txt`](ProjectSettings/ProjectVersion.txt)） |

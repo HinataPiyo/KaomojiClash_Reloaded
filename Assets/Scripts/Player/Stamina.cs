@@ -28,11 +28,11 @@ namespace Player
         protected override void Start()
         {
             base.Start();
-            cam = ApiProvider.Get<ICamera>();
-            hitStop = ApiProvider.Get<IHitStop>();
+            cam = CameraController.Instance;
+            hitStop = HitStop.Instance;
 
-            playerStaminaUI = ApiProvider.Get<IPlayerStaminaUI>();
-            battleState = ApiProvider.Get<IBattleState>();
+            playerStaminaUI = UI.PlayerStaminaUI.Instance;
+            battleState = Wave.WaveController.Instance;
 
             playerStaminaUI.UpdateStaminaUI(currentStamina, statsCalc.GetStamina());
         }

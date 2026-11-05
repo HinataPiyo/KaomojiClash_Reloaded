@@ -22,7 +22,7 @@ namespace UI
 
         void ButtonOnClick()
         {
-            ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
+            AudioManager.Instance.PlaySE(SEAudioName.ButtonClick_00);
             OnSkillButtonClicked?.Invoke(SkillData);
         }
     }

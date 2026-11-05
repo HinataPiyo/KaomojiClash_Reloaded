@@ -15,7 +15,7 @@ namespace Player
         void SetInvincible(bool value);
     }
 
-    public class PlayerSpawn : MonoBehaviour, IPlayerSpawn
+    public class PlayerSpawn : SceneSingleton<PlayerSpawn>, IPlayerSpawn
     {
         [SerializeField] GameObject playerPrefab;
         [SerializeField] KaomojiData playerKaomojiData;
@@ -37,16 +37,14 @@ namespace Player
         public bool IsPlayerAlive => playerInstance != null;
 
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            // IPlayerSpawnをApiProviderに登録
-            ApiProvider.Register<IPlayerSpawn>(this);
         }
 
         void Start()
         {
-            cam = ApiProvider.Get<ICamera>();
-            waveStartWorldUI = ApiProvider.Get<IWaveStartWorldUI>();
+            cam = CameraController.Instance;
+            waveStartWorldUI = UI.WorldCanvasController.Instance;
 
             // ゲーム開始時にプレイヤーを生成
             SpawnPlayer();

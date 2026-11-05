@@ -9,7 +9,7 @@ namespace UI
         void SetEXP(int currentEXP, int getEXP, int border, int level);
     }
 
-    public class PlayerEXPUI : MonoBehaviour, IPlayerEXPUI
+    public class PlayerEXPUI : SceneSingleton<PlayerEXPUI>, IPlayerEXPUI
     {
         [SerializeField] Slider expSlider;
         [SerializeField] TextMeshProUGUI expText;
@@ -21,9 +21,8 @@ namespace UI
         int currentLevel = 1;
         bool isInitialized = false;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IPlayerEXPUI>(this);
         }
 
         void Update()

@@ -25,8 +25,8 @@ public class ArenaObjectDragAndDrop : MonoBehaviour
 
     void Start()
     {
-        battleState = ApiProvider.Get<IBattleState>();
-        stage = ApiProvider.Get<IStage>();
+        battleState = Wave.WaveController.Instance;
+        stage = StageController.Instance;
         press = InputSystem.actions["Press"];
         point = InputSystem.actions["Point"];
     }

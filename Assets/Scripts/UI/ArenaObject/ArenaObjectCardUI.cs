@@ -24,7 +24,7 @@ namespace UI
 
         void Start()
         {
-            arenaObjectSelect = ApiProvider.Get<IArenaObjectSelect>();
+            arenaObjectSelect = ArenaObjectController.Instance;
         }
 
         public void SetData(ArenaObjectData data, int level, bool isNew)

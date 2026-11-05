@@ -38,7 +38,7 @@ namespace UI
             playerData.SetSymbolDataByType(symbolData);
             UpdateStatusViews();
 
-            ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
+            AudioManager.Instance.PlaySE(SEAudioName.ButtonClick_00);
         }
 
         /// <summary>

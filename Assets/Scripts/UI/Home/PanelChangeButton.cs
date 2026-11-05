@@ -37,11 +37,11 @@ namespace UI
 
             if(thisNextOrBack == NextOrBack.Next)
             {
-                ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.ButtonClick_00);
+                AudioManager.Instance.PlaySE(SEAudioName.ButtonClick_00);
             }
             else if(thisNextOrBack == NextOrBack.Back)
             {
-                ApiProvider.Get<IAudioManager>().PlaySE(SEAudioName.Cancel_00);
+                AudioManager.Instance.PlaySE(SEAudioName.Cancel_00);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace Enemy
         void ResetWaveEXPPool();
     }
 
-    public class EnemyExpFactory : MonoBehaviour, IEnemyExpFactory
+    public class EnemyExpFactory : SceneSingleton<EnemyExpFactory>, IEnemyExpFactory
     {
         static readonly int DefaultEXP = 35;
 
@@ -19,9 +19,8 @@ namespace Enemy
         public void AddWaveEXPPool(int exp) => WaveEXPPool += exp;
         public void ResetWaveEXPPool() => WaveEXPPool = 0;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IEnemyExpFactory>(this);
         }
 
         /// <summary>

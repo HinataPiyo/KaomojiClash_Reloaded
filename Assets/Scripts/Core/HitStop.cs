@@ -7,15 +7,14 @@ public interface IHitStop
     void PlayerDeathHitStopEffect(float time = HitStop.PlayerDeathHitStopTime);
 }
 
-public class HitStop : MonoBehaviour, IHitStop
+public class HitStop : SceneSingleton<HitStop>, IHitStop
 {
     public const float DefaultHitStopTime = 0.05f;
     public const float PlayerDeathHitStopTime = 1f;
     Coroutine cor;
 
-    void Awake()
+    protected override void OnSingletonAwake()
     {
-        ApiProvider.Register<IHitStop>(this);
     }
 
     public void HitStopEffect(float time = DefaultHitStopTime)

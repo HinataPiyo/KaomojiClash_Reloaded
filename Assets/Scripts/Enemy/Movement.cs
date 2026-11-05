@@ -34,8 +34,8 @@ namespace Enemy
 
         void Start()
         {
-            playerSpawn = ApiProvider.Get<Player.IPlayerSpawn>();
-            wave = ApiProvider.Get<IWave>();
+            playerSpawn = Player.PlayerSpawn.Instance;
+            wave = Wave.WaveController.Instance;
             moveDirectionArrow.SetVisible(false);
         }
 

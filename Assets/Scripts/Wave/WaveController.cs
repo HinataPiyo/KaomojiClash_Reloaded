@@ -31,7 +31,7 @@ namespace Wave
         TimeUp,
     }
 
-    public class WaveController : MonoBehaviour, IWave, IBattleState
+    public class WaveController : SceneSingleton<WaveController>, IWave, IBattleState
     {
         [SerializeField] WaveConfig waveConfig;
 
@@ -96,10 +96,8 @@ namespace Wave
             return spawnCount;
         }
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<IWave>(this);
-            ApiProvider.Register<IBattleState>(this);
             wait_EncountAnimationTime = new WaitForSeconds(waveConfig.EncountAnimationTime);
             wait_StartWaveAnimationTime = new WaitForSeconds(waveConfig.StartWaveAnimationTime);
             wait_TimeAfterWaveCompleted = new WaitForSeconds(waveConfig.TimeAfterWaveCompleted);
@@ -108,16 +106,16 @@ namespace Wave
 
         void Start()
         {
-            enemySpawn = ApiProvider.Get<IEnemySpawn>();
-            playerSpawn = ApiProvider.Get<IPlayerSpawn>();
-            playerExpHandler = ApiProvider.Get<IExpHandler>();
-            arenaObjectSelect = ApiProvider.Get<IArenaObjectSelect>();
-            stage = ApiProvider.Get<IStage>();
-            cam = ApiProvider.Get<ICamera>();
-            enemyExpFactory = ApiProvider.Get<IEnemyExpFactory>();
-            waveStartAnimationUI = ApiProvider.Get<IStartWaveAnimationUI>();
-            audioManager = ApiProvider.Get<IAudioManager>();
-            letterBox = ApiProvider.Get<ILetterBox>();
+            enemySpawn = Enemy.EnemySpawn.Instance;
+            playerSpawn = Player.PlayerSpawn.Instance;
+            playerExpHandler = Player.ExpHandler.Instance;
+            arenaObjectSelect = ArenaObjectController.Instance;
+            stage = StageController.Instance;
+            cam = CameraController.Instance;
+            enemyExpFactory = Enemy.EnemyExpFactory.Instance;
+            waveStartAnimationUI = UI.StartWaveAnimationUI.Instance;
+            audioManager = AudioManager.Instance;
+            letterBox = UI.LetterBoxAnimation.Instance;
 
             wait_UntilAllEnemiesDestructed = new WaitUntil(() => enemySpawn.IsTotalDestructed());
             wait_MovePlayerToEnemy = new WaitUntil(() => !playerSpawn.IsMoveToEnemy);

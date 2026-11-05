@@ -8,7 +8,7 @@ namespace UI
 
         public void OnClickChangeScene()
         {
-            ApiProvider.Get<ISceneChange>().ChangeScene(targetScene);
+            SceneChange.Instance.ChangeScene(targetScene);
         }
     }
 }

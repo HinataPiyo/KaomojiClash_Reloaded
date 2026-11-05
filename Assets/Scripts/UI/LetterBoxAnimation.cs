@@ -10,7 +10,7 @@ namespace UI
         void AllOpen();
     }
 
-    public class LetterBoxAnimation : MonoBehaviour, ILetterBox
+    public class LetterBoxAnimation : SceneSingleton<LetterBoxAnimation>, ILetterBox
     {
         [SerializeField] Animator anim;
         [SerializeField] CanvasGroup canvasGroup;
@@ -20,14 +20,8 @@ namespace UI
         public const string CloseTrigger = "Close";
         public const string AllOpenTrigger = "AllOpen";
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
-            ApiProvider.Register<ILetterBox>(this);
-        }
-
-        void OnDestroy()
-        {
-            ApiProvider.Unregister<ILetterBox>();
         }
 
         public void ShowLetterBox()

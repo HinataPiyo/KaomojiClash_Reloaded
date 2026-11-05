@@ -12,8 +12,8 @@ public class RemainingTimeHandler : MonoBehaviour
 
     void Start()
     {
-        battleState = ApiProvider.Get<IBattleState>();
-        remainingTimeUI = ApiProvider.Get<UI.IRemainingTimeUI>();
+        battleState = WaveController.Instance;
+        remainingTimeUI = UI.RemainingTimeUI.Instance;
     }
 
     void Update()
