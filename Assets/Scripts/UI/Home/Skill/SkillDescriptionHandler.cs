@@ -11,9 +11,9 @@ namespace UI
     {
         [SerializeField] TextMeshProUGUI skillDescriptionText;
 
-        public static System.Action<SkillData> OnSkillDescriptionUpdated;
+        public System.Action<SkillData> OnSkillDescriptionUpdated;
 
-        public static System.Action OnSkillDescriptionCleared;
+        public System.Action OnSkillDescriptionCleared;
 
         void Awake()
         {
@@ -34,6 +34,9 @@ namespace UI
         public void SetSkillDescription(SkillData skillData)
         {
             Clear();
+
+            if(skillData == null) return;
+
             skillDescriptionText.text = skillData.GetDescription();
         }
 

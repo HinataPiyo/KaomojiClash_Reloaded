@@ -11,6 +11,7 @@ namespace UI
         [SerializeField] Player.PlayerStatsCalculator statsCalc;
         [SerializeField] StatusRaderChartView statusRaderChartView;
         [SerializeField] BaseStatusView baseStatusView;
+        [SerializeField] SkillDescriptionHandler skillDescriptionHandler;
 
         [SerializeField] SymbolListHandler symbolListHandler;
 
@@ -51,7 +52,7 @@ namespace UI
             statusRaderChartView.SetPlayerStatus(statsCalc);
             baseStatusView.SetPlayerStatus(statsCalc);
 
-            SkillDescriptionHandler.OnSkillDescriptionCleared?.Invoke();
+            skillDescriptionHandler.OnSkillDescriptionCleared?.Invoke();
         }
     }
 }

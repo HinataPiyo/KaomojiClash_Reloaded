@@ -8,6 +8,7 @@ namespace UI
         [SerializeField] Transform skillSlotsParent;
         [SerializeField] ConfirmationPanel confirmationPanel;
         [SerializeField] CurrentSymbolHandler currentSymbolHandler;
+        [SerializeField] SkillDescriptionHandler skillDescriptionHandler;
         [SerializeField] SymbolListHandler symbolListHandler;
         SkillSlotHandler[] skillSlots;
 
@@ -72,6 +73,19 @@ namespace UI
             return false;
         }
 
+        /// <summary>
+        /// スキルの被りが存在するか否か
+        /// <see langword="true"/>被りあり
+        /// <see langword="false"/>被りなし
+        /// </summary>
+        public bool IsOverlap(SkillData skill)
+        {
+            for (int i = 0; i < skillSlots.Length; i++)
+                if (skillSlots[i].SkillData == skill)
+                    return true;
+            return false;
+        }
+
         // スロットを解放するためのスロット数ごとの必要金額
         static readonly int[] requireAmount = { 100, 1000, 2500, 5000, 10000 };
         static readonly string ConfirmationMessage = "Do you want to unlock this skill slot?";
@@ -99,6 +113,7 @@ namespace UI
                     
                     SelectedSlot = s;
                     s.SelectedSlot();
+                    skillDescriptionHandler.OnSkillDescriptionUpdated?.Invoke(s.SkillData);
                     OnSlotStateChanged?.Invoke();
                 });
             }

@@ -80,7 +80,8 @@ namespace UI
                     continue;
 
                 // スキルのコストに応じてボタンの操作可否を設定する
-                button.Interactable(skillSlotsCTRL.CanPlaceSkill(button.SkillData));
+                button.Interactable(skillSlotsCTRL.CanPlaceSkill(button.SkillData)
+                    && !skillSlotsCTRL.IsOverlap(button.SkillData));
             }
         }
 

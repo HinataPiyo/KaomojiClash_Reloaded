@@ -31,7 +31,8 @@ namespace UI
         /// スロットを初期化する
         /// </summary>
         /// <param name="amount">スロットをアンロックするために必要な金額</param>
-        public void Initialize(int slotIndex, float amount, System.Action<SkillSlotHandler> onClickLockedSlot, System.Action<SkillSlotHandler> onClickAddSlot)
+        public void Initialize(int slotIndex, float amount,
+            System.Action<SkillSlotHandler> onClickLockedSlot, System.Action<SkillSlotHandler> onClickAddSlot)
         {
             SlotIndex = slotIndex;
             defaultAddSlotColor = addSlot.GetComponent<Image>().color;
@@ -71,7 +72,7 @@ namespace UI
         public void SelectedSlot()
         {
             addSlot.GetComponent<Image>().color = selectedSlotColor;
-            settingSlot.GetComponent<Image>().color = selectedSlotColor;
+            settingSlot.GetComponent<Image>().color = selectedSlotColor;    
         }
 
         public void DeselectSlot()
