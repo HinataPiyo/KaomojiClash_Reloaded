@@ -49,11 +49,6 @@ public abstract class StatsCalculator : MonoBehaviour, IStatsCalculator
     {
         coreStats = KaomojiSetUp.TryGetCoreStats(kaomojiData);
         criticalStats = KaomojiSetUp.TryGetCriticalStats(kaomojiData);
-
-        if(coreStats == null)
-        {
-            Debug.LogWarning("CoreStats is null. Please check the KaomojiData setup.");
-        }
     }
 
     public abstract float GetStamina();
