@@ -1,13 +1,9 @@
 namespace UI
 {
+    using System.Collections.Generic;
     using UnityEngine;
-    
-    public interface ISetPlayerStatus
-    {
-        void SetPlayerStatus(Player.PlayerStatsCalculator calc);
-    }
-    
-    public class BaseStatusView : MonoBehaviour, ISetPlayerStatus
+
+    public class BaseStatusView : CurrentKaomojiEventListener
     {
         StatusParamaterText[] statusParamaterTexts;
 
@@ -16,17 +12,25 @@ namespace UI
             statusParamaterTexts = GetComponentsInChildren<StatusParamaterText>();
         }
 
-        public void SetPlayerStatus(Player.PlayerStatsCalculator calc)
+        // [設計変更] イベント受信を表示処理の入口にし、転送用メソッドをなくす。
+        protected override void OnCurrentKaomojiChanged(CurrentKaomojiUpdate update)
         {
-            if (calc == null)
+            IReadOnlyList<StatusDisplayData> statusData = update.Statuses;
+            if (statusData == null)
             {
-                Debug.LogWarning("PlayerStatsCalculator is not assigned.");
+                Debug.LogWarning("Status display data is not assigned.");
                 return;
             }
 
-            for (int i = 0; i < statusParamaterTexts.Length; i++)
+            if (statusParamaterTexts.Length != statusData.Count)
             {
-                StatusType statusType = (StatusType)i;
+                Debug.LogWarning("Status display data count does not match the status text count.");
+            }
+
+            int count = Mathf.Min(statusParamaterTexts.Length, statusData.Count);
+            for (int i = 0; i < count; i++)
+            {
+                StatusType statusType = statusData[i].Type;
                 string titleText = string.Empty;
                 string valueText = string.Empty;
 
@@ -34,29 +38,27 @@ namespace UI
                 {
                     case StatusType.Speed:
                         titleText = "Speed:";
-                        valueText = $"{calc.GetBaseSpeed()}";
+                        valueText = $"{statusData[i].BaseValue}";
                         break;
                     case StatusType.Power:
                         titleText = "Power:";
-                        valueText = $"{calc.GetBasePower()}";
+                        valueText = $"{statusData[i].BaseValue}";
                         break;
                     case StatusType.Stamina:
                         titleText = "Stamina:";
-                        valueText = $"{calc.GetBaseStamina()}";
+                        valueText = $"{statusData[i].BaseValue}";
                         break;
                     case StatusType.Guard:
                         titleText = "Guard:";
-                        valueText = $"{calc.GetBaseGuard()}";
+                        valueText = $"{statusData[i].BaseValue}";
                         break;
                     case StatusType.CriticalDamage:
-                        float criticalDamage = calc.GetCriticalDamage(CriticalStats.Max_CriticalDamage).Item1;
                         titleText = "CRIT Damage:";
-                        valueText = $"{criticalDamage}";
+                        valueText = $"{statusData[i].Value}";
                         break;
                     case StatusType.CriticalRate:
-                        float criticalRate = calc.GetCriticalRate(CriticalStats.Max_CriticalRate).Item1;
                         titleText = "CRIT Rate:";
-                        valueText = $"{criticalRate}";
+                        valueText = $"{statusData[i].Value}";
                         break;
                 }
 

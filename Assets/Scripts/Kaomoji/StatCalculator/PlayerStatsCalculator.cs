@@ -31,7 +31,7 @@ namespace Player
 
         public (float, float) GetStamina(float maxCoreStamina)
         {
-            return (coreStats.Stamina, maxCoreStamina);
+            return (coreStats == null ? 0 : coreStats.Stamina, maxCoreStamina);
         }
 
 #endregion
@@ -50,7 +50,7 @@ namespace Player
 
         public (float, float) GetPower(float maxCorePower)
         {
-            return (coreStats.Power, maxCorePower);
+            return (coreStats == null ? 0 : coreStats.Power, maxCorePower);
         }
 
 #endregion
@@ -69,7 +69,7 @@ namespace Player
 
         public (float, float) GetSpeed(float maxCoreSpeed)
         {
-            return (coreStats.Speed, maxCoreSpeed);
+            return (coreStats == null ? 0 : coreStats.Speed, maxCoreSpeed);
         }
 
 #endregion
@@ -88,7 +88,7 @@ namespace Player
 
         public (float, float) GetGuard(float maxCoreGuard)
         {
-            return (coreStats.Guard, maxCoreGuard);
+            return (coreStats == null ? 0 : coreStats.Guard, maxCoreGuard);
         }
 
 #endregion
@@ -127,6 +127,35 @@ namespace Player
             if(criticalStats.Length == 1) return (criticalStats[0].CriticalRate, maxCoreCriticalRate);
             else if(criticalStats.Length == 2) return (criticalStats[0].CriticalRate + criticalStats[1].CriticalRate, maxCoreCriticalRate);
             return (CriticalStats.Min_CriticalRate, maxCoreCriticalRate);
+        }
+
+        // [設計変更] 表示に必要な値をここで一括化し、各Viewでの計算機呼び出しと重複計算を避ける。
+        public StatusDisplayData[] GetStatusDisplayData()
+        {
+            var statusData = new StatusDisplayData[System.Enum.GetValues(typeof(StatusType)).Length];
+            float criticalDamage = GetCriticalDamage();
+            float criticalRate = GetCriticalRate();
+
+            statusData[(int)StatusType.Stamina] = new StatusDisplayData(
+                StatusType.Stamina, GetBaseStamina(), coreStats == null ? 0f : coreStats.Stamina,
+                0f, CoreStats.Max_Stamina);
+            statusData[(int)StatusType.Power] = new StatusDisplayData(
+                StatusType.Power, GetBasePower(), coreStats == null ? 0f : coreStats.Power,
+                0f, CoreStats.Max_Power);
+            statusData[(int)StatusType.Speed] = new StatusDisplayData(
+                StatusType.Speed, GetBaseSpeed(), coreStats == null ? 0f : coreStats.Speed,
+                0f, CoreStats.Max_Speed);
+            statusData[(int)StatusType.Guard] = new StatusDisplayData(
+                StatusType.Guard, GetBaseGuard(), coreStats == null ? 0f : coreStats.Guard,
+                0f, CoreStats.Max_Guard);
+            statusData[(int)StatusType.CriticalDamage] = new StatusDisplayData(
+                StatusType.CriticalDamage, criticalDamage, criticalDamage,
+                0f, CriticalStats.Max_CriticalDamage * 2);
+            statusData[(int)StatusType.CriticalRate] = new StatusDisplayData(
+                StatusType.CriticalRate, criticalRate, criticalRate,
+                0f, CriticalStats.Max_CriticalRate * 2);
+
+            return statusData;
         }
 
 #endregion

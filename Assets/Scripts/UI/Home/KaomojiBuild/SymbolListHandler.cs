@@ -3,18 +3,33 @@ namespace UI
     using System.Collections.Generic;
     using UnityEngine;
     
+
+    /// <summary>
+    /// 記号のリストを管理する
+    /// </summary>
     [RequireComponent(typeof(SymbolTypeChangeHandler))]
-    public class SymbolListHandler : MonoBehaviour
+    public class SymbolListHandler : SceneSingleton<SymbolListHandler>
     {
+        [SerializeField] Canvas symbolCollectionCanvas;
         [SerializeField] SymbolIconButton icon_Prefab;
         [SerializeField] Transform content_Transform;
         SymbolTypeChangeHandler typeChangeHandler;
-        public event System.Action<SymbolData> OnSelectedSymbolChanged;
+        public event System.Action<SymbolData> OnSelectedSymbolChanged;     // 選択時の通知
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
             typeChangeHandler = GetComponent<SymbolTypeChangeHandler>();
             typeChangeHandler.OnSymbolTypeChanged += CreateSymbolList;
+
+            ShowCanvas(false);
+        }
+
+        /// <summary>
+        /// 表示切替
+        /// </summary>
+        public void ShowCanvas(bool show)
+        {
+            symbolCollectionCanvas.enabled = show;
         }
 
         void Start()
@@ -23,7 +38,7 @@ namespace UI
             CreateSymbolList(typeChangeHandler.FirstSymbolType());
         }
 
-        void OnDestroy()
+        protected override void OnSingletonDestroy()
         {
             typeChangeHandler.OnSymbolTypeChanged -= CreateSymbolList;
         }
@@ -44,8 +59,18 @@ namespace UI
             foreach (SymbolData symbolData in symbolDataList)
             {
                 SymbolIconButton icon = Instantiate(icon_Prefab, content_Transform);
-                icon.Initialize(symbolData, OnSelectedSymbolChanged);
+                // [不具合修正] ボタン生成時の購読者一覧を固定せず、押下時点の購読者へ通知する。
+                icon.Initialize(symbolData, NotifySelectedSymbolChanged);
             }
+        }
+
+        /// <summary>
+        /// c#の特性上、イベントはnullチェックが必要なため、別途関数を作成して通知する
+        /// </summary>
+        /// <param name="symbolData"></param>
+        void NotifySelectedSymbolChanged(SymbolData symbolData)
+        {
+            OnSelectedSymbolChanged?.Invoke(symbolData);
         }
     }
 }

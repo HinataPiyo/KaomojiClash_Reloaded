@@ -1,10 +1,10 @@
 namespace UI
 {
-    using Player;
+    using System.Collections.Generic;
     using TMPro;
     using UnityEngine;
 
-    public class StatusRaderChartView : MonoBehaviour, ISetPlayerStatus
+    public class StatusRaderChartView : CurrentKaomojiEventListener
     {
         [SerializeField] StatusRadarChart radarChart;
         [SerializeField] Transform textParent;
@@ -15,58 +15,63 @@ namespace UI
             statusLabels = textParent.GetComponentsInChildren<TextMeshProUGUI>();
         }
 
-        public void SetPlayerStatus(PlayerStatsCalculator calc)
+        // [設計変更] イベント受信をチャート描画の入口にし、転送用メソッドをなくす。
+        protected override void OnCurrentKaomojiChanged(CurrentKaomojiUpdate update)
         {
-            if (radarChart == null || calc == null)
+            IReadOnlyList<StatusDisplayData> statusData = update.Statuses;
+            if (radarChart == null || statusData == null)
             {
-                Debug.LogWarning("RadarChart or PlayerStatsCalculator is not assigned.");
+                Debug.LogWarning("RadarChart or status display data is not assigned.");
                 return;
             }
 
-            RadarStatus[] radarStatuses = new RadarStatus[System.Enum.GetValues(typeof(StatusType)).Length];
-            for (int i = 0; i < radarStatuses.Length; i++)
+            if (statusLabels.Length != statusData.Count)
             {
-                StatusType statusType = (StatusType)i;
-                float value = 0f;
-                float maxValue = 0f;
-                float minValue = 0f;
-                
+                Debug.LogWarning("Status display data count does not match the radar label count.");
+            }
 
-                //* テキストには%表示する
-                switch (statusType)
+            RadarStatus[] radarStatuses = new RadarStatus[statusData.Count];
+            for (int i = 0; i < statusData.Count; i++)
+            {
+                StatusDisplayData status = statusData[i];
+                string label;
+                switch (status.Type)
                 {
                     case StatusType.Speed:
-                        (value, maxValue) = calc.GetSpeed(CoreStats.Max_Speed);
-                        statusLabels[i].text = $"Speed: " + value.ToString("P0");
+                        label = $"Speed: {status.Value.ToString("P0")}";
                         break;
                     case StatusType.Power:
-                        (value, maxValue) = calc.GetPower(CoreStats.Max_Power);
-                        statusLabels[i].text = $"Power: " + value.ToString("P0");
+                        label = $"Power: {status.Value.ToString("P0")}";
                         break;
                     case StatusType.Stamina:
-                        (value, maxValue) = calc.GetStamina(CoreStats.Max_Stamina);
-                        statusLabels[i].text = $"Stamina: " + value.ToString("P0");
+                        label = $"Stamina: {status.Value.ToString("P0")}";
                         break;
                     case StatusType.Guard:
-                        (value, maxValue) = calc.GetGuard(CoreStats.Max_Guard);
-                        statusLabels[i].text = $"Guard: " + value.ToString("P0");
+                        label = $"Guard: {status.Value.ToString("P0")}";
                         break;
                     case StatusType.CriticalDamage:
-                        (value, maxValue) = calc.GetCriticalDamage(CriticalStats.Max_CriticalDamage * 2);
-                        statusLabels[i].text = $"Critical Damage: " + value.ToString("P0");
+                        label = $"Critical\nDamage: {status.Value.ToString("P0")}";
                         break;
                     case StatusType.CriticalRate:
-                        (value, maxValue) = calc.GetCriticalRate(CriticalStats.Max_CriticalRate * 2);
-                        statusLabels[i].text = $"Critical Rate: " + value.ToString("P0");
+                        label = $"Critical\nRate: {status.Value.ToString("P0")}";
                         break;
+                    default:
+                        Debug.LogWarning($"Unsupported status type: {status.Type}");
+                        label = status.Type.ToString();
+                        break;
+                }
+
+                if (i < statusLabels.Length)
+                {
+                    statusLabels[i].text = label;
                 }
 
                 radarStatuses[i] = new RadarStatus
                 {
-                    type = statusType,
-                    value = value,
-                    maxValue = maxValue,
-                    minValue = minValue
+                    type = status.Type,
+                    value = status.Value,
+                    maxValue = status.MaxValue,
+                    minValue = status.MinValue
                 };
             }
 

@@ -11,7 +11,7 @@ namespace UI
         [SerializeField] ConfirmationPanel confirmationPanel;
         [SerializeField] CurrentSymbolHandler currentSymbolHandler;
         [SerializeField] SkillDescriptionHandler skillDescriptionHandler;
-        [SerializeField] SymbolListHandler symbolListHandler;
+        SymbolListHandler symbolListHandler;
         [SerializeField] SkillNameListHandler skillNameListHandler;
         [SerializeField] WallReflection testSkillData;
 
@@ -42,13 +42,19 @@ namespace UI
             if (testSkillData != null && !GlobalVariables.HasSkills.Contains(testSkillData))
                 GlobalVariables.HasSkills.Add(testSkillData);
 
-            symbolListHandler.OnSelectedSymbolChanged += HandleSymbolChanged;
             skillNameListHandler.OnSkillSelected += HandleSkillSelected;
+        }
+
+        void Start()
+        {
+            symbolListHandler = SymbolListHandler.Instance;
+            symbolListHandler.OnSelectedSymbolChanged += HandleSymbolChanged;
         }
 
         void OnDestroy()
         {
-            symbolListHandler.OnSelectedSymbolChanged -= HandleSymbolChanged;
+            if (symbolListHandler != null)
+                symbolListHandler.OnSelectedSymbolChanged -= HandleSymbolChanged;
             skillNameListHandler.OnSkillSelected -= HandleSkillSelected;
         }
 
@@ -60,7 +66,7 @@ namespace UI
             currentSymbolData = symbolData as SymbolMouthData;
             currentSymbolHandler.SetCurrentSymbol(symbolData);
             ClearSelectedSlot();
-            skillDescriptionHandler.Clear();
+            // [イベント化] スキル説明はCurrentKaomojiHandlerの更新通知を購読してクリアする。
             skillNameListHandler.SetSkillNameList(GlobalVariables.HasSkills);
             RefreshSlots();
         }
