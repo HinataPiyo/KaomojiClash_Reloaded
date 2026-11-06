@@ -30,6 +30,9 @@ namespace UI
             OnSymbolTypeChanged += (type) =>
             {
                 AudioManager.Instance.PlaySE(SEAudioName.ButtonClick_00);
+
+                if(PanelChangeButton.CurrentPanel == PanelName.KaomojiBuild) return;
+                
                 foreach (var c in canvasByType)
                 {
                     // 単純な比較: Canvas に登録された Type が current type に含まれているか

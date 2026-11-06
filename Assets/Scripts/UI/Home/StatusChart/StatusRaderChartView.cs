@@ -53,11 +53,11 @@ namespace UI
                         break;
                     case StatusType.CriticalDamage:
                         (value, maxValue) = calc.GetCriticalDamage(CriticalStats.Max_CriticalDamage * 2);
-                        statusLabels[i].text = $"Critical Damage: " + value.ToString("P0");
+                        statusLabels[i].text = $"Critical\nDamage: " + value.ToString("P0");
                         break;
                     case StatusType.CriticalRate:
                         (value, maxValue) = calc.GetCriticalRate(CriticalStats.Max_CriticalRate * 2);
-                        statusLabels[i].text = $"Critical Rate: " + value.ToString("P0");
+                        statusLabels[i].text = $"Critical\nRate: " + value.ToString("P0");
                         break;
                 }
 

@@ -10,6 +10,7 @@ namespace UI
     [RequireComponent(typeof(SymbolTypeChangeHandler))]
     public class SymbolListHandler : SceneSingleton<SymbolListHandler>
     {
+        [SerializeField] Canvas symbolCollectionCanvas;
         [SerializeField] SymbolIconButton icon_Prefab;
         [SerializeField] Transform content_Transform;
         SymbolTypeChangeHandler typeChangeHandler;
@@ -19,6 +20,16 @@ namespace UI
         {
             typeChangeHandler = GetComponent<SymbolTypeChangeHandler>();
             typeChangeHandler.OnSymbolTypeChanged += CreateSymbolList;
+
+            ShowCanvas(false);
+        }
+
+        /// <summary>
+        /// 表示切替
+        /// </summary>
+        public void ShowCanvas(bool show)
+        {
+            symbolCollectionCanvas.enabled = show;
         }
 
         void Start()

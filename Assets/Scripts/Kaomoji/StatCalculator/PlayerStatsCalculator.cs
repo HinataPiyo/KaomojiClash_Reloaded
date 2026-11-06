@@ -31,7 +31,7 @@ namespace Player
 
         public (float, float) GetStamina(float maxCoreStamina)
         {
-            return (coreStats.Stamina, maxCoreStamina);
+            return (coreStats == null ? 0 : coreStats.Stamina, maxCoreStamina);
         }
 
 #endregion
@@ -50,7 +50,7 @@ namespace Player
 
         public (float, float) GetPower(float maxCorePower)
         {
-            return (coreStats.Power, maxCorePower);
+            return (coreStats == null ? 0 : coreStats.Power, maxCorePower);
         }
 
 #endregion
@@ -69,7 +69,7 @@ namespace Player
 
         public (float, float) GetSpeed(float maxCoreSpeed)
         {
-            return (coreStats.Speed, maxCoreSpeed);
+            return (coreStats == null ? 0 : coreStats.Speed, maxCoreSpeed);
         }
 
 #endregion
@@ -88,7 +88,7 @@ namespace Player
 
         public (float, float) GetGuard(float maxCoreGuard)
         {
-            return (coreStats.Guard, maxCoreGuard);
+            return (coreStats == null ? 0 : coreStats.Guard, maxCoreGuard);
         }
 
 #endregion

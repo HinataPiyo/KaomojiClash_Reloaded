@@ -10,6 +10,7 @@ namespace UI
     { Next, Back }
     public class PanelChangeButton : MonoBehaviour
     {
+        public static PanelName CurrentPanel;
         [System.Serializable]
         public class Entry
         {
@@ -34,6 +35,7 @@ namespace UI
         {
             thisEntry.canvas.enabled = false;
             targetEntry.canvas.enabled = true;
+            CurrentPanel = targetEntry.panelName;
 
             if(thisNextOrBack == NextOrBack.Next)
             {
@@ -43,6 +45,15 @@ namespace UI
             {
                 AudioManager.Instance.PlaySE(SEAudioName.Cancel_00);
             }
+
+            SymbolListHandler.Instance.ShowCanvas(IsShowSymbolCollection());
+        }
+
+        bool IsShowSymbolCollection()
+        {
+            return targetEntry.panelName == PanelName.KaomojiBuild
+            || targetEntry.panelName == PanelName.CoreStats_Upgrade
+            || targetEntry.panelName == PanelName.Skill_Set;
         }
     }
 }
