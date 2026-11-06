@@ -29,9 +29,10 @@ public class SymbolMouthData : SymbolData
         if (slotIndex < 0 || slotIndex >= Max_SkillSlot_UnlockedCount)
             return;
 
-        if (slotIndex < skillDatas.Count)
-            skillDatas[slotIndex] = skillData;
-        else
-            skillDatas.Add(skillData);
+        // AIリファクタリング: リスト位置をスロット番号と一致させるため、未作成の枠を埋めてから設定する。
+        while (skillDatas.Count <= slotIndex)
+            skillDatas.Add(null);
+
+        skillDatas[slotIndex] = skillData;
     }
 }

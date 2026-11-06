@@ -52,7 +52,8 @@ namespace UI
             statusRaderChartView.SetPlayerStatus(statsCalc);
             baseStatusView.SetPlayerStatus(statsCalc);
 
-            skillDescriptionHandler.OnSkillDescriptionCleared?.Invoke();
+            // AIリファクタリング: Viewの通知Actionを外部から呼ばず、明示的な表示APIを使う。
+            skillDescriptionHandler.Clear();
         }
     }
 }

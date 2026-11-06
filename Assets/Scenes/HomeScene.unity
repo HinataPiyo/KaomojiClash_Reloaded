@@ -8875,11 +8875,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI.SkillNameListHandler
   skillNameButtonPrefab: {fileID: 5561168387236923809, guid: 08c977b18cf9fbd46b73bac46bdff85e, type: 3}
   skillNameButtonParent: {fileID: 341872303}
-  symbolListHandler: {fileID: 868185466}
-  skillDescriptionHandler: {fileID: 1758073785}
-  skillSlotsCTRL: {fileID: 1783833724}
-  currentSymbolHandler: {fileID: 8820584675998573146}
-  testSkillData: {fileID: 11400000, guid: 7c38b2708aaabc544b1aa29f114ac221, type: 2}
 --- !u!1 &1664206396
 GameObject:
   m_ObjectHideFlags: 0
@@ -9535,11 +9530,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c9461489a03ab04cb36c00d7b7537c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.SkillSlotsController
+  # AIリファクタリング: このコンポーネントがシンボル選択から各スキルViewまでを調整するPresenter。
   skillSlotsParent: {fileID: 1844609713}
   confirmationPanel: {fileID: 1787425945}
   currentSymbolHandler: {fileID: 8820584675998573146}
   skillDescriptionHandler: {fileID: 1758073785}
   symbolListHandler: {fileID: 868185466}
+  skillNameListHandler: {fileID: 1632352850}
+  testSkillData: {fileID: 11400000, guid: 7c38b2708aaabc544b1aa29f114ac221, type: 2}
 --- !u!224 &1787425942 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7951249486964226138, guid: 90cccce8cc6ad45488320a3155653163, type: 3}
@@ -13533,9 +13531,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.CurrentSymbolHandler
   currentSymbolText: {fileID: 266249359215527372}
-  symbolListHandler: {fileID: 868185466}
-  skillNameListHandler: {fileID: 1632352850}
-  skillSlotsCTRL: {fileID: 1783833724}
 --- !u!1 &8820584677430225587
 GameObject:
   m_ObjectHideFlags: 0

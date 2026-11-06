@@ -1,8 +1,10 @@
 namespace UI
 {
-    using System.Collections.Generic;
     using UnityEngine;
 
+    /// <summary>
+    /// AIリファクタリング: スキル設定画面のPresenter。入力を受けてサービスと各Viewを調整する。
+    /// </summary>
     public class SkillSlotsController : MonoBehaviour
     {
         [SerializeField] Transform skillSlotsParent;
@@ -10,208 +12,255 @@ namespace UI
         [SerializeField] CurrentSymbolHandler currentSymbolHandler;
         [SerializeField] SkillDescriptionHandler skillDescriptionHandler;
         [SerializeField] SymbolListHandler symbolListHandler;
+        [SerializeField] SkillNameListHandler skillNameListHandler;
+        [SerializeField] WallReflection testSkillData;
+
         SkillSlotHandler[] skillSlots;
+        SkillSlotHandler selectedSlot;
+        SymbolMouthData currentSymbolData;
+        readonly SkillLoadoutService skillLoadoutService = new SkillLoadoutService();
 
-        // スキル変更処理に必要な項目
-        public SkillSlotHandler SelectedSlot { get; private set; }
-        public bool HasSelectedSlot => SelectedSlot != null;
-        public void ClearSelectedSlot()
-        {
-            SelectedSlot = null;
-            OnSlotStateChanged?.Invoke();
-        }
+        static readonly int[] RequireAmounts = { 100, 1000, 2500, 5000, 10000 };
+        const string ConfirmationMessage = "Do you want to unlock this skill slot?";
 
-        /// <summary>
-        /// 選択スロットやスロットの使用状況が変化したときに通知される
-        /// </summary>
-        public event System.Action OnSlotStateChanged;
-
-        /// <summary>
-        /// 指定スロットを起点に、スキルのコスト分の連続した空きスロットがあるか
-        /// </summary>
-        public bool CanPlaceSkill(SkillData skill, int startSlot)
-        {
-            int cost = Mathf.Max(1, skill.Cost);
-            if (startSlot < 0 || startSlot + cost > skillSlots.Length)
-                return false;
-
-            // 置き換え対象(startSlot)以外のスキルが占有しているスロットを集計する
-            bool[] occupied = new bool[skillSlots.Length];
-            for (int i = 0; i < skillSlots.Length; i++)
-            {
-                if (i == startSlot || skillSlots[i].SkillData == null)
-                    continue;
-
-                int end = Mathf.Min(i + Mathf.Max(1, skillSlots[i].SkillData.Cost), skillSlots.Length);
-                for (int k = i; k < end; k++)
-                    occupied[k] = true;
-            }
-
-            for (int k = startSlot; k < startSlot + cost; k++)
-            {
-                if (!skillSlots[k].IsUnlocked || occupied[k])
-                    return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// スキルを設定できるスロットが存在するか(スロット選択中は選択スロットのみ判定)
-        /// </summary>
-        public bool CanPlaceSkill(SkillData skill)
-        {
-            if (HasSelectedSlot)
-                return CanPlaceSkill(skill, SelectedSlot.SlotIndex);
-
-            for (int i = 0; i < skillSlots.Length; i++)
-            {
-                if (CanPlaceSkill(skill, i))
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// スキルの被りが存在するか否か
-        /// <see langword="true"/>被りあり
-        /// <see langword="false"/>被りなし
-        /// </summary>
-        public bool IsOverlap(SkillData skill)
-        {
-            for (int i = 0; i < skillSlots.Length; i++)
-                if (skillSlots[i].SkillData == skill)
-                    return true;
-            return false;
-        }
-
-        // スロットを解放するためのスロット数ごとの必要金額
-        static readonly int[] requireAmount = { 100, 1000, 2500, 5000, 10000 };
-        static readonly string ConfirmationMessage = "Do you want to unlock this skill slot?";
         void Awake()
         {
             skillSlots = skillSlotsParent.GetComponentsInChildren<SkillSlotHandler>();
+            if (skillSlots.Length > RequireAmounts.Length)
+                throw new System.InvalidOperationException("The number of skill slots exceeds the configured unlock prices.");
 
-            // 各スロットに必要金額を設定する
             for (int i = 0; i < skillSlots.Length; i++)
             {
-                int requiredAmount = requireAmount[i];
                 int slotIndex = i;
-
-                skillSlots[i].Initialize(slotIndex, requiredAmount,
-                (s) => {
-                    if(HasSelectedSlot)     // 既に選択されているスロットがある場合は選択を解除する
-                        SelectedSlot.DeselectSlot();
-                    // スロットをアンロックするか確認する
-                    confirmationPanel.Show(ConfirmationMessage, () => OnClickConfirmationYes(s));
-                }, 
-                (s) => {
-                    // スロットの追加ボタンがクリックされたときの処理
-                    if(HasSelectedSlot)     // 既に選択されているスロットがある場合は選択を解除する
-                        SelectedSlot.DeselectSlot();
-                    
-                    SelectedSlot = s;
-                    s.SelectedSlot();
-                    skillDescriptionHandler.OnSkillDescriptionUpdated?.Invoke(s.SkillData);
-                    OnSlotStateChanged?.Invoke();
-                });
+                skillSlots[i].Initialize(
+                    slotIndex,
+                    RequireAmounts[i],
+                    HandleLockedSlotClicked,
+                    HandleSlotClicked);
             }
 
-            symbolListHandler.OnSelectedSymbolChanged += SetSymbolData;
+            if (testSkillData != null && !GlobalVariables.HasSkills.Contains(testSkillData))
+                GlobalVariables.HasSkills.Add(testSkillData);
+
+            symbolListHandler.OnSelectedSymbolChanged += HandleSymbolChanged;
+            skillNameListHandler.OnSkillSelected += HandleSkillSelected;
         }
-        
+
         void OnDestroy()
         {
-            symbolListHandler.OnSelectedSymbolChanged -= SetSymbolData;
+            symbolListHandler.OnSelectedSymbolChanged -= HandleSymbolChanged;
+            skillNameListHandler.OnSkillSelected -= HandleSkillSelected;
         }
 
         /// <summary>
-        /// スキルのコスト分スロットを消費する
+        /// 記号が変わったときの処理
         /// </summary>
-        public void SlotUsageByCost(SymbolMouthData data)
+        void HandleSymbolChanged(SymbolData symbolData)
         {
-            if (data == null)
-                throw new System.ArgumentNullException(nameof(data));
+            currentSymbolData = symbolData as SymbolMouthData;
+            currentSymbolHandler.SetCurrentSymbol(symbolData);
+            ClearSelectedSlot();
+            skillDescriptionHandler.Clear();
+            skillNameListHandler.SetSkillNameList(GlobalVariables.HasSkills);
+            RefreshSlots();
+        }
 
-            for (int i = 0; i < skillSlots.Length; i++)
-                skillSlots[i].ResetByCostLock();
+        /// <summary>
+        /// スロットがクリックされたときの処理
+        /// </summary>
+        void HandleSlotClicked(SkillSlotHandler slot)
+        {
+            if (selectedSlot != null)
+                selectedSlot.DeselectSlot();
 
-            int unlockedSlotCount = Mathf.Min(data.SkillSlot_Unlocked, skillSlots.Length);
-            List<SkillData> skills = data.SkillDatas;
-            for (int i = 0; i < skills.Count && i < unlockedSlotCount; i++)
+            selectedSlot = slot;
+            selectedSlot.SelectedSlot();
+            skillDescriptionHandler.SetSkillDescription(slot.SkillData);
+            RefreshSkillButtons();
+        }
+
+        /// <summary>
+        /// ロックされたスロットがクリックされたときの処理
+        /// </summary>
+        void HandleLockedSlotClicked(SkillSlotHandler slot)
+        {
+            ClearSelectedSlot();
+            skillDescriptionHandler.Clear();
+            RefreshSkillButtons();
+
+            if (!CanUnlockSlot(slot))
             {
-                SkillData skill = skills[i];
-                if (skill == null)
-                    continue;
-
-                int cost = Mathf.Max(0, skill.Cost);
-                int lastConsumedSlot = Mathf.Min(i + cost, unlockedSlotCount);
-                for (int slotIndex = i; slotIndex < lastConsumedSlot; slotIndex++)
-                    skillSlots[slotIndex].ByCostLockSlot();
+                return;
             }
 
-            OnSlotStateChanged?.Invoke();
+            confirmationPanel.Show(ConfirmationMessage, () => UnlockSlot(slot));
         }
 
         /// <summary>
-        /// 確認画面で「はい」を選択した際に実行されるメソッド
+        /// スロットをアンロックする
         /// </summary>
-        /// <param name="requiredAmount">アンロックするスロットに必要な金額</param>
-        void OnClickConfirmationYes(SkillSlotHandler slot)
+        void UnlockSlot(SkillSlotHandler slot)
         {
             confirmationPanel.Hide();
+            if (!skillLoadoutService.TryUnlockNextSlot(
+                currentSymbolData,
+                slot.SlotIndex,
+                skillSlots.Length,
+                Player.Funds.CurrentGold,
+                slot.RequireAmount))
+            {
+                RefreshSlots();
+                return;
+            }
+
+            // ゴールドを消費してアンロック
             Player.Funds.SpendGold(slot.RequireAmount);
-            slot.UnlockSlot();
-            currentSymbolHandler.CurrentSymbolData.UnlockNextSkillSlot();       // 次のスキルスロットをアンロックする
-            OnSlotStateChanged?.Invoke();
+            RefreshSlots();
         }
 
         /// <summary>
-        /// 記号データを選択した際に実行されるメソッド
-        /// SkillSlotsListを更新する
+        /// スキルが選択されたときの処理。選択中のスロットに割り当てる
         /// </summary>
-        /// <param name="data">設定する記号データ</param>
-        public void SetSymbolData(SymbolData data)
+        /// <param name="skillData"></param>
+        void HandleSkillSelected(SkillData skillData)
         {
-            if (HasSelectedSlot)
+            skillDescriptionHandler.SetSkillDescription(skillData);
+            if (selectedSlot == null || currentSymbolData == null)
+                return;
+
+            // スキルを割り当てる
+            if (!skillLoadoutService.TryAssignSkill(
+                currentSymbolData,
+                selectedSlot.SlotIndex,
+                skillData,
+                skillSlots.Length))
             {
-                SelectedSlot.DeselectSlot();
                 ClearSelectedSlot();
+                RefreshSlots();
+                return;
             }
 
-            SymbolMouthData symbolMouthData = data as SymbolMouthData;
-            if (symbolMouthData == null)
-            {
-                for (int i = 0; i < skillSlots.Length; i++)
-                    skillSlots[i].LockSlot();
+            // 割り当て成功したので更新
+            selectedSlot.SetSkillData(skillData);
+            selectedSlot = null;
+            RefreshCostLocks();
+            RefreshSkillButtons();
+        }
 
-                OnSlotStateChanged?.Invoke();
+        /// <summary>
+        /// スロットの状態を更新する（アンロックやスキル割り当て反映）
+        /// </summary>
+        void RefreshSlots()
+        {
+            if (currentSymbolData == null)
+            {
+                foreach (SkillSlotHandler slot in skillSlots)
+                {
+                    slot.LockSlot();
+                    slot.SetLockedSlotInteractable(false);
+                }
+
+                RefreshSkillButtons();
                 return;
             }
 
             for (int i = 0; i < skillSlots.Length; i++)
             {
-                // 現在アンロックしてるスロットを確認
-                if (i < symbolMouthData.SkillSlot_Unlocked)
+                // アンロックされているか確認
+                if (i >= currentSymbolData.SkillSlot_Unlocked)
                 {
-                    // スキルデータが存在する場合は設定し、存在しない場合はスロットをアンロックする
-                    if (i < symbolMouthData.SkillDatas.Count)
-                    {
-                        skillSlots[i].SetSkillData(symbolMouthData.SkillDatas[i]);
-                        continue;
-                    }
-
-                    skillSlots[i].UnlockSlot();
-                }
-                else
-                {
-                    // スロットがアンロックされていない場合はロックする
                     skillSlots[i].LockSlot();
+                    skillSlots[i].SetLockedSlotInteractable(CanUnlockSlot(skillSlots[i]));
+                    continue;
                 }
+
+                // スキルを取得
+                SkillData skillData = i < currentSymbolData.SkillDatas.Count
+                    ? currentSymbolData.SkillDatas[i]
+                    : null;
+
+                // スキルがあるか
+                if (skillData == null)
+                    skillSlots[i].UnlockSlot();
+                else
+                    skillSlots[i].SetSkillData(skillData);
             }
 
-            SlotUsageByCost(symbolMouthData);
+            RefreshCostLocks();
+            RefreshSkillButtons();
+        }
+
+        /// <summary>
+        /// コストロックを更新する（使用中スロットを反映）
+        /// </summary>
+        void RefreshCostLocks()
+        {
+            foreach (SkillSlotHandler slot in skillSlots)
+                slot.ResetByCostLock();
+
+            if (currentSymbolData == null)
+                return;
+
+            bool[] occupiedSlots = skillLoadoutService.GetOccupiedSlots(currentSymbolData, skillSlots.Length);
+            for (int i = 0; i < occupiedSlots.Length; i++)
+            {
+                if (occupiedSlots[i])
+                    skillSlots[i].ByCostLockSlot();
+            }
+        }
+
+        /// <summary>
+        /// スキルボタンの状態を更新する（割り当て可能か）
+        /// </summary>
+        void RefreshSkillButtons()
+        {
+            skillNameListHandler.RefreshInteractability(CanAssignSkill);
+        }
+
+        /// <summary>
+        /// 選択中のスロットに割り当て可能か
+        /// </summary>
+        bool CanAssignSkill(SkillData skillData)
+        {
+            if (currentSymbolData == null)
+                return false;
+
+            // 選択中スロットがあるか確認
+            if (selectedSlot != null)
+            {
+                return skillLoadoutService.CanAssignSkill(
+                    currentSymbolData,
+                    selectedSlot.SlotIndex,
+                    skillData,
+                    skillSlots.Length);
+            }
+
+            return skillLoadoutService.CanAssignSkillAnywhere(currentSymbolData, skillData, skillSlots.Length);
+        }
+
+        /// <summary>
+        /// スロットをアンロック可能か
+        /// </summary>
+        bool CanUnlockSlot(SkillSlotHandler slot)
+        {
+            return skillLoadoutService.CanUnlockNextSlot(
+                currentSymbolData,
+                slot.SlotIndex,
+                skillSlots.Length,
+                Player.Funds.CurrentGold,
+                slot.RequireAmount);
+        }
+
+        /// <summary>
+        /// 選択中スロットをクリアする
+        /// </summary>
+        void ClearSelectedSlot()
+        {
+            if (selectedSlot == null)
+                return;
+
+            selectedSlot.DeselectSlot();
+            selectedSlot = null;
         }
     }
 }

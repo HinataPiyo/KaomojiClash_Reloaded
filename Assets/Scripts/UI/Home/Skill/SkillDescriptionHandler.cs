@@ -4,43 +4,23 @@ namespace UI
     using UnityEngine;
     
     /// <summary>
-    /// スキルの説明を管理するハンドラークラスです。
-    /// このクラスは、スキルの説明をUIに設定するためのメソッドを提供します。
+    /// AIリファクタリング: Presenterから指示されたスキル説明を表示するView。
     /// </summary>
     public class SkillDescriptionHandler : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI skillDescriptionText;
 
-        public System.Action<SkillData> OnSkillDescriptionUpdated;
-
-        public System.Action OnSkillDescriptionCleared;
-
         void Awake()
         {
             Clear();
-            OnSkillDescriptionUpdated += SetSkillDescription;
-            OnSkillDescriptionCleared += Clear;
         }
 
-        void OnDestroy()
-        {
-            OnSkillDescriptionUpdated -= SetSkillDescription;
-            OnSkillDescriptionCleared -= Clear;
-        }
-
-        /// <summary>
-        /// 指定されたスキルデータと現在のレベルに基づいて、スキルの説明をUIに設定します。
-        /// </summary>
         public void SetSkillDescription(SkillData skillData)
         {
-            Clear();
-
-            if(skillData == null) return;
-
-            skillDescriptionText.text = skillData.GetDescription();
+            skillDescriptionText.text = skillData == null ? string.Empty : skillData.GetDescription();
         }
 
-        void Clear()
+        public void Clear()
         {
             skillDescriptionText.text = string.Empty;
         }
