@@ -1,3 +1,5 @@
 ﻿<Solution>
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="UI.TreeConnections.EditorTests.csproj" />
+  <Project Path="UI.TreeConnections.csproj" />
 </Solution>
