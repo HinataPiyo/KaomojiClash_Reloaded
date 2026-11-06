@@ -99,5 +99,42 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3385409885487636035, guid: 710c8cb0ec7b1cb4d95239b5e7fef0d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 405417551705359627}
   m_SourcePrefab: {fileID: 100100000, guid: 710c8cb0ec7b1cb4d95239b5e7fef0d1, type: 3}
+--- !u!114 &2580296249769787634 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8315647263851586957, guid: 710c8cb0ec7b1cb4d95239b5e7fef0d1, type: 3}
+  m_PrefabInstance: {fileID: 5811913892466500991}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9102747634896583484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+--- !u!1 &9102747634896583484 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3385409885487636035, guid: 710c8cb0ec7b1cb4d95239b5e7fef0d1, type: 3}
+  m_PrefabInstance: {fileID: 5811913892466500991}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &405417551705359627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9102747634896583484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acb7df917de4617418a7c7cd4865a7af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CriticalRateNode
+  nodeId: CriticalRate_00
+  nodeName: 
+  description: Increases critical hit rate.
+  nodeButton: {fileID: 2580296249769787634}
+  unlockedOnStart: 0
+  activeOnStart: 0

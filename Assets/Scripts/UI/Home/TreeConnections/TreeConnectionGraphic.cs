@@ -63,6 +63,9 @@ namespace UI
 
         public int ConnectionCount => connections.Count;
 
+        // 接続定義の変更を進行管理側へ通知し、同じ接続情報を二重管理しない。
+        public event Action ConnectionsChanged;
+
         public float LineWidth
         {
             get => lineWidth;
@@ -120,6 +123,7 @@ namespace UI
             var connection = new TreeConnection(source, destination);
             connections.Add(connection);
             SetVerticesDirty();
+            ConnectionsChanged?.Invoke();
             return connection;
         }
 
@@ -130,6 +134,7 @@ namespace UI
             if (!connections.Remove(connection))
                 return false;
             SetVerticesDirty();
+            ConnectionsChanged?.Invoke();
             return true;
         }
 
@@ -237,6 +242,10 @@ namespace UI
                 return snapshot;
             }
             if (!connection.Visible || !connection.Source.isActiveAndEnabled || !connection.Destination.isActiveAndEnabled)
+                return snapshot;
+
+            Canvas nearestCanvas = GetComponentInParent<Canvas>();
+            if (nearestCanvas != null && !nearestCanvas.isActiveAndEnabled)
                 return snapshot;
 
             if (canvas == null || connection.Source.GetComponentInParent<Canvas>() != canvas ||

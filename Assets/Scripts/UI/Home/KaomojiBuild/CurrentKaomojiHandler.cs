@@ -31,12 +31,18 @@ namespace UI
             }
 
             currentKaomoji.OnCurrentKaomojiUpdated += HandleCurrentKaomojiUpdated;
+            currentKaomoji.OnStatusUpdated += OnStatusChanged;
+            if (currentKaomoji.TryGetCurrentUpdate(out CurrentKaomojiUpdate update))
+                OnStatusChanged(update);
         }
 
         protected virtual void OnDisable()
         {
             if (currentKaomoji != null)
+            {
                 currentKaomoji.OnCurrentKaomojiUpdated -= HandleCurrentKaomojiUpdated;
+                currentKaomoji.OnStatusUpdated -= OnStatusChanged;
+            }
         }
 
         void HandleCurrentKaomojiUpdated(CurrentKaomojiUpdate update)
@@ -45,6 +51,8 @@ namespace UI
         }
 
         protected abstract void OnCurrentKaomojiChanged(CurrentKaomojiUpdate update);
+
+        protected virtual void OnStatusChanged(CurrentKaomojiUpdate update) { }
     }
 
     public class CurrentKaomojiHandler : MonoBehaviour
@@ -55,14 +63,20 @@ namespace UI
         [SerializeField] Player.PlayerStatsCalculator statsCalc;
 
         SymbolListHandler symbolListHandler;
+        CoreStats observedCoreStats;
+        readonly HashSet<CriticalStats> observedCriticalStats = new HashSet<CriticalStats>();
+        CurrentKaomojiUpdate currentUpdate;
+        bool hasCurrentUpdate;
 
         // [イベント化] 購読側のみが登録できる、型付きの顔文字更新通知。
         public event System.Action<CurrentKaomojiUpdate> OnCurrentKaomojiUpdated;
+        public event System.Action<CurrentKaomojiUpdate> OnStatusUpdated;
 
         void Start()
         {
             symbolListHandler = SymbolListHandler.Instance;
             symbolListHandler.OnSelectedSymbolChanged += UpdateCurrentKaomoji;
+            SubscribeToStatusChanges();
             UpdateStatusViews();
         }
 
@@ -70,6 +84,7 @@ namespace UI
         {
             if (symbolListHandler != null)
                 symbolListHandler.OnSelectedSymbolChanged -= UpdateCurrentKaomoji;
+            UnsubscribeFromStatusChanges();
         }
 
         /// <summary>
@@ -78,7 +93,11 @@ namespace UI
         /// <param name="symbolData">更新する顔文字のデータ</param>
         void UpdateCurrentKaomoji(SymbolData symbolData)
         {
-            playerData.SetSymbolDataByType(symbolData);
+            if (PanelChangeButton.CurrentPanel == PanelName.KaomojiBuild)
+            {
+                playerData.SetSymbolDataByType(symbolData);
+                SubscribeToStatusChanges();
+            }
             UpdateStatusViews();
 
             AudioManager.Instance.PlaySE(SEAudioName.ButtonClick_00);
@@ -93,8 +112,62 @@ namespace UI
             statsCalc.SetUp(playerData);
             StatusDisplayData[] statusData = statsCalc.GetStatusDisplayData();
 
-            // [イベント化] 初期表示と選択後の更新を同じ通知経路で各Viewへ届ける。
-            OnCurrentKaomojiUpdated?.Invoke(new CurrentKaomojiUpdate(playerData, statusData));
+            currentUpdate = new CurrentKaomojiUpdate(playerData, statusData);
+            hasCurrentUpdate = true;
+            OnCurrentKaomojiUpdated?.Invoke(currentUpdate);
+        }
+
+        /// <summary>
+        /// 現在の更新を取得します。
+        /// </summary>
+        /// <param name="update">取得する更新</param>
+        /// <returns>更新があるか</returns>
+        public bool TryGetCurrentUpdate(out CurrentKaomojiUpdate update)
+        {
+            update = currentUpdate;
+            return hasCurrentUpdate;
+        }
+
+        /// <summary>
+        /// 顔文字のステータス変化を購読。
+        /// </summary>
+        void SubscribeToStatusChanges()
+        {
+            UnsubscribeFromStatusChanges();
+            observedCoreStats = KaomojiSetUp.TryGetCoreStats(playerData);
+            if (observedCoreStats != null)
+                observedCoreStats.Changed += HandleStatusChanged;
+
+            foreach (CriticalStats stats in KaomojiSetUp.TryGetCriticalStats(playerData))
+            {
+                if (stats != null && observedCriticalStats.Add(stats))
+                    stats.Changed += HandleStatusChanged;
+            }
+        }
+
+        /// <summary>
+        /// 顔文字のステータス変化の購読を解除
+        /// </summary>
+        void UnsubscribeFromStatusChanges()
+        {
+            if (observedCoreStats != null)
+                observedCoreStats.Changed -= HandleStatusChanged;
+            observedCoreStats = null;
+
+            foreach (CriticalStats stats in observedCriticalStats)
+                stats.Changed -= HandleStatusChanged;
+            observedCriticalStats.Clear();
+        }
+
+        /// <summary>
+        /// ステータス変化時の処理
+        /// </summary>
+        void HandleStatusChanged()
+        {
+            statsCalc.SetUp(playerData);
+            currentUpdate = new CurrentKaomojiUpdate(playerData, statsCalc.GetStatusDisplayData());
+            hasCurrentUpdate = true;
+            OnStatusUpdated?.Invoke(currentUpdate);
         }
     }
 }

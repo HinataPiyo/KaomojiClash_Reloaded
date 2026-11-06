@@ -12,6 +12,12 @@ namespace UI.Tests
         public readonly List<UIVertex> Vertices = new List<UIVertex>();
         public int PopulateCount { get; private set; }
 
+        public void PopulateImmediately()
+        {
+            using (var helper = new VertexHelper())
+                OnPopulateMesh(helper);
+        }
+
         protected override void OnPopulateMesh(VertexHelper helper)
         {
             base.OnPopulateMesh(helper);
@@ -117,6 +123,25 @@ namespace UI.Tests
             Assert.Throws<ArgumentException>(() => graphic.SetConnectionColor(second, Color.white));
         }
 
+        // 進行管理側が接続変更だけを再索引し、表示属性の変更で不要な再構築をしないことを検証する。
+        [Test]
+        public void NotifiesWhenConnectionTopologyChanges()
+        {
+            int changeCount = 0;
+            graphic.ConnectionsChanged += () => changeCount++;
+
+            TreeConnection connection = graphic.AddConnection(source, destination);
+            Assert.That(changeCount, Is.EqualTo(1));
+
+            graphic.SetConnectionVisible(connection, false);
+            Assert.That(changeCount, Is.EqualTo(1));
+
+            Assert.That(graphic.RemoveConnection(connection), Is.True);
+            Assert.That(changeCount, Is.EqualTo(2));
+            Assert.That(graphic.RemoveConnection(connection), Is.False);
+            Assert.That(changeCount, Is.EqualTo(2));
+        }
+
         [Test]
         public void TracksInactiveAndDestroyedButtons()
         {
@@ -175,6 +200,47 @@ namespace UI.Tests
             Assert.That(Vector3.Distance(graphic.Vertices[0].position, graphic.Vertices[1].position),
                 Is.EqualTo(12f).Within(0.001f));
             Assert.Throws<ArgumentOutOfRangeException>(() => graphic.LineWidth = -1f);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void SkipsDisabledCanvasAndDrawsWhenEnabled(bool nested)
+        {
+            Canvas targetCanvas = canvas;
+            if (nested)
+            {
+                var nestedObject = new GameObject("Nested Canvas", typeof(RectTransform), typeof(Canvas));
+                nestedObject.transform.SetParent(root.transform, false);
+                targetCanvas = nestedObject.GetComponent<Canvas>();
+                graphic.transform.SetParent(nestedObject.transform, false);
+                source.transform.SetParent(nestedObject.transform, false);
+                destination.transform.SetParent(nestedObject.transform, false);
+            }
+
+            var warnings = new List<string>();
+            Application.LogCallback captureWarning = (message, stackTrace, type) =>
+            {
+                if (type == LogType.Warning && message.StartsWith("TreeConnectionGraphic:"))
+                    warnings.Add(message);
+            };
+            Application.logMessageReceived += captureWarning;
+            try
+            {
+                targetCanvas.enabled = false;
+                graphic.AddConnection(source, destination);
+                graphic.PopulateImmediately();
+                Assert.That(graphic.Vertices.Count, Is.Zero);
+                Assert.That(warnings, Is.Empty);
+
+                targetCanvas.enabled = true;
+                Canvas.ForceUpdateCanvases();
+                Assert.That(graphic.Vertices.Count, Is.EqualTo(4));
+                Assert.That(warnings, Is.Empty);
+            }
+            finally
+            {
+                Application.logMessageReceived -= captureWarning;
+            }
         }
 
         [Test]

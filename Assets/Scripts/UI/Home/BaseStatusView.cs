@@ -15,6 +15,16 @@ namespace UI
         // [設計変更] イベント受信を表示処理の入口にし、転送用メソッドをなくす。
         protected override void OnCurrentKaomojiChanged(CurrentKaomojiUpdate update)
         {
+            UpdateStatuses(update);
+        }
+
+        protected override void OnStatusChanged(CurrentKaomojiUpdate update)
+        {
+            UpdateStatuses(update);
+        }
+
+        void UpdateStatuses(CurrentKaomojiUpdate update)
+        {
             IReadOnlyList<StatusDisplayData> statusData = update.Statuses;
             if (statusData == null)
             {
@@ -54,11 +64,11 @@ namespace UI
                         break;
                     case StatusType.CriticalDamage:
                         titleText = "CRIT Damage:";
-                        valueText = $"{statusData[i].Value}";
+                        valueText = statusData[i].Value.ToString("P1");
                         break;
                     case StatusType.CriticalRate:
                         titleText = "CRIT Rate:";
-                        valueText = $"{statusData[i].Value}";
+                        valueText = statusData[i].Value.ToString("P1");
                         break;
                 }
 
