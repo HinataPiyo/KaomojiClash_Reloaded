@@ -3,9 +3,12 @@ namespace UI
     using TMPro;
     using UnityEngine;
     using UnityEngine.UI;
-    using Player;
 
     public enum SkillSlotState { Locked, Unlocked, Set }
+
+    /// <summary>
+    /// AIリファクタリング: 各スロットの表示状態を描画し、クリックをPresenterへ通知するView。
+    /// </summary>
     public class SkillSlotHandler : MonoBehaviour
     {
         [SerializeField] Button addSlot;
@@ -31,13 +34,15 @@ namespace UI
         /// スロットを初期化する
         /// </summary>
         /// <param name="amount">スロットをアンロックするために必要な金額</param>
-        public void Initialize(int slotIndex, float amount, System.Action<SkillSlotHandler> onClickLockedSlot, System.Action<SkillSlotHandler> onClickAddSlot)
+        public void Initialize(int slotIndex, float amount,
+            System.Action<SkillSlotHandler> onClickLockedSlot, System.Action<SkillSlotHandler> onClickAddSlot)
         {
             SlotIndex = slotIndex;
             defaultAddSlotColor = addSlot.GetComponent<Image>().color;
             defaultSettingSlotColor = settingSlot.GetComponent<Image>().color;
-            LockSlot();
+            // AIリファクタリング: 金額ラベルと初期有効状態を正しい価格で初期化する。
             SetRequireAmount(amount);
+            LockSlot();
 
             lockedSlot.GetComponentInChildren<TextMeshProUGUI>().text = "-";
 
@@ -53,25 +58,15 @@ namespace UI
         }
         
 
-        /// <summary>
-        /// スロットのアンロック条件を現在の所持金と比較する
-        /// </summary>
-        /// <param name="currentGold">現在の所持金</param>
-        public bool Comparison()
+        public void SetLockedSlotInteractable(bool interactable)
         {
-            // 現在の所持金が必要金額以上かどうかを比較する
-            if (Funds.CurrentGold >= RequireAmount)
-            {
-                return true;
-            }
-
-            return false;
+            lockedSlot.interactable = interactable;
         }
 
         public void SelectedSlot()
         {
             addSlot.GetComponent<Image>().color = selectedSlotColor;
-            settingSlot.GetComponent<Image>().color = selectedSlotColor;
+            settingSlot.GetComponent<Image>().color = selectedSlotColor;    
         }
 
         public void DeselectSlot()
@@ -92,7 +87,7 @@ namespace UI
             lockedSlot.GetComponentInChildren<TextMeshProUGUI>().text = 
                 "Required amount : " + RequireAmount.ToString("#,###");
 
-            lockedSlot.interactable = Comparison();
+            lockedSlot.interactable = false;
         }
 
         public void UnlockSlot()
