@@ -367,6 +367,3 @@ MonoBehaviour:
   currentKaomojiText: {fileID: 266249358520323932}
   playerData: {fileID: 11400000, guid: dd3cefebf63082049a6fa8635a45586e, type: 2}
   statsCalc: {fileID: 0}
-  statusRaderChartView: {fileID: 0}
-  baseStatusView: {fileID: 0}
-  skillDescriptionHandler: {fileID: 0}

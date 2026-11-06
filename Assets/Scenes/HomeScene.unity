@@ -1157,17 +1157,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1314137133083135849, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
   m_PrefabInstance: {fileID: 6421968105972910614}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &235544706 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6169173945564429991, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
-  m_PrefabInstance: {fileID: 6421968105972910614}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfc46bd8d33495249a4d2599945ba0d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI.StatusRaderChartView
 --- !u!1 &259076588
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,8 +1486,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1519716520}
   m_HandleRect: {fileID: 1519716519}
   m_Direction: 3
-  m_Value: 0
-  m_Size: 0
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1717,7 +1706,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -95056.97, y: -47560.63}
+  m_AnchoredPosition: {x: -0.00019171812, y: -0.000057605972}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &341872304
@@ -2114,6 +2103,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseStatusUI
       objectReference: {fileID: 0}
+    - target: {fileID: 5069949170807039698, guid: 2f741237261ed7d4eaa118054a3993db, type: 3}
+      propertyPath: currentKaomoji
+      value: 
+      objectReference: {fileID: 910000000000000001}
     - target: {fileID: 5503853571706556237, guid: 2f741237261ed7d4eaa118054a3993db, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2341,17 +2334,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 426949392}
   m_CullTransparentMesh: 1
---- !u!114 &426949395 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5069949170807039698, guid: 2f741237261ed7d4eaa118054a3993db, type: 3}
-  m_PrefabInstance: {fileID: 426949390}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 426949392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f08f55e3de800b46b7f02f166b1dc0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI.BaseStatusView
 --- !u!1001 &470676643
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3013,17 +2995,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7885643440492656071, guid: 2f741237261ed7d4eaa118054a3993db, type: 3}
   m_PrefabInstance: {fileID: 5579912534889512952}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &796998162 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5069949170807039698, guid: 2f741237261ed7d4eaa118054a3993db, type: 3}
-  m_PrefabInstance: {fileID: 5579912534889512952}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f08f55e3de800b46b7f02f166b1dc0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI.BaseStatusView
 --- !u!1 &827822048
 GameObject:
   m_ObjectHideFlags: 0
@@ -4764,18 +4735,6 @@ PrefabInstance:
       propertyPath: statsCalc
       value: 
       objectReference: {fileID: 992614823}
-    - target: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
-      propertyPath: baseStatusView
-      value: 
-      objectReference: {fileID: 426949395}
-    - target: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
-      propertyPath: symbolListHandler
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
-      propertyPath: statusRaderChartView
-      value: 
-      objectReference: {fileID: 1748021311}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5980,7 +5939,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183697895}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -7779,6 +7738,10 @@ PrefabInstance:
       propertyPath: radius
       value: 180
       objectReference: {fileID: 0}
+    - target: {fileID: 6169173945564429991, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
+      propertyPath: currentKaomoji
+      value: 
+      objectReference: {fileID: 910000000000000001}
     - target: {fileID: 6727800171261411324, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -209
@@ -8095,6 +8058,7 @@ GameObject:
   - component: {fileID: 1589961969}
   - component: {fileID: 1589961971}
   - component: {fileID: 1589961970}
+  - component: {fileID: 1589961972}
   m_Layer: 5
   m_Name: CurrentEquipedSkillUI
   m_TagString: Untagged
@@ -8161,6 +8125,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589961968}
   m_CullTransparentMesh: 1
+--- !u!114 &1589961972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589961968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cdea265685f7394a93ff63800cae0b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CurrentEquipedSkillHandler
+  currentKaomoji: {fileID: 910000000000000001}
+  container: {fileID: 874069228}
+  skillNamePrefab: {fileID: 5561168387236923809, guid: 08c977b18cf9fbd46b73bac46bdff85e, type: 3}
 --- !u!1 &1632352846
 GameObject:
   m_ObjectHideFlags: 0
@@ -8362,6 +8341,10 @@ PrefabInstance:
       propertyPath: radius
       value: 180
       objectReference: {fileID: 0}
+    - target: {fileID: 6169173945564429991, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
+      propertyPath: currentKaomoji
+      value: 
+      objectReference: {fileID: 910000000000000001}
     - target: {fileID: 6727800171261411324, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -209
@@ -8388,17 +8371,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1314137133083135849, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
   m_PrefabInstance: {fileID: 1748021308}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1748021311 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6169173945564429991, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
-  m_PrefabInstance: {fileID: 1748021308}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfc46bd8d33495249a4d2599945ba0d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI.StatusRaderChartView
 --- !u!1 &1757524460
 GameObject:
   m_ObjectHideFlags: 0
@@ -8610,6 +8582,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49a94e377f2f25448692f685d10a2b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.SkillDescriptionHandler
+  currentKaomoji: {fileID: 910000000000000001}
   skillDescriptionText: {fileID: 328540758}
 --- !u!1001 &1772534676
 PrefabInstance:
@@ -8719,14 +8692,6 @@ PrefabInstance:
       propertyPath: statsCalc
       value: 
       objectReference: {fileID: 992614823}
-    - target: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
-      propertyPath: baseStatusView
-      value: 
-      objectReference: {fileID: 796998162}
-    - target: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
-      propertyPath: statusRaderChartView
-      value: 
-      objectReference: {fileID: 235544706}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10702,6 +10667,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8820584675998573145}
   m_CullTransparentMesh: 1
+--- !u!114 &910000000000000001 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+  m_PrefabInstance: {fileID: 1086673808}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8806105cf497c4091bf96090b0a65a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.CurrentKaomojiHandler
+--- !u!114 &910000000000000002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+  m_PrefabInstance: {fileID: 1772534676}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8806105cf497c4091bf96090b0a65a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.CurrentKaomojiHandler
 --- !u!1 &1667249502138272318
 GameObject:
   m_ObjectHideFlags: 0
@@ -11205,6 +11192,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseStatusUI
       objectReference: {fileID: 0}
+    - target: {fileID: 5069949170807039698, guid: 2f741237261ed7d4eaa118054a3993db, type: 3}
+      propertyPath: currentKaomoji
+      value: 
+      objectReference: {fileID: 910000000000000002}
     - target: {fileID: 5503853571706556237, guid: 2f741237261ed7d4eaa118054a3993db, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -11492,6 +11483,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6169173945564429991, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
+      propertyPath: currentKaomoji
+      value: 
+      objectReference: {fileID: 910000000000000002}
     - target: {fileID: 7742657323357587437, guid: 6b2744d558d72fe4985c268cda6eeb44, type: 3}
       propertyPath: m_Name
       value: StatusRadarChart UI

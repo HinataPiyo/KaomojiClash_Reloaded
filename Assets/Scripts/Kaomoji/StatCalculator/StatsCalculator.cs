@@ -5,6 +5,24 @@ public interface IStatsCalculator
     void SetUp(IKaomojiStats kaomojiStats);
 }
 
+// [設計変更] 計算結果をViewへ渡す共通データ。UI側が計算機の詳細に依存しないようにする。
+public readonly struct StatusDisplayData
+{
+    public StatusType Type { get; }
+    public float BaseValue { get; }
+    public float Value { get; }
+    public float MinValue { get; }
+    public float MaxValue { get; }
+
+    public StatusDisplayData(StatusType type, float baseValue, float value, float minValue, float maxValue)
+    {
+        Type = type;
+        BaseValue = baseValue;
+        Value = value;
+        MinValue = minValue;
+        MaxValue = maxValue;
+    }
+}
 
 /// <summary>
 /// Player,Enemyのステータスをまとめて計算し参照するクラス

@@ -66,7 +66,7 @@ namespace UI
             currentSymbolData = symbolData as SymbolMouthData;
             currentSymbolHandler.SetCurrentSymbol(symbolData);
             ClearSelectedSlot();
-            skillDescriptionHandler.Clear();
+            // [イベント化] スキル説明はCurrentKaomojiHandlerの更新通知を購読してクリアする。
             skillNameListHandler.SetSkillNameList(GlobalVariables.HasSkills);
             RefreshSlots();
         }
