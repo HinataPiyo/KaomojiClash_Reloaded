@@ -1,0 +1,7 @@
+{
+    "name": "UI.TreeConnections",
+    "references": [
+        "UnityEngine.UI"
+    ],
+    "autoReferenced": true
+}

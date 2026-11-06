@@ -20,6 +20,8 @@ CurrentKaomojiHandler
 
 `PlayerStatsCalculator` が表示に必要な値を一度組み立て、読み取り専用のイベントデータ `CurrentKaomojiUpdate` にまとめて購読側へ通知する。`CurrentKaomojiEventListener` が購読・解除のライフサイクルをまとめ、派生クラスは更新処理だけを担当する。
 
+装備中の記号の `CoreStats` / `CriticalStats` は、プロパティを通じて値が変わったときに `Changed` を通知する。`CurrentKaomojiHandler` は装備変更時に購読対象を切り替え、ステータスのみの変更を `OnStatusUpdated` で `BaseStatusView` と `StatusRaderChartView` に通知する。無効化されたステータスViewは再有効化時に最新の表示データを受け取る。Critical画面はプレイヤーの装備とは別に、選択中の目記号の `CriticalStats` を購読する。既存のシリアライズ済み値は `FormerlySerializedAs` で引き継ぐため、ステータスを変更するコードは公開プロパティを使う。
+
 ## 変更箇所とコード内注釈
 
 | ファイル | 注釈 | 変更内容 |

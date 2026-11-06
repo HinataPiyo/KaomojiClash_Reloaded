@@ -1,0 +1,10 @@
+{
+    "name": "UI.TreeConnections.EditorTests",
+    "references": [
+        "UI.TreeConnections",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": ["Editor"],
+    "optionalUnityReferences": ["TestAssemblies"],
+    "autoReferenced": false
+}

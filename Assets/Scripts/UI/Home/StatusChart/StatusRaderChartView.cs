@@ -18,6 +18,16 @@ namespace UI
         // [設計変更] イベント受信をチャート描画の入口にし、転送用メソッドをなくす。
         protected override void OnCurrentKaomojiChanged(CurrentKaomojiUpdate update)
         {
+            UpdateStatuses(update);
+        }
+
+        protected override void OnStatusChanged(CurrentKaomojiUpdate update)
+        {
+            UpdateStatuses(update);
+        }
+
+        void UpdateStatuses(CurrentKaomojiUpdate update)
+        {
             IReadOnlyList<StatusDisplayData> statusData = update.Statuses;
             if (radarChart == null || statusData == null)
             {
@@ -50,10 +60,10 @@ namespace UI
                         label = $"Guard: {status.Value.ToString("P0")}";
                         break;
                     case StatusType.CriticalDamage:
-                        label = $"Critical\nDamage: {status.Value.ToString("P0")}";
+                        label = $"Critical\nDamage: {status.Value.ToString("P1")}";
                         break;
                     case StatusType.CriticalRate:
-                        label = $"Critical\nRate: {status.Value.ToString("P0")}";
+                        label = $"Critical\nRate: {status.Value.ToString("P1")}";
                         break;
                     default:
                         Debug.LogWarning($"Unsupported status type: {status.Type}");

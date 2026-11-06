@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "SymbolHandData", menuName = "KaomojiClash_Reloaded/SymbolData/SymbolHandData")]
 public class SymbolHandData : SymbolData
@@ -19,8 +20,24 @@ public class CoreStats
 
     // 初期値は最小値
     // 強化は全てのパラメーターをランダムに増減させ決める
-    [Range(0, Max_Stamina)] public float Stamina = 0f;
-    [Range(0, Max_Power)] public float Power = 0f;
-    [Range(0, Max_Speed)] public float Speed = 0f;
-    [Range(0, Max_Guard)] public float Guard = 0f;
+    [SerializeField, FormerlySerializedAs("Stamina"), Range(0, Max_Stamina)] float stamina;
+    [SerializeField, FormerlySerializedAs("Power"), Range(0, Max_Power)] float power;
+    [SerializeField, FormerlySerializedAs("Speed"), Range(0, Max_Speed)] float speed;
+    [SerializeField, FormerlySerializedAs("Guard"), Range(0, Max_Guard)] float guard;
+
+    public event System.Action Changed;
+
+    public float Stamina { get => stamina; set => SetValue(ref stamina, value); }
+    public float Power { get => power; set => SetValue(ref power, value); }
+    public float Speed { get => speed; set => SetValue(ref speed, value); }
+    public float Guard { get => guard; set => SetValue(ref guard, value); }
+
+    void SetValue(ref float field, float value)
+    {
+        if (field.Equals(value))
+            return;
+
+        field = value;
+        Changed?.Invoke();
+    }
 }
