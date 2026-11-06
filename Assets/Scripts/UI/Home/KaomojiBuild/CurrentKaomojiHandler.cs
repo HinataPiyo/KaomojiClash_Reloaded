@@ -13,12 +13,13 @@ namespace UI
         [SerializeField] BaseStatusView baseStatusView;
         [SerializeField] SkillDescriptionHandler skillDescriptionHandler;
 
-        [SerializeField] SymbolListHandler symbolListHandler;
+        SymbolListHandler symbolListHandler;
 
         public static System.Action<SymbolData> OnCurrentKaomojiUpdated;
 
         void Start()
         {
+            symbolListHandler = SymbolListHandler.Instance;
             OnCurrentKaomojiUpdated += UpdateCurrentKaomoji;
             symbolListHandler.OnSelectedSymbolChanged += UpdateCurrentKaomoji;
             UpdateStatusViews();
@@ -27,7 +28,8 @@ namespace UI
         void OnDestroy()
         {
             OnCurrentKaomojiUpdated -= UpdateCurrentKaomoji;
-            symbolListHandler.OnSelectedSymbolChanged -= UpdateCurrentKaomoji;
+            if (symbolListHandler != null)
+                symbolListHandler.OnSelectedSymbolChanged -= UpdateCurrentKaomoji;
         }
 
         /// <summary>

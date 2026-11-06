@@ -3,15 +3,19 @@ namespace UI
     using System.Collections.Generic;
     using UnityEngine;
     
+
+    /// <summary>
+    /// 記号のリストを管理する
+    /// </summary>
     [RequireComponent(typeof(SymbolTypeChangeHandler))]
-    public class SymbolListHandler : MonoBehaviour
+    public class SymbolListHandler : SceneSingleton<SymbolListHandler>
     {
         [SerializeField] SymbolIconButton icon_Prefab;
         [SerializeField] Transform content_Transform;
         SymbolTypeChangeHandler typeChangeHandler;
         public event System.Action<SymbolData> OnSelectedSymbolChanged;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
             typeChangeHandler = GetComponent<SymbolTypeChangeHandler>();
             typeChangeHandler.OnSymbolTypeChanged += CreateSymbolList;
@@ -23,7 +27,7 @@ namespace UI
             CreateSymbolList(typeChangeHandler.FirstSymbolType());
         }
 
-        void OnDestroy()
+        protected override void OnSingletonDestroy()
         {
             typeChangeHandler.OnSymbolTypeChanged -= CreateSymbolList;
         }
