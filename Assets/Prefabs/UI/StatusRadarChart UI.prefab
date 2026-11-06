@@ -1106,6 +1106,7 @@ RectTransform:
   - {fileID: 4606063556244427898}
   - {fileID: 2803588143709482229}
   - {fileID: 7672034725431440332}
+  - {fileID: 2242238337864426669}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
@@ -1163,6 +1164,150 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc46bd8d33495249a4d2599945ba0d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.StatusRaderChartView
-  currentKaomoji: {fileID: 0}
+  currentKaomoji: {fileID: 7050909488097516096}
   radarChart: {fileID: 5894067787643329252}
   textParent: {fileID: 4606063556244427898}
+--- !u!1001 &2253035016571275530
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1314137133083135849}
+    m_Modifications:
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_Pivot.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 165
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 39.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -13
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -11
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 266249358520323932, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_fontSize
+      value: 27
+      objectReference: {fileID: 0}
+    - target: {fileID: 266249358520323932, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8023870794142842461, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8023870794142842461, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.000030517578
+      objectReference: {fileID: 0}
+    - target: {fileID: 8023870794142842461, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8820584676697974985, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_Name
+      value: CurrentKaomoji UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 8820584676697974985, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+      propertyPath: statsCalc
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3330295651688387133, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+    - {fileID: 328519123625498129, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 1667249502329456708, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+--- !u!224 &2242238337864426669 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 25443293837176231, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+  m_PrefabInstance: {fileID: 2253035016571275530}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7050909488097516096 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9123659231617389386, guid: 094ec2f10a539b448a8f6c1bfe949a1e, type: 3}
+  m_PrefabInstance: {fileID: 2253035016571275530}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8806105cf497c4091bf96090b0a65a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.CurrentKaomojiHandler
